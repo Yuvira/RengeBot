@@ -1,10 +1,9 @@
 # import
 import discord
 import sqlite3
-from renge_db import conn, c
 
 # info cmds
-async def cmds_profile(message, umsg, client):
+async def cmds_profile(message, umsg, client, conn, cur):
 	
 	# args/variables
 	args = umsg.split(' ')
@@ -13,11 +12,11 @@ async def cmds_profile(message, umsg, client):
 	
 	# create profile if not exist
 	t = (member.id,)
-	c.execute('SELECT * FROM profiles WHERE id=?', t)
-	t = c.fetchone()
+	cur.execute('SELECT * FROM profiles WHERE id=?', t)
+	t = cur.fetchone()
 	if (t == None):
 		profile = (member.id, member.name + '#' + member.discriminator, 'Nothing to see here')
-		c.execute('INSERT INTO profiles VALUES (?,?,?)', profile)
+		cur.execute('INSERT INTO profiles VALUES (?,?,?)', profile)
 		conn.commit()
 	
 	# profile
@@ -25,8 +24,8 @@ async def cmds_profile(message, umsg, client):
 		
 		# load data
 		t = (member.id,)
-		c.execute('SELECT * FROM profiles WHERE id=?', t)
-		data = c.fetchone()
+		cur.execute('SELECT * FROM profiles WHERE id=?', t)
+		data = cur.fetchone()
 				
 		# profile commands
 		if (len(args) > 1):
@@ -45,5 +44,5 @@ async def cmds_profile(message, umsg, client):
 			await client.send_message(channel, content=None, embed=embed)
 		
 		# save profile
-		c.execute('UPDATE profiles SET id=?, name=?, desc=?', data)
+		cur.execute('UPDATE profiles SET id=?, name=?, desc=?', data)
 		conn.commit()
