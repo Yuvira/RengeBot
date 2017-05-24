@@ -3,6 +3,7 @@ import discord
 import time
 import random
 import logging
+import sqlite3
 from cmds_info import cmds_info
 from cmds_mod import cmds_mod
 from cmds_action import cmds_action
