@@ -52,7 +52,7 @@ async def on_message(message):
 			await cmds_info(message, umsg, client)
 			await cmds_mod(message, umsg, client)
 			await cmds_action(message, umsg, client)
-			await cmds_profile(message, umsg, client, cur)
+			await cmds_profile(message, umsg, client, conn, cur)
 			await cmds_owner(message, umsg, client, conn)
 
 # server join
