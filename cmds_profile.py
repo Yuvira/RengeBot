@@ -15,8 +15,8 @@ async def cmds_profile(message, umsg, client, conn, cur):
 	cur.execute('SELECT * FROM profiles WHERE id=?', t)
 	t = cur.fetchone()
 	if (t == None):
-		data = (member.id, member.name + '#' + member.discriminator, 'Nothing to see here')
-		cur.execute('INSERT INTO profiles VALUES (?,?,?)', data)
+		profile = (member.id, member.name + '#' + member.discriminator, 'Nothing to see here')
+		cur.execute('INSERT INTO profiles VALUES (?,?,?)', profile)
 		conn.commit()
 	
 	# profile
@@ -25,7 +25,8 @@ async def cmds_profile(message, umsg, client, conn, cur):
 		# load data
 		t = (member.id,)
 		cur.execute('SELECT * FROM profiles WHERE id=?', t)
-		data = cur.fetchone()
+		profile = cur.fetchone()
+		data = list(profile)
 				
 		# profile commands
 		if (len(args) > 1):
@@ -45,6 +46,7 @@ async def cmds_profile(message, umsg, client, conn, cur):
 		
 		# save profile
 		t = (member.id,)
+		profile = tuple(data)
 		cur.execute('DELETE FROM profiles WHERE id=?', t)
-		cur.execute('INSERT INTO profiles VALUES (?,?,?)', data)
+		cur.execute('INSERT INTO profiles VALUES (?,?,?)', profile)
 		conn.commit()
