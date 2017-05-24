@@ -1,39 +1,31 @@
 # import
 import discord
-from pathlib import Path
-from ast import literal_eval
-import codecs
+import sqlite3
 
 # info cmds
-async def cmds_profile(message, umsg, client):
+async def cmds_profile(message, umsg, client, conn, cur):
 	
 	# args/variables
 	args = umsg.split(' ')
 	channel = message.channel
 	member = message.author
 	
-	# check/create profile
-	profile = Path('profiles/' + member.id + '.prof')
-	if (profile.is_file()):
-		pass
-	else:
-		data = ['Nothing to see here.']
-		file = codecs.open('profiles/' + member.id + '.prof', 'w+', 'utf-8')
-		for a in range(0, len(data)):
-			file.write(str(data[a]) + '\n')
-		file.close()
+	# create profile if not exist
+	t = (member.id,)
+	cur.execute('SELECT * FROM profiles WHERE id=?', t)
+	t = cur.fetchone()
+	if (t == None):
+		profile = (member.id, member.name + '#' + member.discriminator, 'Nothing to see here')
+		cur.execute('INSERT INTO profiles VALUES (?,?,?)', profile)
+		conn.commit()
 	
 	# profile
 	if (args[0] == 'profile'):
 		
 		# load data
-		with open('profiles/' + member.id + '.prof') as f:
-			data = f.readlines()
-		data = [x.strip('\n') for x in data]
-		try:
-			data[0] = literal_eval(data[0])
-		except:
-			data[0] = literal_eval('"' + data[0] + '"')
+		t = (member.id,)
+		cur.execute('SELECT * FROM profiles WHERE id=?', t)
+		data = cur.fetchone()
 				
 		# profile commands
 		if (len(args) > 1):
@@ -41,19 +33,16 @@ async def cmds_profile(message, umsg, client):
 			# description set
 			if (args[1] == 'desc'):
 				if (len(args) > 2):
-					data[0] = umsg[13:]
-					await client.send_message(channel, 'Description set to `' + data[0] + '`!')
+					data[2] = umsg[13:]
+					await client.send_message(channel, 'Description set to `' + data[2] + '`!')
 				else:
 					await client.send_message(channel, 'You need to enter a description!')
 		
 		# show profile
 		else:
-			embed = discord.Embed(title=member.name + "'s profile", type='rich', description=str(data[0]))
+			embed = discord.Embed(title=member.name + "'s profile", type='rich', description=data[2])
 			await client.send_message(channel, content=None, embed=embed)
 		
 		# save profile
-		file = codecs.open('profiles/' + member.id + '.prof', 'w+', 'utf-8')
-		file.write(repr(data[0]))
-		for a in range(1, len(data)):
-			file.write(str(data[a]) + '\n')
-		file.close()
+		cur.execute('UPDATE profiles SET id=?, name=?, desc=?', data)
+		conn.commit()

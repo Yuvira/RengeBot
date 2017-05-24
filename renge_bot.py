@@ -12,6 +12,10 @@ from cmds_owner import cmds_owner
 # client
 client = discord.Client()
 
+# database
+conn = sqlite3.connect('renge.db')
+cur = conn.cursor()
+
 # message received
 @client.event
 async def on_message(message):
@@ -48,8 +52,8 @@ async def on_message(message):
 			await cmds_info(message, umsg, client)
 			await cmds_mod(message, umsg, client)
 			await cmds_action(message, umsg, client)
-			await cmds_profile(message, umsg, client)
-			await cmds_owner(message, umsg, client)
+			await cmds_profile(message, umsg, client, conn, cur)
+			await cmds_owner(message, umsg, client, conn)
 
 # server join
 @client.event
