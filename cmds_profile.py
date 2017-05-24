@@ -15,8 +15,8 @@ async def cmds_profile(message, umsg, client, conn, cur):
 	cur.execute('SELECT * FROM profiles WHERE id=?', t)
 	t = cur.fetchone()
 	if (t == None):
-		profile = (member.id, member.name + '#' + member.discriminator, 'Nothing to see here')
-		cur.execute('INSERT INTO profiles VALUES (?,?,?)', profile)
+		data = (member.id, member.name + '#' + member.discriminator, 'Nothing to see here')
+		cur.execute('INSERT INTO profiles VALUES (?,?,?)', data)
 		conn.commit()
 	
 	# profile
@@ -44,5 +44,7 @@ async def cmds_profile(message, umsg, client, conn, cur):
 			await client.send_message(channel, content=None, embed=embed)
 		
 		# save profile
-		cur.execute('UPDATE profiles SET id=?, name=?, desc=?', data)
+		t = (member.id,)
+		cur.execute('DELETE FROM profiles WHERE id=?', t)
+		cur.execute('INSERT INTO profiles VALUES (?,?,?)', data)
 		conn.commit()
