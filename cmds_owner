@@ -1,8 +1,10 @@
 # import
 import discord
+import sqlite3
+import sys
 
 # info cmds
-async def cmds_owner(message, umsg, client):
+async def cmds_owner(message, umsg, client, conn):
 	
 	# args/variables
 	args = umsg.split(' ')
@@ -19,3 +21,10 @@ async def cmds_owner(message, umsg, client):
 				await client.send_message(channel, 'User is `' + user.name + '#' + user.discriminator + '`')
 			except:
 				await client.send_message(channel, 'User not found!')
+				
+		# shutdown
+		if (args[0] == 'shutdown'):
+			await client.send_message(channel, '*Shutting down...*')
+			conn.close()
+			await client.logout()
+			sys.exit(0)
