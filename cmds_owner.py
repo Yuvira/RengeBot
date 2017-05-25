@@ -28,3 +28,10 @@ async def cmds_owner(message, umsg, client, conn):
 			conn.close()
 			await client.logout()
 			sys.exit(0)
+			
+		# list servers
+		if (args[0] == 'serverlist'):
+			msg = '**Renge Server List**'
+			for server in client.servers:
+				msg = msg + '\n`' + server.name + '` owned by `' + server.owner.name + '#' + server.owner.discriminator + '`'
+			await client.send_message(channel, msg)
