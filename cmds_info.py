@@ -48,10 +48,12 @@ async def cmds_info(message, umsg, client):
 	if (args[0] == 'about'):
 		if (umsg == 'about'):
 			t1 = 0
+			t2 = 0
 			for server in client.servers:
 				t1 += 1
-			t2 = len(glob.glob('profiles/*'))
-			embed = discord.Embed(title='About Renge', type='rich', description='Renge is a small bot but constantly growing with new commands and community suggestions!\n\nCreated by Yuvira#7842\n\n**Version:** 0.1.3\n**Servers:** ' + str(t1) + '\n**Users:** ' + str(t2) + '\n\n[Invite Link](https://discordapp.com/oauth2/authorize?client_id=309002800703078400&scope=bot&permissions=271641670)\n[Support Guild](https://discord.gg/9ZxCkvv)')
+			for member in client.get_all_members:
+				t2 += 1
+			embed = discord.Embed(title='About Renge', type='rich', description='Renge is a small bot but constantly growing with new commands and community suggestions!\n\nCreated by Yuvira#7842\n\n**Version:** 0.1.4\n**Servers:** ' + str(t1) + '\n**Users:** ' + str(t2) + '\n\n[Invite Link](https://discordapp.com/oauth2/authorize?client_id=309002800703078400&scope=bot&permissions=271641670)\n[Support Guild](https://discord.gg/9ZxCkvv)')
 			await client.send_message(channel, content=None, embed=embed)
 			
 	# request
