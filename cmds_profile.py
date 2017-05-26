@@ -43,9 +43,9 @@ async def cmds_profile(message, umsg, client, conn, cur):
 		else:
 			embed = discord.Embed(title=member.name + "'s profile", type='rich', description=data[2], colour=member.colour)
 			if (member.avatar_url == ''):
-				embed.set_thumbnail(member.default_avatar_url)
+				embed.set_thumbnail(url=member.default_avatar_url)
 			else:
-				embed.set_thumbnail(member.avatar_url)
+				embed.set_thumbnail(url=member.avatar_url)
 			await client.send_message(channel, content=None, embed=embed)
 		
 		# save profile
