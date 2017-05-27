@@ -20,15 +20,15 @@ async def cmds_mod(message, umsg, client):
 			await client.send_message(channel, 'You must mention the person(s) to kick!')
 		else:
 			check = 0
-			rrole = len(role_hierarchy)
+			rrole = len(server.role_hierarchy)
 			t = server.me.top_role
 			for a in range(0, len(server.role_hierarchy)):
-				if (t == role_hierarchy[a]):
+				if (t == server.role_hierarchy[a]):
 					rrole = a
 			for a in range(0, len(message.mentions)):
 				t = message.mentions[a].top_role
 				for a in range(0, len(server.role_hierarchy)):
-					if (t == role_hierarchy[a]):
+					if (t == server.role_hierarchy[a]):
 						if (a <= rrole):
 							check = 1
 			if (check == 0):
@@ -57,15 +57,15 @@ async def cmds_mod(message, umsg, client):
 			await client.send_message(channel, 'You must mention the person(s) to ban!')
 		else:
 			check = 0
-			rrole = len(role_hierarchy)
+			rrole = len(server.role_hierarchy)
 			t = server.me.top_role
 			for a in range(0, len(server.role_hierarchy)):
-				if (t == role_hierarchy[a]):
+				if (t == server.role_hierarchy[a]):
 					rrole = a
 			for a in range(0, len(message.mentions)):
 				t = message.mentions[a].top_role
 				for a in range(0, len(server.role_hierarchy)):
-					if (t == role_hierarchy[a]):
+					if (t == server.role_hierarchy[a]):
 						if (a <= rrole):
 							check = 1
 			try:
