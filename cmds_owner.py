@@ -35,7 +35,7 @@ async def cmds_owner(message, umsg, client, conn):
 			t = 0
 			for member in server.members:
 				t += 1
-			await client.send_message(channel, 'There are ' + t + ' users in this server')
+			await client.send_message(channel, 'There are ' + str(t) + ' users in this server')
 				
 		# shutdown
 		if (args[0] == 'shutdown'):
