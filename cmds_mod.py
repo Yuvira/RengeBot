@@ -19,16 +19,31 @@ async def cmds_mod(message, umsg, client):
 		elif (len(message.mentions) < 1):
 			await client.send_message(channel, 'You must mention the person(s) to kick!')
 		else:
-			msg = 'Kicked '
+			check = 0
+			rrole = len(role_hierarchy)
+			t = server.me.top_role
+			for a in range(0, len(server.role_hierarchy)):
+				if (t == role_hierarchy[a]):
+					rrole = a
 			for a in range(0, len(message.mentions)):
-				msg = msg + '`' + message.mentions[a].name + '` '
-				private_channel = server.get_member(message.mentions[a].id)
-				try:
-					await client.send_message(private_channel, 'You were kicked from **' + server.name + '** by **' + member.name + '**')
-				except HTTPException:
-					pass
-			for a in range(0, len(message.mentions)):
-				await client.kick(message.mentions[a])
+				t = message.mentions[a].top_role
+				for a in range(0, len(server.role_hierarchy)):
+					if (t == role_hierarchy[a]):
+						if (a <= rrole):
+							check = 1
+			if (check == 0):
+				msg = 'Kicked '
+				for a in range(0, len(message.mentions)):
+					msg = msg + '`' + message.mentions[a].name + '` '
+					private_channel = server.get_member(message.mentions[a].id)
+					try:
+						await client.send_message(private_channel, 'You were kicked from **' + server.name + '** by **' + member.name + '**')
+					except HTTPException:
+						pass
+				for a in range(0, len(message.mentions)):
+					await client.kick(message.mentions[a])
+			else:
+				msg = 'Failed to kick! My role is lower than one or more of the mentioned users!'
 			await client.send_message(channel, msg)
 	
 	# ban
@@ -41,18 +56,33 @@ async def cmds_mod(message, umsg, client):
 		elif (len(message.mentions) < 1):
 			await client.send_message(channel, 'You must mention the person(s) to ban!')
 		else:
+			check = 0
+			rrole = len(role_hierarchy)
+			t = server.me.top_role
+			for a in range(0, len(server.role_hierarchy)):
+				if (t == role_hierarchy[a]):
+					rrole = a
+			for a in range(0, len(message.mentions)):
+				t = message.mentions[a].top_role
+				for a in range(0, len(server.role_hierarchy)):
+					if (t == role_hierarchy[a]):
+						if (a <= rrole):
+							check = 1
 			try:
 				t = int(args[len(args)-1])
 			except ValueError:
 				t = 0
-			msg = 'Banned '
-			for a in range(0, len(message.mentions)):
-				msg = msg + '`' + message.mentions[a].name + '` '
-				private_channel = server.get_member(message.mentions[a].id)
-				try:
-					await client.send_message(private_channel, 'You were banned from **' + server.name + '** by **' + member.name + '**')
-				except HTTPException:
-					pass
-			for a in range(0, len(message.mentions)):
-				await client.ban(message.mentions[a], delete_message_days=t)
-			await client.send_message(channel, msg + 'and deleted their messages from the past ' + str(t) + ' days')
+			if (check == 0):
+				msg = 'Banned '
+				for a in range(0, len(message.mentions)):
+					msg = msg + '`' + message.mentions[a].name + '` '
+					private_channel = server.get_member(message.mentions[a].id)
+					try:
+						await client.send_message(private_channel, 'You were banned from **' + server.name + '** by **' + member.name + '**')
+					except HTTPException:
+						pass
+				for a in range(0, len(message.mentions)):
+					await client.ban(message.mentions[a], delete_message_days=t)
+				await client.send_message(channel, msg + 'and deleted their messages from the past ' + str(t) + ' days')
+			else:
+				await client.send_message(channel, 'Failed to ban! My role is lower than one or more of the mentioned users!')
