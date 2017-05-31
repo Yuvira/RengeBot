@@ -35,6 +35,14 @@ async def cmds_profile(message, umsg, client, conn, cur):
 		
 		# show other person's profile
 		if (len(args) == 2 and len(message.mentions) > 0):
+		
+			# load data
+			t = (member.id,)
+			cur.execute('SELECT * FROM profiles WHERE id=?', t)
+			profile = cur.fetchone()
+			data = list(profile)
+			
+			# display data
 			await create_profile(message.mentions[0], conn, cur)
 			embed = discord.Embed(title=message.mentions[0].name + "'s profile", type='rich', description=data[2], colour=message.mentions[0].colour)
 			if (message.mentions[0].avatar_url == ''):
@@ -42,15 +50,15 @@ async def cmds_profile(message, umsg, client, conn, cur):
 			else:
 				embed.set_thumbnail(url=message.mentions[0].avatar_url)
 			await client.send_message(channel, content=None, embed=embed)
+		
+		# load data
+		t = (member.id,)
+		cur.execute('SELECT * FROM profiles WHERE id=?', t)
+		profile = cur.fetchone()
+		data = list(profile)
 				
 		# profile commands
 		elif (len(args) > 1):
-		
-			# load data
-			t = (member.id,)
-			cur.execute('SELECT * FROM profiles WHERE id=?', t)
-			profile = cur.fetchone()
-			data = list(profile)
 			
 			# description set
 			if (args[1] == 'desc'):
