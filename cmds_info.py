@@ -36,7 +36,7 @@ async def cmds_info(message, umsg, client):
 				embed = discord.Embed(title='Ban Command', type='rich', description='**Usage:**\n`$ban <mentions>` - Bans one or more monetioned users\n`$ban <mentions> <days>` - Bans mentioned user(s) and deletes messages from the past given number of days')
 				await client.send_message(channel, content=None, embed=embed)
 			elif (args[1] == 'profile'):
-				embed = discord.Embed(title='Profile Command', type='rich', description='**Usage:**\n`$profile` - Displays your profile\n`$profile desc <description>` - Set the description for your profile')
+				embed = discord.Embed(title='Profile Command', type='rich', description='**Usage:**\n`$profile` - Displays your profile\n`$profile <@mention>` - Show the profile of someone else\n`$profile desc <description>` - Set the description for your profile')
 				await client.send_message(channel, content=None, embed=embed)
 			else:
 				await client.send_message(channel, 'That command does not exist!')
