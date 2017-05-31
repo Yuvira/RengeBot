@@ -35,7 +35,7 @@ async def cmds_profile(message, umsg, client, conn, cur):
 		
 		# show other person's profile
 		if (len(args) == 2 and len(message.mentions) > 0):
-			await create_profile(message.mentions[0])
+			await create_profile(message.mentions[0], conn, cur)
 			embed = discord.Embed(title=message.mentions[0].name + "'s profile", type='rich', description=data[2], colour=message.mentions[0].colour)
 			if (message.mentions[0].avatar_url == ''):
 				embed.set_thumbnail(url=message.mentions[0].default_avatar_url)
