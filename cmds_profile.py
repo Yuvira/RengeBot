@@ -18,6 +18,22 @@ async def create_profile(member, conn, cur):
 		ratelimit = (member.id, member.name + '#' + member.discriminator, 0, 0)
 		cur.execute('INSERT INTO ratelimits VALUES (?,?,?,?)', ratelimit)
 		conn.commit()
+		
+# load profile
+async def load_profile(member, conn, cur):
+	t = (member.id,)
+	cur.execute('SELECT * FROM profiles WHERE id=?', t)
+	profile = cur.fetchone()
+	data = list(profile)
+	return data
+	
+# save profile
+async def save_profile(member, data, conn, cur):
+	t = (member.id,)
+	profile = tuple(data)
+	cur.execute('DELETE FROM profiles WHERE id=?', t)
+	cur.execute('INSERT INTO profiles VALUES (?,?,?,?)', profile)
+	conn.commit()
 
 # info cmds
 async def cmds_profile(message, umsg, client, conn, cur):
@@ -37,10 +53,7 @@ async def cmds_profile(message, umsg, client, conn, cur):
 		if (len(args) == 2 and len(message.mentions) > 0):
 		
 			# load data
-			t = (member.id,)
-			cur.execute('SELECT * FROM profiles WHERE id=?', t)
-			profile = cur.fetchone()
-			data = list(profile)
+			data = await load_profile(message.mentions[0], conn, cur)
 			
 			# display data
 			await create_profile(message.mentions[0], conn, cur)
@@ -50,15 +63,12 @@ async def cmds_profile(message, umsg, client, conn, cur):
 			else:
 				embed.set_thumbnail(url=message.mentions[0].avatar_url)
 			await client.send_message(channel, content=None, embed=embed)
-		
-		# load data
-		t = (member.id,)
-		cur.execute('SELECT * FROM profiles WHERE id=?', t)
-		profile = cur.fetchone()
-		data = list(profile)
 				
 		# profile commands
 		elif (len(args) > 1):
+			
+			# load data
+			data = await load_profile(member, conn, cur)
 			
 			# description set
 			if (args[1] == 'desc'):
@@ -69,14 +79,15 @@ async def cmds_profile(message, umsg, client, conn, cur):
 					await client.send_message(channel, 'You need to enter a description!')
 		
 			# save profile
-			t = (member.id,)
-			profile = tuple(data)
-			cur.execute('DELETE FROM profiles WHERE id=?', t)
-			cur.execute('INSERT INTO profiles VALUES (?,?,?,?)', profile)
-			conn.commit()
+			await save_profile(member, data, conn, cur)
 		
 		# show profile
 		else:
+			
+			# load data
+			data = await load_profile(member, conn, cur)
+			
+			# display data
 			embed = discord.Embed(title=member.name + "'s profile", type='rich', description=data[2], colour=member.colour)
 			if (member.avatar_url == ''):
 				embed.set_thumbnail(url=member.default_avatar_url)
