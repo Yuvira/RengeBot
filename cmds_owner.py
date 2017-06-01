@@ -47,6 +47,7 @@ async def cmds_owner(message, umsg, client, conn, cur):
 				data = await load_profile(user, conn, cur)
 				data[3] = data[3] + t
 				await save_profile(user, data, conn, cur)
+				await client.send_message(channel, 'Gave ' + args[2] + ' credits to ' + user.name + '!')
 			except:
 				await client.send_message(channel, 'You did something wrong!')
 				
