@@ -1,6 +1,7 @@
 # import
 import discord
 import time
+import random
 import sqlite3
 
 # create blank profile
