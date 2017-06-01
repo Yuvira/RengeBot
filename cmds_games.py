@@ -249,14 +249,14 @@ async def cmds_games(message, umsg, client, conn, cur):
 							else:
 								winnings = -data[a+1]
 							if (winnings > 0):
-								msg = msg + ' won $' + winnings + '!'
+								msg = msg + ' won $' + str(winnings) + '!'
 							else:
-								msg = msg + ' lost $' + data[a+1] + '!'
+								msg = msg + ' lost $' + str(data[a+1]) + '!'
 							await client.send_message(channel, msg)
 								
 							# update user
 							udata = await load_profile(user, conn, cur)
-							udata[3] = udata[3] + winnings
+							udata[3] = udata[3] + int(winnings)
 							await save_profile(user, udata, conn, cur)
 							
 					# clear game
