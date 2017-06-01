@@ -56,7 +56,7 @@ async def on_message(message):
 			await cmds_action(message, umsg, client)
 			await cmds_profile(message, umsg, client, conn, cur)
 			await cmds_games(message, umsg, client, conn, cur)
-			await cmds_owner(message, umsg, client, conn)
+			await cmds_owner(message, umsg, client, conn, cur)
 
 # server join
 @client.event
@@ -88,4 +88,4 @@ logger.addHandler(handler)
 
 # run
 random.seed(time.time())
-client.run('token')
+client.run('MzA5MDAyODAwNzAzMDc4NDAw.DBHt0A.FeaTXBkWFD2FymhSTapjgSzDRDg')
