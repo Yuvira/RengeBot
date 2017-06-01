@@ -81,11 +81,11 @@ async def cmds_games(message, umsg, client, conn, cur):
 						if (is_int(args[2])):
 							
 							# check bet more than zero
-							if (args[2] > 0):
+							if (int(args[2]) > 0):
 								
 								#check bet within player's credits
 								udata = await load_profile(member, conn, cur)
-								if (args[2] < udata[3]):
+								if (int(args[2]) < udata[3]):
 							
 									# bet type
 									if (len(args) > 3):
