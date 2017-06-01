@@ -129,7 +129,7 @@ async def cmds_profile(message, umsg, client, conn, cur):
 			# update ratelimit
 			rl[2] = int(time.time())
 			await save_ratelimit(member, rl, conn, cur)
-			await client.send_message('You have received your daily 100 credits!')
+			await client.send_message(channel, 'You have received your daily 100 credits!')
 			
 		# show time remaining
 		else:
@@ -161,9 +161,9 @@ async def cmds_profile(message, umsg, client, conn, cur):
 			rl[3] = int(time.time())
 			await save_ratelimit(member, rl, conn, cur)
 			if (loot > 0):
-				await client.send_message('You looted a whole ' + str(loot) + ' credits!')
+				await client.send_message(channel, 'You looted a whole ' + str(loot) + ' credits!')
 			else:
-				await client.send_message("You couldn't find anything to loot")
+				await client.send_message(channel, "You couldn't find anything to loot")
 			
 		# show time remaining
 		else:
