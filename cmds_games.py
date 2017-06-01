@@ -17,7 +17,7 @@ async def create_game(channel, conn, cur):
 # load game
 async def load_game(channel, conn, cur):
 	t = (channel.id,)
-	cur.execute('SELECT * FROM games WHERE id=?', t)
+	cur.execute('SELECT * FROM games WHERE channel=?', t)
 	game = cur.fetchone()
 	data = list(game)
 	return data
@@ -26,7 +26,7 @@ async def load_game(channel, conn, cur):
 async def save_game(channel, data, conn, cur):
 	t = (channel.id,)
 	game = tuple(data)
-	cur.execute('DELETE FROM games WHERE id=?', t)
+	cur.execute('DELETE FROM games WHERE channel=?', t)
 	cur.execute('INSERT INTO games VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)', game)
 	conn.commit()
 	
