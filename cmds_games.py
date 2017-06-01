@@ -1,5 +1,6 @@
 # import
 import discord
+import random
 import sqlite3
 from cmds_profile import load_profile
 from cmds_profile import save_profile
