@@ -102,7 +102,7 @@ async def cmds_games(message, umsg, client, conn, cur):
 											await client.send_message(channel, member.name + ' has bet $' + data[pos+1] + ' on ' + data[pos+2] + '!')
 											
 										# columns/dozens
-										if (args[3] == 'column' or args[3] == 'dozen'):
+										elif (args[3] == 'column' or args[3] == 'dozen'):
 											if (len(args) > 4):
 												if (args[4] == '1' or args[4] == '2' or args[4] == '3'):
 													data[pos] = member.id
