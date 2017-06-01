@@ -8,6 +8,7 @@ from cmds_info import cmds_info
 from cmds_mod import cmds_mod
 from cmds_action import cmds_action
 from cmds_profile import cmds_profile
+from cmds_games import cmds_games
 from cmds_owner import cmds_owner
 
 # client
@@ -54,6 +55,7 @@ async def on_message(message):
 			await cmds_mod(message, umsg, client)
 			await cmds_action(message, umsg, client)
 			await cmds_profile(message, umsg, client, conn, cur)
+			await cmds_games(message, umdg, client, conn, cur)
 			await cmds_owner(message, umsg, client, conn)
 
 # server join
