@@ -42,7 +42,7 @@ async def cmds_owner(message, umsg, client, conn):
 		# give credits
 		if (args[0] == 'givecredits'):
 			try:
-				user = client.get_user_info(args[1])
+				user = await client.get_user_info(args[1])
 				t = int(args[2])
 				data = await load_profile(user, conn, cur)
 				data[3] = data[3] + t
