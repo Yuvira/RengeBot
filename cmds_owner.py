@@ -6,7 +6,7 @@ from cmds_profile import load_profile
 from cmds_profile import save_profile
 
 # info cmds
-async def cmds_owner(message, umsg, client, conn):
+async def cmds_owner(message, umsg, client, conn, cur):
 	
 	# args/variables
 	args = umsg.split(' ')
