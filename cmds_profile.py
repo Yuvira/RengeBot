@@ -57,7 +57,7 @@ async def cmds_profile(message, umsg, client, conn, cur):
 			data = await load_profile(message.mentions[0], conn, cur)
 			
 			# display data
-			embed = discord.Embed(title=message.mentions[0].name + "'s profile", type='rich', description=data[2] + '\n\n**Credits**\n' + data[3], colour=message.mentions[0].colour)
+			embed = discord.Embed(title=message.mentions[0].name + "'s profile", type='rich', description=data[2] + '\n\n**Credits**\n' + str(data[3]), colour=message.mentions[0].colour)
 			if (message.mentions[0].avatar_url == ''):
 				embed.set_thumbnail(url=message.mentions[0].default_avatar_url)
 			else:
@@ -88,7 +88,7 @@ async def cmds_profile(message, umsg, client, conn, cur):
 			data = await load_profile(member, conn, cur)
 			
 			# display data
-			embed = discord.Embed(title=member.name + "'s profile", type='rich', description=data[2] + '\n\n**Credits**\n' + data[3], colour=member.colour)
+			embed = discord.Embed(title=member.name + "'s profile", type='rich', description=data[2] + '\n\n**Credits**\n' + str(data[3]), colour=member.colour)
 			if (member.avatar_url == ''):
 				embed.set_thumbnail(url=member.default_avatar_url)
 			else:
