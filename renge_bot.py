@@ -90,4 +90,4 @@ logger.addHandler(handler)
 
 # run
 random.seed(time.time())
-client.run('MzA5MDAyODAwNzAzMDc4NDAw.DBHt0A.FeaTXBkWFD2FymhSTapjgSzDRDg')
+client.run('token')
