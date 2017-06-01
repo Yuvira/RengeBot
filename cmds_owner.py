@@ -2,6 +2,8 @@
 import discord
 import sqlite3
 import sys
+from cmds_profile import load_profile
+from cmds_profile import save_profile
 
 # info cmds
 async def cmds_owner(message, umsg, client, conn):
@@ -36,6 +38,17 @@ async def cmds_owner(message, umsg, client, conn):
 			for member in server.members:
 				t += 1
 			await client.send_message(channel, 'There are ' + str(t) + ' users in this server')
+			
+		# give credits
+		if (args[0] == 'givecredits'):
+			try:
+				user = client.get_user_info(args[1])
+				t = int(args[2])
+				data = await load_profile(user, conn, cur)
+				data[3] = data[3] + t
+				await save_profile(user, data, conn, cur)
+			except:
+				await client.send_message(channel, 'You did something wrong!')
 				
 		# shutdown
 		if (args[0] == 'shutdown'):
