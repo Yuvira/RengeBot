@@ -7,11 +7,11 @@ from cmds_profile import save_profile
 # create blank game profile
 async def create_game(channel, conn, cur):
 	t = (channel.id,)
-	cur.execute('SELECT * FROM profiles WHERE channel=?', t)
+	cur.execute('SELECT * FROM games WHERE channel=?', t)
 	t = cur.fetchone()
 	if (t == None):
 		game = (channel.id, 'None', None, 0, None, None, 0, None, None, 0, None, None, 0, None)
-		cur.execute('INSERT INTO profiles VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)', game)
+		cur.execute('INSERT INTO games VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)', game)
 		conn.commit()
 	
 # load game
