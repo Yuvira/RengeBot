@@ -78,6 +78,8 @@ async def on_ready():
 	print(client.user.id)
 	print('------')
 	await client.change_presence(game=discord.Game(name='$help | Nyanpasuuu~'), status=None, afk=False)
+	cur.execute('DELETE FROM games')
+	conn.commit()
 
 # logging
 logger = logging.getLogger('discord')
