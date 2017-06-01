@@ -208,9 +208,9 @@ async def cmds_games(message, umsg, client, conn, cur):
 					# roll number
 					roll = int(random.random() * 37)
 					if (roll in nums_red):
-						await client.send_message(channel, 'The ball has landed on Red ' + roll + '!')
+						await client.send_message(channel, 'The ball has landed on Red ' + str(roll) + '!')
 					elif (roll in nums_grn):
-						await client.send_message(channel, 'The ball has landed on Green ' + roll + '!')
+						await client.send_message(channel, 'The ball has landed on Green ' + str(roll) + '!')
 					else:
 						await client.send_message(channel, 'The ball has landed on 0!')
 						
