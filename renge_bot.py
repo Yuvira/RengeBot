@@ -86,4 +86,4 @@ logger.addHandler(handler)
 
 # run
 random.seed(time.time())
-client.run('MzA5MDAyODAwNzAzMDc4NDAw.C-uGbg.yNm-SMcLyoRBxqHmKBDDN6BdJRg')
+client.run('token')
