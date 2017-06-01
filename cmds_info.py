@@ -38,10 +38,19 @@ async def cmds_info(message, umsg, client):
 			elif (args[1] == 'profile'):
 				embed = discord.Embed(title='Profile Command', type='rich', description='**Usage:**\n`$profile` - Displays your profile\n`$profile <@mention>` - Show the profile of someone else\n`$profile desc <description>` - Set the description for your profile')
 				await client.send_message(channel, content=None, embed=embed)
+			elif (args[1] == 'daily'):
+				embed = discord.Embed(title='Daily Command', type='rich', description='**Usage:**\n`$daily` - Gives you 100 free credits every 24 hours')
+				await client.send_message(channel, content=None, embed=embed)
+			elif (args[1] == 'loot'):
+				embed = discord.Embed(title='Loot Command', type='rich', description='**Usage:**\n`$loot` - Loots a random number of credits every 5 minutes')
+				await client.send_message(channel, content=None, embed=embed)
+			elif (args[1] == 'profile'):
+				embed = discord.Embed(title='Roulette Command', type='rich', description='Allows up to four people at a time to play a game of casino roulette\n**Usage:**\n`$roulette bet <amount> <type>` - Bets an amount on a certain value (bet types listed below)\n`$roulette cancel` - Cancels your current bet\n`$roulette spin` - Spin the roulette wheel\n**Bet Types:**\n`red/green` - Bets on the red or green colour (Payout 1:1)\n`odd/even` - Bets on odd or even numbers (Payout 1:1)\n`high/low` - Bets on high (19-36) or low (1-18) numbers (Payout 1:1)\n`column <#>` - Bet on column 1, 2 or 3 (Payout 2:1)\n`dozen <#>` - Bet on first (1-12), second (13-24) or third (25-36) dozen (Payout 2:1)\n**Note:**\nDue to limitations, only outside bets are currently allowed. Inside bets may be added in future')
+				await client.send_message(channel, content=None, embed=embed)
 			else:
 				await client.send_message(channel, 'That command does not exist!')
 		else:
-			embed = discord.Embed(title='Renge Help', type='rich', description='Use `$help <command>` for usage\n**Action Commands:**\n`shrug` `sugoi`\n**Profile Commands:**\n`profile`\n**Moderation Commands:**\n`kick` `ban`\n**Info Commands:**\n`help` `about` `request`')
+			embed = discord.Embed(title='Renge Help', type='rich', description='Use `$help <command>` for usage\n**Action Commands:**\n`shrug` `sugoi`\n**Profile Commands:**\n`profile` `daily` `loot`\n**Game Commands:**\n`roulette`\n**Moderation Commands:**\n`kick` `ban`\n**Info Commands:**\n`help` `about` `request`')
 			await client.send_message(channel, content=None, embed=embed)
 	
 	# about
@@ -53,7 +62,7 @@ async def cmds_info(message, umsg, client):
 				t1 += 1
 				for member in server.members:
 					t2 += 1
-			embed = discord.Embed(title='About Renge', type='rich', description='Renge is a small bot but constantly growing with new commands and community suggestions!\n\nCreated by Yuvira#7842\n\n**Version:** 0.1.5\n**Servers:** ' + str(t1) + '\n**Users:** ' + str(t2) + '\n\n[Invite Link](https://discordapp.com/oauth2/authorize?client_id=309002800703078400&scope=bot&permissions=271641670)\n[Support Guild](https://discord.gg/9ZxCkvv)')
+			embed = discord.Embed(title='About Renge', type='rich', description='Renge is a small bot but constantly growing with new commands and community suggestions!\n\nCreated by Yuvira#7842\n\n**Version:** 0.2.0\n**Servers:** ' + str(t1) + '\n**Users:** ' + str(t2) + '\n\n[Invite Link](https://discordapp.com/oauth2/authorize?client_id=309002800703078400&scope=bot&permissions=271641670)\n[Support Guild](https://discord.gg/9ZxCkvv)')
 			embed.set_thumbnail(url=client.user.avatar_url)
 			await client.send_message(channel, content=None, embed=embed)
 			
