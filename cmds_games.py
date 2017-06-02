@@ -212,7 +212,7 @@ async def cmds_games(message, umsg, client, conn, cur):
 					roll = int(random.random() * 37)
 					if (roll in nums_red):
 						msg = msg + 'The ball has landed on Red ' + str(roll) + '!\n'
-					elif (roll in nums_grn):
+					elif (roll in nums_blk):
 						msg = msg + 'The ball has landed on Black ' + str(roll) + '!\n'
 					else:
 						msg = msg + 'The ball has landed on 0!\n'
