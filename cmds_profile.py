@@ -124,6 +124,9 @@ async def cmds_profile(message, umsg, client, conn, cur):
 			# add 100 credits to profile
 			data = await load_profile(member, conn, cur)
 			data[3] = data[3] + 100
+			if (data[3] > 9200000000000000000):
+				data[3] = 9200000000000000000
+				await client.send_message(channel, ':tada: Good job, ' + member.name + ", you reached the credit limit. Hope you're proud of yourself")
 			await save_profile(member, data, conn, cur)
 			
 			# update ratelimit
@@ -155,6 +158,9 @@ async def cmds_profile(message, umsg, client, conn, cur):
 			if (loot > 0):
 				data = await load_profile(member, conn, cur)
 				data[3] = data[3] + loot
+				if (data[3] > 9200000000000000000):
+					data[3] = 9200000000000000000
+					await client.send_message(channel, ':tada: Good job, ' + member.name + ", you reached the credit limit. Hope you're proud of yourself")
 				await save_profile(member, data, conn, cur)
 			
 			# update ratelimit
