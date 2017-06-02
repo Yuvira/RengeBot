@@ -91,8 +91,8 @@ async def cmds_games(message, umsg, client, conn, cur):
 									# bet type
 									if (len(args) > 3):
 										
-										# red/green/odd/even/low/high
-										if (args[3] == 'red' or args[3] == 'green' or args[3] == 'odd' or args[3] == 'even' or args[3] == 'low' or args[3] == 'high'):
+										# red/black/odd/even/low/high
+										if (args[3] == 'red' or args[3] == 'black' or args[3] == 'odd' or args[3] == 'even' or args[3] == 'low' or args[3] == 'high'):
 											data[pos] = member.id
 											data[pos+1] = args[2]
 											data[pos+2] = args[3]
@@ -190,7 +190,7 @@ async def cmds_games(message, umsg, client, conn, cur):
 				
 				# values
 				nums_red = [2,  4,  6,  8,  10, 11, 13, 15, 17, 20, 22, 24, 26, 28, 29, 31, 33, 35]
-				nums_grn = [1,  3,  5,  7,  9,  12, 14, 16, 18, 19, 21, 23, 25, 27, 30, 32, 34, 36]
+				nums_blk = [1,  3,  5,  7,  9,  12, 14, 16, 18, 19, 21, 23, 25, 27, 30, 32, 34, 36]
 				nums_odd = [1,  3,  5,  7,  9,  11, 13, 15, 17, 19, 21, 23, 25, 27, 29, 31, 33, 35]
 				nums_evn = [2,  4,  6,  8,  10, 12, 14, 16, 18, 20, 22, 24, 26, 28, 30, 32, 34, 36]
 				nums_low = [1,  2,  3,  4,  5,  6,  7,  8,  9,  10, 11, 12, 13, 14, 15, 16, 17, 18]
@@ -204,15 +204,18 @@ async def cmds_games(message, umsg, client, conn, cur):
 				
 				# check active game
 				if (data[1] == 'Roulette'):
+				
+					# start message
+					msg = ''
 					
 					# roll number
 					roll = int(random.random() * 37)
 					if (roll in nums_red):
-						await client.send_message(channel, 'The ball has landed on Red ' + str(roll) + '!')
+						msg = msg + 'The ball has landed on Red ' + str(roll) + '!\n'
 					elif (roll in nums_grn):
-						await client.send_message(channel, 'The ball has landed on Green ' + str(roll) + '!')
+						msg = msg + 'The ball has landed on Black ' + str(roll) + '!\n'
 					else:
-						await client.send_message(channel, 'The ball has landed on 0!')
+						msg = msg + 'The ball has landed on 0!\n'
 						
 					# results
 					for a in range(2, 14, 3):
@@ -221,10 +224,10 @@ async def cmds_games(message, umsg, client, conn, cur):
 							# retrieve and display results
 							user = await client.get_user_info(data[a])
 							winnings = 0
-							msg = user.mention
+							msg = msg + user.mention
 							if (data[a+2] == 'red' and roll in nums_red):
 								winnings = data[a+1]
-							elif (data[a+2] == 'green' and roll in nums_grn):
+							elif (data[a+2] == 'black' and roll in nums_blk):
 								winnings = data[a+1]
 							elif (data[a+2] == 'odd' and roll in nums_odd):
 								winnings = data[a+1]
@@ -249,20 +252,20 @@ async def cmds_games(message, umsg, client, conn, cur):
 							else:
 								winnings = -data[a+1]
 							if (winnings > 0):
-								msg = msg + ' won $' + str(winnings) + '!'
+								msg = msg + ' won $' + str(winnings) + '!\n'
 							else:
-								msg = msg + ' lost $' + str(data[a+1]) + '!'
-							await client.send_message(channel, msg)
+								msg = msg + ' lost $' + str(data[a+1]) + '!\n'
 								
 							# update user
 							udata = await load_profile(user, conn, cur)
 							udata[3] = udata[3] + int(winnings)
 							await save_profile(user, udata, conn, cur)
 							
-					# clear game
+					# clear game & final results
 					data = [channel.id, 'None', None, 0, None, None, 0, None, None, 0, None, None, 0, None]
 					await save_game(channel, data, conn, cur)
-					await client.send_message(channel, 'End of roulette game!')
+					msg = msg + 'End of roulette game!'
+					await client.send_message(channel, msg)
 					
 				# no game active
 				else:
