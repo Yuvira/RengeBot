@@ -86,7 +86,7 @@ async def cmds_games(message, umsg, client, conn, cur):
 								
 								#check bet within player's credits
 								udata = await load_profile(member, conn, cur)
-								if (int(args[2]) < udata[3]):
+								if (int(args[2]) <= udata[3]):
 							
 									# bet type
 									if (len(args) > 3):
@@ -259,7 +259,10 @@ async def cmds_games(message, umsg, client, conn, cur):
 							# update user
 							udata = await load_profile(user, conn, cur)
 							udata[3] = udata[3] + int(winnings)
+							if (udata[3] > 9200000000000000000):
+								udata[3] = 9200000000000000000
 							await save_profile(user, udata, conn, cur)
+							await client.send_message(channel, ':tada: Good job, ' + user.name + ", you reached the credit limit. Hope you're proud of yourself"
 							
 					# clear game & final results
 					data = [channel.id, 'None', None, 0, None, None, 0, None, None, 0, None, None, 0, None]
