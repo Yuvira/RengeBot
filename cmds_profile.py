@@ -3,58 +3,14 @@ import discord
 import time
 import random
 import sqlite3
-
-# create blank profile
-async def create_profile(member, conn, cur):
-	t = (member.id,)
-	cur.execute('SELECT * FROM profiles WHERE id=?', t)
-	t = cur.fetchone()
-	if (t == None):
-		profile = (member.id, member.name + '#' + member.discriminator, 'Nothing to see here', 0)
-		cur.execute('INSERT INTO profiles VALUES (?,?,?,?)', profile)
-		conn.commit()
-	t = (member.id,)
-	cur.execute('SELECT * FROM ratelimits WHERE id=?', t)
-	t = cur.fetchone()
-	if (t == None):
-		ratelimit = (member.id, member.name + '#' + member.discriminator, 0, 0)
-		cur.execute('INSERT INTO ratelimits VALUES (?,?,?,?)', ratelimit)
-		conn.commit()
-		
-# load profile
-async def load_profile(member, conn, cur):
-	t = (member.id,)
-	cur.execute('SELECT * FROM profiles WHERE id=?', t)
-	profile = cur.fetchone()
-	data = list(profile)
-	return data
-	
-# save profile
-async def save_profile(member, data, conn, cur):
-	t = (member.id,)
-	profile = tuple(data)
-	cur.execute('DELETE FROM profiles WHERE id=?', t)
-	cur.execute('INSERT INTO profiles VALUES (?,?,?,?)', profile)
-	conn.commit()
-		
-# load profile
-async def load_ratelimit(member, conn, cur):
-	t = (member.id,)
-	cur.execute('SELECT * FROM ratelimits WHERE id=?', t)
-	ratelimit = cur.fetchone()
-	data = list(ratelimit)
-	return data
-	
-# save profile
-async def save_ratelimit(member, data, conn, cur):
-	t = (member.id,)
-	ratelimit = tuple(data)
-	cur.execute('DELETE FROM ratelimits WHERE id=?', t)
-	cur.execute('INSERT INTO ratelimits VALUES (?,?,?,?)', ratelimit)
-	conn.commit()
+from renge_utils import create_profile
+from renge_utils import load_profile
+from renge_utils import save_profile
+from renge_utils import load_ratelimit
+from renge_utils import save_ratelimit
 
 # info cmds
-async def cmds_profile(message, umsg, client, conn, cur):
+async def cmds_currency(message, umsg, client, conn, cur):
 	
 	# args/variables
 	args = umsg.split(' ')
@@ -179,3 +135,13 @@ async def cmds_profile(message, umsg, client, conn, cur):
 			t = t % 60
 			msg = msg + str(t) + ' seconds'
 			await client.send_message(channel, msg)
+			
+	# get global richest users
+	if (args[0] == 'richest'):
+		msg = 'Top Ten'
+		cur.execute('SELECT * FROM profiles ORDER BY credits DESC')
+		for a in range(0,10):
+			t = cur.fetchone()
+			msg = msg + '\n' + str(a+1) + '. ' + t[1] + ' - $' + str(t[3])
+		embed = discord.Embed(title='Global Richest Users', type='rich', description=msg)
+		await client.send_message(channel, content=None, embed=embed)
