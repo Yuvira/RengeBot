@@ -7,7 +7,7 @@ import sqlite3
 from cmds_info import cmds_info
 from cmds_mod import cmds_mod
 from cmds_action import cmds_action
-from cmds_profile import cmds_profile
+from cmds_currency import cmds_currency
 from cmds_games import cmds_games
 from cmds_owner import cmds_owner
 
@@ -54,7 +54,7 @@ async def on_message(message):
 			await cmds_info(message, umsg, client)
 			await cmds_mod(message, umsg, client)
 			await cmds_action(message, umsg, client)
-			await cmds_profile(message, umsg, client, conn, cur)
+			await cmds_currency(message, umsg, client, conn, cur)
 			await cmds_games(message, umsg, client, conn, cur)
 			await cmds_owner(message, umsg, client, conn, cur)
 
