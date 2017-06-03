@@ -2,42 +2,12 @@
 import discord
 import random
 import sqlite3
-from cmds_profile import load_profile
-from cmds_profile import save_profile
-
-# create blank game profile
-async def create_game(channel, conn, cur):
-	t = (channel.id,)
-	cur.execute('SELECT * FROM games WHERE channel=?', t)
-	t = cur.fetchone()
-	if (t == None):
-		game = (channel.id, 'None', None, 0, None, None, 0, None, None, 0, None, None, 0, None)
-		cur.execute('INSERT INTO games VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)', game)
-		conn.commit()
-	
-# load game
-async def load_game(channel, conn, cur):
-	t = (channel.id,)
-	cur.execute('SELECT * FROM games WHERE channel=?', t)
-	game = cur.fetchone()
-	data = list(game)
-	return data
-	
-# save game
-async def save_game(channel, data, conn, cur):
-	t = (channel.id,)
-	game = tuple(data)
-	cur.execute('DELETE FROM games WHERE channel=?', t)
-	cur.execute('INSERT INTO games VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)', game)
-	conn.commit()
-	
-# check integer
-def is_int(s):
-	try:
-		int(s)
-		return True
-	except:
-		return False
+from renge_utils import load_profile
+from renge_utils import save_profile
+from renge_utils import create_game
+from renge_utils import load_game
+from renge_utils import save_game
+from renge_utils import is_int
 
 # games
 async def cmds_games(message, umsg, client, conn, cur):
