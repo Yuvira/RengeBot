@@ -1,6 +1,5 @@
 # import
 import discord
-import glob
 
 # info cmds
 async def cmds_info(message, umsg, client):
