@@ -2,8 +2,8 @@
 import discord
 import sqlite3
 import sys
-from cmds_profile import load_profile
-from cmds_profile import save_profile
+from renge_utils import load_profile
+from renge_utils import save_profile
 
 # info cmds
 async def cmds_owner(message, umsg, client, conn, cur):
