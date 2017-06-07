@@ -145,6 +145,7 @@ async def cmds_currency(message, umsg, client, conn, cur):
 							usr2[3] += args[2]
 							await save_profile(member, usr1, conn, cur)
 							await save_profile(message.mentions[0], usr2, conn, cur)
+							await client.send_message(channel, 'Successfully transferred ' + args[2] + ' credits to ' + message.mentions[0].name + '!')
 						else:
 							await client.send_message(channel, "You don't have that much money!")
 					else:
