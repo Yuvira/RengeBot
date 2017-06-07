@@ -40,6 +40,7 @@ async def save_profile(member, data, conn, cur):
 		
 # load ratelimit
 async def load_ratelimit(member, conn, cur):
+	await create_profile(member, conn, cur)
 	t = (member.id,)
 	cur.execute('SELECT * FROM ratelimits WHERE id=?', t)
 	ratelimit = cur.fetchone()
