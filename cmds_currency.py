@@ -3,11 +3,11 @@ import discord
 import time
 import random
 import sqlite3
-from renge_utils import create_profile
 from renge_utils import load_profile
 from renge_utils import save_profile
 from renge_utils import load_ratelimit
 from renge_utils import save_ratelimit
+from renge_utils import is_int
 
 # info cmds
 async def cmds_currency(message, umsg, client, conn, cur):
@@ -17,9 +17,6 @@ async def cmds_currency(message, umsg, client, conn, cur):
 	channel = message.channel
 	member = message.author
 	
-	# create profile if not exist
-	await create_profile(member, conn, cur)
-	
 	# profile
 	if (args[0] == 'profile'):
 		
@@ -27,7 +24,6 @@ async def cmds_currency(message, umsg, client, conn, cur):
 		if (len(args) == 2 and len(message.mentions) > 0):
 		
 			# load data
-			await create_profile(message.mentions[0], conn, cur)
 			data = await load_profile(message.mentions[0], conn, cur)
 			
 			# display data
@@ -135,6 +131,30 @@ async def cmds_currency(message, umsg, client, conn, cur):
 			t = t % 60
 			msg = msg + str(t) + ' seconds'
 			await client.send_message(channel, msg)
+			
+	# transfer
+	if (args[0] == 'transfer'):
+		if (len(args) == 3):
+			if (len(message.mentions) == 1):
+				if (is_int(args[2])):
+					if (int(args[2]) > 0):
+						usr1 = await load_profile(member, conn, cur)
+						if (usr1[3] < int(args[2])):
+							usr2 = await load_profile(message.mentions[0], conn, cur)
+							usr1[3] -= args[2]
+							usr2[3] += args[2]
+							await save_profile(member, usr1, conn, cur)
+							await save_profile(message.mentions[0], usr2, conn, cur)
+						else:
+							await client.send_message(channel, "You don't have that much money!")
+					else:
+						await client.send_message(channel, "You can't transfer negative credits!")
+				else:
+					await client.send_message(channel, 'Invalid transfer amount!')
+			else:
+				await client.send_message(channel, 'You need to mention one user!')
+		else:
+			await client.send_message(channel, 'Incorrect number of arguments!')
 			
 	# get global richest users
 	if (args[0] == 'richest'):
