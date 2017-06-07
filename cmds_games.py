@@ -158,6 +158,10 @@ async def cmds_games(message, umsg, client, conn, cur):
 				# load game
 				data = await load_game(channel, conn, cur)
 				
+				# clear game to prevent double-spin
+				clear = [channel.id, 'None', None, 0, None, None, 0, None, None, 0, None, None, 0, None]
+				await save_game(channel, clear, conn, cur)
+				
 				# values
 				nums_red = [2,  4,  6,  8,  10, 11, 13, 15, 17, 20, 22, 24, 26, 28, 29, 31, 33, 35]
 				nums_blk = [1,  3,  5,  7,  9,  12, 14, 16, 18, 19, 21, 23, 25, 27, 30, 32, 34, 36]
@@ -234,9 +238,7 @@ async def cmds_games(message, umsg, client, conn, cur):
 								await client.send_message(channel, ':tada: Good job, ' + user.name + ", you reached the credit limit. Hope you're proud of yourself")
 							await save_profile(user, udata, conn, cur)
 							
-					# clear game & final results
-					data = [channel.id, 'None', None, 0, None, None, 0, None, None, 0, None, None, 0, None]
-					await save_game(channel, data, conn, cur)
+					# final results
 					msg = msg + 'End of roulette game!'
 					await client.send_message(channel, msg)
 					
