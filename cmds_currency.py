@@ -139,7 +139,7 @@ async def cmds_currency(message, umsg, client, conn, cur):
 				if (is_int(args[2])):
 					if (int(args[2]) > 0):
 						usr1 = await load_profile(member, conn, cur)
-						if (usr1[3] < int(args[2])):
+						if (int(args[2]) < usr1[3]):
 							usr2 = await load_profile(message.mentions[0], conn, cur)
 							usr1[3] -= args[2]
 							usr2[3] += args[2]
