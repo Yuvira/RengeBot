@@ -23,6 +23,7 @@ async def create_profile(member, conn, cur):
 		
 # load profile
 async def load_profile(member, conn, cur):
+	await create_profile(member, conn, cur)
 	t = (member.id,)
 	cur.execute('SELECT * FROM profiles WHERE id=?', t)
 	profile = cur.fetchone()
