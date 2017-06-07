@@ -49,10 +49,13 @@ async def cmds_info(message, umsg, client):
 			elif (args[1] == 'richest'):
 				embed = discord.Embed(title='Richest Command', type='rich', description='**Usage:**\n`$richest` - Retrieves the top ten richest users')
 				await client.send_message(channel, content=None, embed=embed)
+			elif (args[1] == 'transfer'):
+				embed = discord.Embed(title='Transfer Command', type='rich', description='**Usage:**\n`$transfer <@mention> <amount>` - Transfer a given amount to a mentioned user')
+				await client.send_message(channel, content=None, embed=embed)
 			else:
 				await client.send_message(channel, 'That command does not exist!')
 		else:
-			embed = discord.Embed(title='Renge Help', type='rich', description='Use `$help <command>` for usage\n**Action Commands:**\n`shrug` `sugoi`\n**Currency Commands:**\n`profile` `daily` `loot` `richest`\n**Game Commands:**\n`roulette`\n**Moderation Commands:**\n`kick` `ban`\n**Info Commands:**\n`help` `about` `request`')
+			embed = discord.Embed(title='Renge Help', type='rich', description='Use `$help <command>` for usage\n**Action Commands:**\n`shrug` `sugoi`\n**Currency Commands:**\n`profile` `daily` `loot` `transfer` `richest`\n**Game Commands:**\n`roulette`\n**Moderation Commands:**\n`kick` `ban`\n**Info Commands:**\n`help` `about` `request`')
 			await client.send_message(channel, content=None, embed=embed)
 	
 	# about
