@@ -141,11 +141,14 @@ async def cmds_currency(message, umsg, client, conn, cur):
 						usr1 = await load_profile(member, conn, cur)
 						if (int(args[2]) <= usr1[3]):
 							usr2 = await load_profile(message.mentions[0], conn, cur)
-							usr1[3] -= int(args[2])
-							usr2[3] += int(args[2])
-							await save_profile(member, usr1, conn, cur)
-							await save_profile(message.mentions[0], usr2, conn, cur)
-							await client.send_message(channel, 'Successfully transferred ' + args[2] + ' credits to ' + message.mentions[0].name + '!')
+								if (usr1[0] != usr2[0]):
+								usr1[3] -= int(args[2])
+								usr2[3] += int(args[2])
+								await save_profile(member, usr1, conn, cur)
+								await save_profile(message.mentions[0], usr2, conn, cur)
+								await client.send_message(channel, 'Successfully transferred ' + args[2] + ' credits to ' + message.mentions[0].name + '!')
+							else:
+								await client.send_message(channel, "You can't transfer to yourself!")
 						else:
 							await client.send_message(channel, "You don't have that much money!")
 					else:
