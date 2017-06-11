@@ -26,8 +26,17 @@ async def cmds_currency(message, umsg, client, conn, cur):
 			# load data
 			data = await load_profile(message.mentions[0], conn, cur)
 			
+			# load waifus
+			waifu = ''
+			for a in range(4,9):
+				if (data[a] != None):
+					t = await load_profile(data[a], conn, cur)
+					waifu = waifu + '\n' + t[1]
+			if (waifu == ''):
+				waifu = '\nNone'
+			
 			# display data
-			embed = discord.Embed(title=message.mentions[0].name + "'s profile", type='rich', description=data[2] + '\n\n**Credits**\n' + str(data[3]), colour=message.mentions[0].colour)
+			embed = discord.Embed(title=message.mentions[0].name + "'s profile", type='rich', description=data[2] + '\n\n**Credits**\n' + str(data[3]) + '\n\n**Waifus**' + waifu, colour=message.mentions[0].colour)
 			if (message.mentions[0].avatar_url == ''):
 				embed.set_thumbnail(url=message.mentions[0].default_avatar_url)
 			else:
@@ -53,8 +62,17 @@ async def cmds_currency(message, umsg, client, conn, cur):
 			# load data
 			data = await load_profile(member, conn, cur)
 			
+			# load waifus
+			waifu = ''
+			for a in range(4,9):
+				if (data[a] != None):
+					t = await load_profile(data[a], conn, cur)
+					waifu = waifu + '\n' + t[1]
+			if (waifu == ''):
+				waifu = '\nNone'
+			
 			# display data
-			embed = discord.Embed(title=member.name + "'s profile", type='rich', description=data[2] + '\n\n**Credits**\n' + str(data[3]), colour=member.colour)
+			embed = discord.Embed(title=member.name + "'s profile", type='rich', description=data[2] + '\n\n**Credits**\n' + str(data[3]) + '\n\n**Waifus**' + waifu, colour=member.colour)
 			if (member.avatar_url == ''):
 				embed.set_thumbnail(url=member.default_avatar_url)
 			else:
