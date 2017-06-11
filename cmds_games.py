@@ -66,6 +66,8 @@ async def cmds_games(message, umsg, client, conn, cur):
 											data[pos] = member.id
 											data[pos+1] = args[2]
 											data[pos+2] = args[3]
+											udata[3] -= int(args[2])
+											await save_profile(member, udata, conn, cur)
 											if (data[1] == 'None'):
 												data[1] = 'Roulette'
 												await client.send_message(channel, 'Started a new game of roulette!')
@@ -79,6 +81,8 @@ async def cmds_games(message, umsg, client, conn, cur):
 													data[pos] = member.id
 													data[pos+1] = args[2]
 													data[pos+2] = args[3] + ' ' + args[4]
+													udata[3] -= int(args[2])
+													await save_profile(member, udata, conn, cur)
 													if (data[1] == 'None'):
 														data[1] = 'Roulette'
 														await client.send_message(channel, 'Started a new game of roulette!')
@@ -134,6 +138,9 @@ async def cmds_games(message, umsg, client, conn, cur):
 					t = False
 					for a in range(2, 14, 3):
 						if (member.id == data[a]):
+							udata = await load_profile(member, conn, cur)
+							udata[3] += data[a+1]
+							await save_profile(member, udata, conn, cur)
 							data[a] = None
 							data[a+1] = 0
 							data[a+2] = None
@@ -232,6 +239,7 @@ async def cmds_games(message, umsg, client, conn, cur):
 								
 							# update user
 							udata = await load_profile(user, conn, cur)
+							udata[3] += data[a+1]
 							udata[3] = udata[3] + int(winnings)
 							if (udata[3] > 9200000000000000000):
 								udata[3] = 9200000000000000000
