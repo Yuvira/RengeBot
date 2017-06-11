@@ -17,9 +17,6 @@ async def cmds_games(message, umsg, client, conn, cur):
 	channel = message.channel
 	member = message.author
 	
-	# create game if not exist
-	await create_game(channel, conn, cur)
-	
 	# roulette
 	if (args[0] == 'roulette'):
 		
@@ -30,7 +27,7 @@ async def cmds_games(message, umsg, client, conn, cur):
 			if (args[1] == 'bet'):
 				
 				# load game
-				data = await load_game(channel, conn, cur)
+				data = await load_game(channel.id, conn, cur)
 				
 				# check for full game/get position
 				pos = 0
@@ -67,11 +64,11 @@ async def cmds_games(message, umsg, client, conn, cur):
 											data[pos+1] = args[2]
 											data[pos+2] = args[3]
 											udata[3] -= int(args[2])
-											await save_profile(member, udata, conn, cur)
+											await save_profile(udata, conn, cur)
 											if (data[1] == 'None'):
 												data[1] = 'Roulette'
 												await client.send_message(channel, 'Started a new game of roulette!')
-											await save_game(channel, data, conn, cur)
+											await save_game(data, conn, cur)
 											await client.send_message(channel, member.name + ' has bet $' + data[pos+1] + ' on ' + data[pos+2] + '!')
 											
 										# columns/dozens
@@ -82,11 +79,11 @@ async def cmds_games(message, umsg, client, conn, cur):
 													data[pos+1] = args[2]
 													data[pos+2] = args[3] + ' ' + args[4]
 													udata[3] -= int(args[2])
-													await save_profile(member, udata, conn, cur)
+													await save_profile(udata, conn, cur)
 													if (data[1] == 'None'):
 														data[1] = 'Roulette'
 														await client.send_message(channel, 'Started a new game of roulette!')
-													await save_game(channel, data, conn, cur)
+													await save_game(data, conn, cur)
 													await client.send_message(channel, member.name + ' has bet $' + data[pos+1] + ' on ' + data[pos+2] + '!')
 												else:
 													await client.send_message(channel, 'Invalid ' + args[3] + ' number!')
@@ -129,7 +126,7 @@ async def cmds_games(message, umsg, client, conn, cur):
 			elif (args[1] == 'cancel'):
 				
 				# load game
-				data = await load_game(channel, conn, cur)
+				data = await load_game(channel.id, conn, cur)
 				
 				# check active game
 				if (data[1] == 'Roulette'):
@@ -140,7 +137,7 @@ async def cmds_games(message, umsg, client, conn, cur):
 						if (member.id == data[a]):
 							udata = await load_profile(member, conn, cur)
 							udata[3] += data[a+1]
-							await save_profile(member, udata, conn, cur)
+							await save_profile(udata, conn, cur)
 							data[a] = None
 							data[a+1] = 0
 							data[a+2] = None
@@ -149,7 +146,7 @@ async def cmds_games(message, umsg, client, conn, cur):
 							if (data[2] == None and data[5] == None and data[8] == None and data[11] == None):
 								data[1] = 'None'
 								await client.send_message(channel, 'All players quit! Closing game...')
-							await save_game(channel, data, conn, cur)
+							await save_game(data, conn, cur)
 						
 					# not in game
 					if (t == False):
@@ -163,11 +160,11 @@ async def cmds_games(message, umsg, client, conn, cur):
 			elif (args[1] == 'spin'):
 				
 				# load game
-				data = await load_game(channel, conn, cur)
+				data = await load_game(channel.id, conn, cur)
 				
 				# clear game to prevent double-spin
 				clear = [channel.id, 'None', None, 0, None, None, 0, None, None, 0, None, None, 0, None]
-				await save_game(channel, clear, conn, cur)
+				await save_game(clear, conn, cur)
 				
 				# values
 				nums_red = [2,  4,  6,  8,  10, 11, 13, 15, 17, 20, 22, 24, 26, 28, 29, 31, 33, 35]
@@ -203,9 +200,8 @@ async def cmds_games(message, umsg, client, conn, cur):
 						if (data[a] != None):
 							
 							# retrieve and display results
-							user = await client.get_user_info(data[a])
 							winnings = 0
-							msg = msg + user.mention
+							msg = msg + '<@' + data[a] + '>'
 							if (data[a+2] == 'red' and roll in nums_red):
 								winnings = data[a+1]
 							elif (data[a+2] == 'black' and roll in nums_blk):
@@ -238,13 +234,13 @@ async def cmds_games(message, umsg, client, conn, cur):
 								msg = msg + ' lost $' + str(data[a+1]) + '!\n'
 								
 							# update user
-							udata = await load_profile(user, conn, cur)
+							udata = await load_profile(data[a], conn, cur)
 							udata[3] += data[a+1]
-							udata[3] = udata[3] + int(winnings)
+							udata[3] += int(winnings)
 							if (udata[3] > 9200000000000000000):
 								udata[3] = 9200000000000000000
-								await client.send_message(channel, ':tada: Good job, ' + user.name + ", you reached the credit limit. Hope you're proud of yourself")
-							await save_profile(user, udata, conn, cur)
+								await client.send_message(channel, ":tada: Good job, somebody reached the credit limit. Hope you're proud of yourself")
+							await save_profile(udata, conn, cur)
 							
 					# final results
 					msg = msg + 'End of roulette game!'
