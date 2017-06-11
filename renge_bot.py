@@ -9,6 +9,7 @@ from cmds_mod import cmds_mod
 from cmds_action import cmds_action
 from cmds_currency import cmds_currency
 from cmds_games import cmds_games
+from cmds_misc import cmds_misc
 from cmds_owner import cmds_owner
 
 # client
@@ -56,6 +57,7 @@ async def on_message(message):
 			await cmds_action(message, umsg, client)
 			await cmds_currency(message, umsg, client, conn, cur)
 			await cmds_games(message, umsg, client, conn, cur)
+			await cmds_misc(message, umsg, client, conn, cur)
 			await cmds_owner(message, umsg, client, conn, cur)
 
 # server join
