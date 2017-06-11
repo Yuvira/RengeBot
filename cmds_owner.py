@@ -37,7 +37,7 @@ async def cmds_owner(message, umsg, client, conn, cur):
 			t = 0
 			for member in server.members:
 				t += 1
-			await client.send_message(channel, 'There are ' + str(t) + ' users in this server')
+			await client.send_message(channel, 'There are ' + str(t) + ' users in this server!')
 			
 		# give credits
 		if (args[0] == 'givecredits'):
@@ -45,11 +45,11 @@ async def cmds_owner(message, umsg, client, conn, cur):
 				user = await client.get_user_info(args[1])
 				t = int(args[2])
 				data = await load_profile(user, conn, cur)
-				data[3] = data[3] + t
+				data[3] += t
 				if (data[3] > 9200000000000000000):
 					data[3] = 9200000000000000000
 					await client.send_message(channel, 'pls')
-				await save_profile(user, data, conn, cur)
+				await save_profile(data, conn, cur)
 				await client.send_message(channel, 'Gave ' + args[2] + ' credits to ' + user.name + '!')
 			except:
 				await client.send_message(channel, 'You did something wrong!')
