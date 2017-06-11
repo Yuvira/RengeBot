@@ -52,10 +52,13 @@ async def cmds_info(message, umsg, client):
 			elif (args[1] == 'transfer'):
 				embed = discord.Embed(title='Transfer Command', type='rich', description='**Usage:**\n`$transfer <@mention> <amount>` - Transfer a given amount to a mentioned user')
 				await client.send_message(channel, content=None, embed=embed)
+			elif (args[1] == 'waifu'):
+				embed = discord.Embed(title='Waifu Command', type='rich', description='**Usage:**\n`$waifu add <@mention>` - Add the mentioned user as one of your waifus\n`$waifu rem <number>` - Remove the waifu at the given postion (1-5, in order seen on profile)')
+				await client.send_message(channel, content=None, embed=embed)
 			else:
 				await client.send_message(channel, 'That command does not exist!')
 		else:
-			embed = discord.Embed(title='Renge Help', type='rich', description='Use `$help <command>` for usage\n**Action Commands:**\n`shrug` `sugoi`\n**Currency Commands:**\n`profile` `daily` `loot` `transfer` `richest`\n**Game Commands:**\n`roulette`\n**Moderation Commands:**\n`kick` `ban`\n**Info Commands:**\n`help` `about` `request`')
+			embed = discord.Embed(title='Renge Help', type='rich', description='Use `$help <command>` for usage\n**Info Commands:**\n`help` `about` `request`\n**Moderation Commands:**\n`kick` `ban`\n**Action Commands:**\n`shrug` `sugoi`\n**Currency Commands:**\n`profile` `daily` `loot` `transfer` `richest`\n**Game Commands:**\n`roulette`\n**Misc Commands:**\n`waifu`')
 			await client.send_message(channel, content=None, embed=embed)
 	
 	# about
@@ -67,7 +70,7 @@ async def cmds_info(message, umsg, client):
 				t1 += 1
 				for member in server.members:
 					t2 += 1
-			embed = discord.Embed(title='About Renge', type='rich', description='Renge is a small bot but constantly growing with new commands and community suggestions!\n\nCreated by Yuvira#7842\n\n**Version:** 0.2.2\n**Servers:** ' + str(t1) + '\n**Users:** ' + str(t2) + '\n\n[Invite Link](https://discordapp.com/oauth2/authorize?client_id=309002800703078400&scope=bot&permissions=271641670)\n[Support Guild](https://discord.gg/9ZxCkvv)')
+			embed = discord.Embed(title='About Renge', type='rich', description='Renge is a small bot but constantly growing with new commands and community suggestions!\n\nCreated by Yuvira#7842\n\n**Version:** 0.3.0\n**Servers:** ' + str(t1) + '\n**Users:** ' + str(t2) + '\n\n[Invite Link](https://discordapp.com/oauth2/authorize?client_id=309002800703078400&scope=bot&permissions=271641670)\n[Support Guild](https://discord.gg/9ZxCkvv)')
 			embed.set_thumbnail(url=client.user.avatar_url)
 			await client.send_message(channel, content=None, embed=embed)
 			
