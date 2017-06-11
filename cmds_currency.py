@@ -37,19 +37,15 @@ async def cmds_currency(message, umsg, client, conn, cur):
 		# profile commands
 		elif (len(args) > 1):
 			
-			# load data
-			data = await load_profile(member, conn, cur)
-			
 			# description set
 			if (args[1] == 'desc'):
 				if (len(args) > 2):
+					data = await load_profile(member, conn, cur)
 					data[2] = umsg[13:]
+					await save_profile(data, conn, cur)
 					await client.send_message(channel, 'Description set to `' + data[2] + '`!')
 				else:
 					await client.send_message(channel, 'You need to enter a description!')
-		
-			# save profile
-			await save_profile(member, data, conn, cur)
 		
 		# show profile
 		else:
@@ -70,7 +66,7 @@ async def cmds_currency(message, umsg, client, conn, cur):
 		
 		# check ratelimit
 		rl = await load_ratelimit(member, conn, cur)
-		t = int(time.time()) - rl[2]
+		t = int(time.time()) - rl[1]
 		if (t > 86400):
 		
 			# add 100 credits to profile
@@ -79,11 +75,11 @@ async def cmds_currency(message, umsg, client, conn, cur):
 			if (data[3] > 9200000000000000000):
 				data[3] = 9200000000000000000
 				await client.send_message(channel, ':tada: Good job, ' + member.name + ", you reached the credit limit. Hope you're proud of yourself")
-			await save_profile(member, data, conn, cur)
+			await save_profile(data, conn, cur)
 			
 			# update ratelimit
-			rl[2] = int(time.time())
-			await save_ratelimit(member, rl, conn, cur)
+			rl[1] = int(time.time())
+			await save_ratelimit(rl, conn, cur)
 			await client.send_message(channel, 'You have received your daily 100 credits!')
 			
 		# show time remaining
@@ -102,26 +98,26 @@ async def cmds_currency(message, umsg, client, conn, cur):
 		
 		# check ratelimit
 		rl = await load_ratelimit(member, conn, cur)
-		t = int(time.time()) - rl[3]
+		t = int(time.time()) - rl[2]
 		if (t > 300):
 		
 			# get random credits and update profile
 			loot = int(random.random() * 40) - 10
 			if (loot > 0):
 				data = await load_profile(member, conn, cur)
-				data[3] = data[3] + loot
+				data[3] += loot
 				if (data[3] > 9200000000000000000):
 					data[3] = 9200000000000000000
 					await client.send_message(channel, ':tada: Good job, ' + member.name + ", you reached the credit limit. Hope you're proud of yourself")
-				await save_profile(member, data, conn, cur)
+				await save_profile(data, conn, cur)
 			
 			# update ratelimit
-			rl[3] = int(time.time())
-			await save_ratelimit(member, rl, conn, cur)
+			rl[2] = int(time.time())
+			await save_ratelimit(rl, conn, cur)
 			if (loot > 0):
 				await client.send_message(channel, 'You looted a whole ' + str(loot) + ' credits!')
 			else:
-				await client.send_message(channel, "You couldn't find anything to loot")
+				await client.send_message(channel, "You couldn't find anything to loot!")
 			
 		# show time remaining
 		else:
@@ -144,8 +140,8 @@ async def cmds_currency(message, umsg, client, conn, cur):
 							if (usr1[0] != usr2[0]):
 								usr1[3] -= int(args[2])
 								usr2[3] += int(args[2])
-								await save_profile(member, usr1, conn, cur)
-								await save_profile(message.mentions[0], usr2, conn, cur)
+								await save_profile(usr1, conn, cur)
+								await save_profile(usr2, conn, cur)
 								await client.send_message(channel, 'Successfully transferred ' + args[2] + ' credits to ' + message.mentions[0].name + '!')
 							else:
 								await client.send_message(channel, "You can't transfer to yourself!")
@@ -166,6 +162,6 @@ async def cmds_currency(message, umsg, client, conn, cur):
 		cur.execute('SELECT * FROM profiles ORDER BY credits DESC')
 		for a in range(0,10):
 			t = cur.fetchone()
-			msg = msg + '\n' + str(a+1) + '. ' + t[1] + ' - $' + str(t[3])
+			msg = msg + '\n' + str(a+1) + '. **' + t[1] + '** - $' + str(t[3])
 		embed = discord.Embed(title='Global Richest Users', type='rich', description=msg)
 		await client.send_message(channel, content=None, embed=embed)
