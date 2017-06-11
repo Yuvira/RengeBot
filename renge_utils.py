@@ -17,22 +17,34 @@ async def create_profile(member, conn, cur):
 	cur.execute('SELECT * FROM ratelimits WHERE id=?', t)
 	t = cur.fetchone()
 	if (t == None):
-		ratelimit = (member.id, member.name + '#' + member.discriminator, 0, 0)
-		cur.execute('INSERT INTO ratelimits VALUES (?,?,?,?)', ratelimit)
+		ratelimit = (member.id, 0, 0)
+		cur.execute('INSERT INTO ratelimits VALUES (?,?,?)', ratelimit)
 		conn.commit()
 		
 # load profile
 async def load_profile(member, conn, cur):
-	await create_profile(member, conn, cur)
-	t = (member.id,)
-	cur.execute('SELECT * FROM profiles WHERE id=?', t)
-	profile = cur.fetchone()
-	data = list(profile)
-	return data
+
+	# given member
+	try:
+		t = (member.id,)
+		await create_profile(member, conn, cur)
+		cur.execute('SELECT * FROM profiles WHERE id=?', t)
+		profile = cur.fetchone()
+		data = list(profile)
+		data[1] = member.name + '#' + member.discriminator
+		return data
+		
+	# given id
+	except:
+		t = (member,)
+		cur.execute('SELECT * FROM profiles WHERE id=?', t)
+		profile = cur.fetchone()
+		data = list(profile)
+		return data
 	
 # save profile
-async def save_profile(member, data, conn, cur):
-	t = (member.id,)
+async def save_profile(data, conn, cur):
+	t = (data[0],)
 	profile = tuple(data)
 	cur.execute('DELETE FROM profiles WHERE id=?', t)
 	cur.execute('INSERT INTO profiles VALUES (?,?,?,?)', profile)
@@ -48,36 +60,37 @@ async def load_ratelimit(member, conn, cur):
 	return data
 	
 # save ratelimit
-async def save_ratelimit(member, data, conn, cur):
-	t = (member.id,)
+async def save_ratelimit(data, conn, cur):
+	t = (data[0],)
 	ratelimit = tuple(data)
 	cur.execute('DELETE FROM ratelimits WHERE id=?', t)
-	cur.execute('INSERT INTO ratelimits VALUES (?,?,?,?)', ratelimit)
+	cur.execute('INSERT INTO ratelimits VALUES (?,?,?)', ratelimit)
 	conn.commit()
 	
 # games------------------------------------------------------------------------
 
 # create blank game profile
-async def create_game(channel, conn, cur):
-	t = (channel.id,)
+async def create_game(id, conn, cur):
+	t = (id,)
 	cur.execute('SELECT * FROM games WHERE channel=?', t)
 	t = cur.fetchone()
 	if (t == None):
-		game = (channel.id, 'None', None, 0, None, None, 0, None, None, 0, None, None, 0, None)
+		game = (id, 'None', None, 0, None, None, 0, None, None, 0, None, None, 0, None)
 		cur.execute('INSERT INTO games VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)', game)
 		conn.commit()
 	
 # load game
-async def load_game(channel, conn, cur):
-	t = (channel.id,)
+async def load_game(id, conn, cur):
+	await create_game(id, conn, cur)
+	t = (id,)
 	cur.execute('SELECT * FROM games WHERE channel=?', t)
 	game = cur.fetchone()
 	data = list(game)
 	return data
 	
 # save game
-async def save_game(channel, data, conn, cur):
-	t = (channel.id,)
+async def save_game(data, conn, cur):
+	t = (data[0],)
 	game = tuple(data)
 	cur.execute('DELETE FROM games WHERE channel=?', t)
 	cur.execute('INSERT INTO games VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)', game)
