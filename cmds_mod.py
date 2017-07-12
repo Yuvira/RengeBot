@@ -38,7 +38,7 @@ async def cmds_mod(message, umsg, client):
 					private_channel = server.get_member(message.mentions[a].id)
 					try:
 						await client.send_message(private_channel, 'You were kicked from **' + server.name + '** by **' + member.name + '**')
-					except HTTPException:
+					except:
 						pass
 				for a in range(0, len(message.mentions)):
 					await client.kick(message.mentions[a])
@@ -79,7 +79,7 @@ async def cmds_mod(message, umsg, client):
 					private_channel = server.get_member(message.mentions[a].id)
 					try:
 						await client.send_message(private_channel, 'You were banned from **' + server.name + '** by **' + member.name + '**')
-					except HTTPException:
+					except:
 						pass
 				for a in range(0, len(message.mentions)):
 					await client.ban(message.mentions[a], delete_message_days=t)
