@@ -1,5 +1,7 @@
 # import
 import discord
+import time
+import datetime
 
 # info cmds
 async def cmds_info(message, umsg, client):
@@ -18,6 +20,12 @@ async def cmds_info(message, umsg, client):
 				await client.send_message(channel, content=None, embed=embed)
 			elif (args[1] == 'about'):
 				embed = discord.Embed(title='About Command', type='rich', description='**Usage:**\n`$about` - Shows info about the bot')
+				await client.send_message(channel, content=None, embed=embed)
+			elif (args[1] == 'ping'):
+				embed = discord.Embed(title='Ping Command', type='rich', description='**Usage:**\n`$ping` - Ping Renge')
+				await client.send_message(channel, content=None, embed=embed)
+			elif (args[1] == 'avatar'):
+				embed = discord.Embed(title='Avatar Command', type='rich', description='**Usage:**\n`$avatar` - View your avatar\n`$avatar <@mention>` - View avatar of a mentioned user')
 				await client.send_message(channel, content=None, embed=embed)
 			elif (args[1] == 'request'):
 				embed = discord.Embed(title='Request Command', type='rich', description='**Usage:**\n`$request` - Send a request to the developer')
@@ -58,7 +66,7 @@ async def cmds_info(message, umsg, client):
 			else:
 				await client.send_message(channel, 'That command does not exist!')
 		else:
-			embed = discord.Embed(title='Renge Help', type='rich', description='Use `$help <command>` for usage\n**Info Commands:**\n`help` `about` `request`\n**Moderation Commands:**\n`kick` `ban`\n**Action Commands:**\n`shrug` `sugoi`\n**Currency Commands:**\n`profile` `daily` `loot` `transfer` `richest`\n**Game Commands:**\n`roulette`\n**Misc Commands:**\n`waifu`')
+			embed = discord.Embed(title='Renge Help', type='rich', description='Use `$help <command>` for usage\n**Info Commands:**\n`help` `about` `ping` `avatar` `request`\n**Moderation Commands:**\n`kick` `ban`\n**Action Commands:**\n`shrug` `sugoi`\n**Currency Commands:**\n`profile` `daily` `loot` `transfer` `richest`\n**Game Commands:**\n`roulette`\n**Misc Commands:**\n`waifu`')
 			await client.send_message(channel, content=None, embed=embed)
 	
 	# about
@@ -73,7 +81,47 @@ async def cmds_info(message, umsg, client):
 			embed = discord.Embed(title='About Renge', type='rich', description='Renge is a small bot but constantly growing with new commands and community suggestions!\n\nCreated by Yuvira#7842\n\n**Version:** 0.3.0\n**Servers:** ' + str(t1) + '\n**Users:** ' + str(t2) + '\n\n[Invite Link](https://discordapp.com/oauth2/authorize?client_id=309002800703078400&scope=bot&permissions=271641670)\n[Support Guild](https://discord.gg/9ZxCkvv)')
 			embed.set_thumbnail(url=client.user.avatar_url)
 			await client.send_message(channel, content=None, embed=embed)
-			
+	
+	# ping
+	if (args[0] == 'ping'):
+		before = datetime.datetime.utcnow()
+		ping_msg = await client.send_message(channel, 'Pinging...')
+		ping = (datetime.datetime.utcnow() - before) * 1000
+		before2 = time.monotonic()
+		await (await client.ws.ping())
+		after = time.monotonic()
+		ping2 = (after - before2) * 1000
+		await client.edit_message(ping_msg, new_content='Ping! Message received! `Ping: {:.2f}ms'.format(ping.total_seconds()) + ' Websocket: {0:.0f}ms`'.format(ping2))
+		
+	# avatar
+	if (args[0] == 'avatar'):
+		
+		# mention avatar
+		if (len(message.mentions) > 0):
+			avatar = None
+			if (message.mentions[0].avatar_url == ''):
+				avatar = message.mentions[0].default_avatar_url
+			else:
+				avatar = message.mentions[0].avatar_url
+				avatar = avatar.replace(".webp?size=1024", ".png?size=512")
+				avatar = avatar.replace(".gif?size=1024", ".gif")
+			embed = discord.Embed(title=message.mentions[0].display_name + "'s avatar!", type='rich', description='Click [here](' + avatar + ')!')
+			embed.set_image(url=avatar)
+			await client.send_message(channel, content=None, embed=embed)
+		
+		# user's avatar
+		else:
+			avatar = None
+			if (member.avatar_url == ''):
+				avatar = member.default_avatar_url
+			else:
+				avatar = member.avatar_url
+				avatar = avatar.replace(".webp?size=1024", ".png?size=512")
+				avatar = avatar.replace(".gif?size=1024", ".gif")
+			embed = discord.Embed(title='Your avatar!', type='rich', description='Click [here](' + avatar + ')!')
+			embed.set_image(url=avatar)
+			await client.send_message(channel, content=None, embed=embed)
+		
 	# request
 	if (args[0] == 'request'):
 		if (umsg == 'request'):
