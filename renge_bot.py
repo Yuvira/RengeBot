@@ -27,19 +27,19 @@ async def on_message(message):
 	log_channel = discord.Object('314283195866677251')
 	
 	# check message source
-	check = 'true'
+	check = True
 	try:
 		if (message.server.name != ''):
-			check = 'true'
+			check = True
 	except AttributeError:
 		if (message.author.bot == False):
 			await client.send_message(log_channel, 'Received DM from `' + message.author.name + '#' + message.author.discriminator + '`: ' + message.content)
-			check = 'false'
+			check = True
 	if (message.author.bot == True):
-		check = 'false'
+		check = False
 	
 	# if message received from server
-	if (check == 'true'):
+	if (check == True):
 		
 		# transfer message to variable and format
 		umsg = message.content
