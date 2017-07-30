@@ -36,11 +36,16 @@ async def cmds_currency(message, umsg, client, conn, cur):
 				waifu = '\nNone'
 			
 			# display data
-			embed = discord.Embed(title=message.mentions[0].name + "'s profile", type='rich', description=data[2] + '\n\n**Credits**\n' + str(data[3]) + '\n\n**Waifus**' + waifu, colour=message.mentions[0].colour)
+			try:
+				embed = discord.Embed(title=message.mentions[0].display_name + "'s profile", type='rich', description=data[2] + '\n\n**Credits**\n' + str(data[3]) + '\n\n**Waifus**' + waifu, colour=message.mentions[0].colour)
+			except:
+				embed = discord.Embed(title=message.mentions[0].display_name + "'s profile", type='rich', description=data[2] + '\n\n**Credits**\n' + str(data[3]) + '\n\n**Waifus**' + waifu)
 			if (message.mentions[0].avatar_url == ''):
-				embed.set_thumbnail(url=message.mentions[0].default_avatar_url)
+				avatar = message.mentions[0].default_avatar_url
 			else:
-				embed.set_thumbnail(url=message.mentions[0].avatar_url)
+				avatar = message.mentions[0].avatar_url
+				avatar = avatar.replace("?size=1024", "")
+			embed.set_thumbnail(url=avatar)
 			await client.send_message(channel, content=None, embed=embed)
 				
 		# profile commands
@@ -72,11 +77,18 @@ async def cmds_currency(message, umsg, client, conn, cur):
 				waifu = '\nNone'
 			
 			# display data
-			embed = discord.Embed(title=member.name + "'s profile", type='rich', description=data[2] + '\n\n**Credits**\n' + str(data[3]) + '\n\n**Waifus**' + waifu, colour=member.colour)
+			embed = None
+			try:
+				embed = discord.Embed(title=member.display_name + "'s profile", type='rich', description=data[2] + '\n\n**Credits**\n' + str(data[3]) + '\n\n**Waifus**' + waifu, colour=member.colour)
+			except:
+				embed = discord.Embed(title=member.display_name + "'s profile", type='rich', description=data[2] + '\n\n**Credits**\n' + str(data[3]) + '\n\n**Waifus**' + waifu)
+			avatar = None
 			if (member.avatar_url == ''):
-				embed.set_thumbnail(url=member.default_avatar_url)
+				avatar = member.default_avatar_url
 			else:
-				embed.set_thumbnail(url=member.avatar_url)
+				avatar = member.avatar_url
+				avatar = avatar.replace("?size=1024", "")
+			embed.set_thumbnail(url=avatar)
 			await client.send_message(channel, content=None, embed=embed)
 			
 	# daily
