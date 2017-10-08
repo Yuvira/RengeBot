@@ -14,6 +14,8 @@ async def cmds_info(message, umsg, client):
 	
 	# help
 	if (args[0] == 'help'):
+		
+		# contextual help
 		if (len(args) > 1):
 			if (args[1] == 'help'):
 				embed = discord.Embed(title='Help Command', type='rich', description='**Usage:**\n`$help` - Shows the command list')
@@ -65,8 +67,17 @@ async def cmds_info(message, umsg, client):
 				await client.send_message(channel, content=None, embed=embed)
 			else:
 				await client.send_message(channel, 'That command does not exist!')
+		
+		# command list
 		else:
-			embed = discord.Embed(title='Renge Help', type='rich', description='Use `$help <command>` for usage\n**Info Commands:**\n`help` `about` `ping` `avatar` `request`\n**Moderation Commands:**\n`kick` `ban`\n**Action Commands:**\n`shrug` `sugoi`\n**Currency Commands:**\n`profile` `daily` `loot` `transfer` `richest`\n**Game Commands:**\n`roulette`\n**Misc Commands:**\n`waifu`')
+			embed = discord.Embed(title='Renge Help', type='rich', description='Use `$help <command>` for usage')
+			embed.add_field(name="Info Commands:",value="`help` `about` `ping` `avatar` `request`",inline=False)
+			if not message.server is None:
+				embed.add_field(name="Moderation Commands:",value="`ban` `kick`",inline=False)
+			embed.add_field(name="Action Commands:",value="`shrug` `sugoi`",inline=False)
+			embed.add_field(name="Currency Commands:",value="`profile` `daily` `loot` `transfer` `richest`",inline=False)
+			embed.add_field(name="Game Commands:",value="`roulette`",inline=False)
+			embed.add_field(name="Misc Commands:",value='`waifu`')
 			await client.send_message(channel, content=None, embed=embed)
 	
 	# about
