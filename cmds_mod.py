@@ -19,6 +19,7 @@ async def cmds_mod(message, umsg, client):
 		elif (len(message.mentions) < 1):
 			await client.send_message(channel, 'You must mention the person(s) to kick!')
 		else:
+			test = False
 			msg = "Kicked "
 			for i in range(0, len(message.mentions)):
 				if server.me.top_role.position > message.mentions[i].top_role.position:
@@ -30,13 +31,15 @@ async def cmds_mod(message, umsg, client):
 								pass
 							await client.kick(message.mentions[i])
 							msg += "`{}` ".format(str(message.mentions[i]))
+							test = True
 						except:
 							await client.send_message(channel, "Something happened while trying to kick the member :<")
 					else:
 						await client.send_message(channel, "You can't kick someone with a higher role than you!")
 				else:
 					await client.send_message(channel, "I can't kick that person because they have a role higher than me!")
-			await client.send_message(channel, msg)
+			if (test == True):
+				await client.send_message(channel, msg)
 	
 	# ban
 	if (args[0] == 'ban'):
@@ -48,6 +51,7 @@ async def cmds_mod(message, umsg, client):
 		elif (len(message.mentions) < 1):
 			await client.send_message(channel, 'You must mention the person(s) to ban!')
 		else:
+			test = False
 			try:
 				t = int(args[len(args)-1])
 			except ValueError:
@@ -63,10 +67,12 @@ async def cmds_mod(message, umsg, client):
 								pass
 							await client.ban(message.mentions[i],delete_message_days=t)
 							msg += "`{}` ".format(str(message.mentions[i]))
+							test = True
 						except:
 							await client.send_message(channel, "Something happened while trying to ban the member.") # this shouldnt happen
 					else:
 						await client.send_message(channel, "Can't allow you to ban someone with a higher role than you.")
 				else:
 					await client.send_message(channel, "I can't ban that person because they have a role higher than me.")
-			await client.send_message(channel, msg + "and deleted **" + str(t) + "** days of messages.")
+			if (test == True):
+				await client.send_message(channel, msg + "and deleted **" + str(t) + "** days of messages.")
