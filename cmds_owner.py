@@ -34,10 +34,7 @@ async def cmds_owner(message, umsg, client, conn, cur):
 			
 		# count members in server
 		if (args[0] == 'usercount'):
-			t = 0
-			for member in server.members:
-				t += 1
-			await client.send_message(channel, 'There are ' + str(t) + ' users in this server!')
+			await client.send_message(channel, 'There are ' + str(len(server.members)) + ' users in this server!')
 			
 		# give credits
 		if (args[0] == 'givecredits'):
