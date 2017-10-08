@@ -25,6 +25,7 @@ async def on_message(message):
 	
 	# variables
 	log_channel = discord.Object('314283195866677251')
+	dm_log = discord.Object('342097197443317760')
 	
 	# check message source
 	check = True
@@ -33,7 +34,7 @@ async def on_message(message):
 			check = True
 	except AttributeError:
 		if (message.author.bot == False):
-			await client.send_message(log_channel, 'Received DM from `' + message.author.name + '#' + message.author.discriminator + '`: ' + message.content)
+			await client.send_message(dm_log, 'Received DM from `' + message.author.name + '#' + message.author.discriminator + '`: ' + message.content)
 			check = True
 	if (message.author.bot == True):
 		check = False
@@ -46,7 +47,7 @@ async def on_message(message):
 		umsg.lower()
 		
 		# check prefix
-		if umsg.startswith('$'):
+		if umsg.startswith('%'):
 			
 			# more formatting
 			umsg = umsg[1:]
@@ -79,7 +80,7 @@ async def on_ready():
 	print(client.user.name)
 	print(client.user.id)
 	print('------')
-	await client.change_presence(game=discord.Game(type=0, name='$help | Nyanpasuuu~'), status=None, afk=False)
+	await client.change_presence(game=discord.Game(type=0, name='%help | Nyanpasuuu~'), status=None, afk=False)
 	cur.execute('DELETE FROM games')
 	conn.commit()
 
