@@ -89,7 +89,7 @@ async def cmds_info(message, umsg, client):
 				t1 += 1
 				for member in server.members:
 					t2 += 1
-			embed = discord.Embed(title='About Renge', type='rich', description='Renge is a small bot but constantly growing with new commands and community suggestions!\n\nCreated by Yuvira#7842\n\n**Version:** 0.3.1\n**Servers:** ' + str(t1) + '\n**Users:** ' + str(t2) + '\n\n[Invite Link](https://discordapp.com/oauth2/authorize?client_id=309002800703078400&scope=bot&permissions=271641670)\n[Support Guild](https://discord.gg/9ZxCkvv)')
+			embed = discord.Embed(title='About Renge', type='rich', description='Renge is a small bot but constantly growing with new commands and community suggestions!\n\nCreated by Yuvira\n\n**Version:** 0.3.2\n**Servers:** ' + str(t1) + '\n**Users:** ' + str(t2) + '\n\n[Invite Link](https://discordapp.com/oauth2/authorize?client_id=309002800703078400&scope=bot&permissions=271641670)\n[Support Guild](https://discord.gg/9ZxCkvv)')
 			embed.set_thumbnail(url=client.user.avatar_url)
 			await client.send_message(channel, content=None, embed=embed)
 	
