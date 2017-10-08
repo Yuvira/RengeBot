@@ -46,7 +46,7 @@ async def cmds_misc(message, umsg, client, conn, cur):
 					await client.send_message(channel, 'You must mention one user!')
 					
 			# remove
-			elif (args[1] == 'rem'):
+			elif (args[1] == 'rem' or args[1] == "rm"):
 				if (len(args) > 2):
 					if (is_int(args[2])):
 						if (int(args[2]) > 0 and int(args[2]) < 6):
