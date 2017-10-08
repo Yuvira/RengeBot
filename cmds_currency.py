@@ -56,6 +56,9 @@ async def cmds_currency(message, umsg, client, conn, cur):
 				if (len(args) > 2):
 					data = await load_profile(member, conn, cur)
 					data[2] = umsg[13:]
+					if len(data[2]) > 500:
+						await client.send_message(channel, "I couldn't set your description because it is over 500 characters!")
+						return
 					await save_profile(data, conn, cur)
 					await client.send_message(channel, 'Description set to `' + data[2] + '`!')
 				else:
