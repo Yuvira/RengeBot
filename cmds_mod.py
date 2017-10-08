@@ -12,77 +12,61 @@ async def cmds_mod(message, umsg, client):
 	
 	# kick
 	if (args[0] == 'kick'):
-		if (channel.permissions_for(server.me).kick_members == False):
+		if (server.me.server_permissions.kick_members == False):
 			await client.send_message(channel, 'I do not have permissions to kick!')
-		elif (channel.permissions_for(member).kick_members == False):
+		elif (member.server_permissions.kick_members == False):
 			await client.send_message(channel, 'You do not have permissions to kick!')
 		elif (len(message.mentions) < 1):
 			await client.send_message(channel, 'You must mention the person(s) to kick!')
 		else:
-			check = 0
-			rrole = len(server.role_hierarchy)
-			t = server.me.top_role
-			for a in range(0, len(server.role_hierarchy)):
-				if (t == server.role_hierarchy[a]):
-					rrole = a
-			for a in range(0, len(message.mentions)):
-				t = message.mentions[a].top_role
-				for a in range(0, len(server.role_hierarchy)):
-					if (t == server.role_hierarchy[a]):
-						if (a <= rrole):
-							check = 1
-			if (check == 0):
-				msg = 'Kicked '
-				for a in range(0, len(message.mentions)):
-					msg = msg + '`' + message.mentions[a].name + '` '
-					private_channel = server.get_member(message.mentions[a].id)
-					try:
-						await client.send_message(private_channel, 'You were kicked from **' + server.name + '** by **' + member.name + '**')
-					except:
-						pass
-				for a in range(0, len(message.mentions)):
-					await client.kick(message.mentions[a])
-			else:
-				msg = 'Failed to kick! My role is lower than one or more of the mentioned users!'
+			msg = "Kicked "
+			for i in range(0, len(message.mentions)):
+				if server.me.top_role.position > message.mentions[i].top_role.position:
+					if member.top_role.position > message.mentions[i].top_role.position:
+						try:
+							try:
+								await client.send_message(message.mentions[i], 'You were kicked from **' + server.name + '** by **' + str(member) + '**')
+							except:
+								pass
+							await client.kick(message.mentions[i])
+							msg += "`{}` ".format(str(message.mentions[i]))
+						except:
+							await client.send_message(channel, "Something happened while trying to kick the member :<")
+					else:
+						await client.send_message(channel, "You can't kick someone with a higher role than you!")
+				else:
+					await client.send_message(channel, "I can't kick that person because they have a role higher than me!")
 			await client.send_message(channel, msg)
 	
 	# ban
 	if (args[0] == 'ban'):
 		t = 0
-		if (channel.permissions_for(server.me).ban_members == False):
+		if (server.me.server_permissions.ban_members == False):
 			await client.send_message(channel, 'I do not have permissions to ban!')
-		elif (channel.permissions_for(member).ban_members == False):
+		elif (member.server_permissions.ban_members == False):
 			await client.send_message(channel, 'You do not have permissions to ban!')
 		elif (len(message.mentions) < 1):
 			await client.send_message(channel, 'You must mention the person(s) to ban!')
 		else:
-			check = 0
-			rrole = len(server.role_hierarchy)
-			t = server.me.top_role
-			for a in range(0, len(server.role_hierarchy)):
-				if (t == server.role_hierarchy[a]):
-					rrole = a
-			for a in range(0, len(message.mentions)):
-				t = message.mentions[a].top_role
-				for a in range(0, len(server.role_hierarchy)):
-					if (t == server.role_hierarchy[a]):
-						if (a <= rrole):
-							check = 1
 			try:
 				t = int(args[len(args)-1])
 			except ValueError:
 				t = 0
-			if (check == 0):
-				msg = 'Banned '
-				for a in range(0, len(message.mentions)):
-					msg = msg + '`' + message.mentions[a].name + '` '
-					private_channel = server.get_member(message.mentions[a].id)
-					try:
-						await client.send_message(private_channel, 'You were banned from **' + server.name + '** by **' + member.name + '**')
-					except:
-						pass
-				for a in range(0, len(message.mentions)):
-					await client.ban(message.mentions[a], delete_message_days=t)
-				await client.send_message(channel, msg + 'and deleted their messages from the past ' + str(t) + ' days')
-			else:
-				await client.send_message(channel, 'Failed to ban! My role is lower than one or more of the mentioned users!')
+			msg = "Banned "
+			for i in range(0, len(message.mentions)):
+				if server.me.top_role.position > message.mentions[i].top_role.position:
+					if member.top_role.position > message.mentions[i].top_role.position:
+						try:
+							try:
+								await client.send_message(message.mentions[i], 'You were banned from **' + server.name + '** by **' + str(member) + '**')
+							except:
+								pass
+							await client.ban(message.mentions[i],delete_message_days=t)
+							msg += "`{}` ".format(str(message.mentions[i]))
+						except:
+							await client.send_message(channel, "Something happened while trying to ban the member.") # this shouldnt happen
+					else:
+						await client.send_message(channel, "Can't allow you to ban someone with a higher role than you.")
+				else:
+					await client.send_message(channel, "I can't ban that person because they have a role higher than me.")
+			await client.send_message(channel, msg + "and deleted **" + str(t) + "** days of messages.")
