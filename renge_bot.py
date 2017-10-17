@@ -2,15 +2,18 @@
 import discord
 import time
 import random
+import importlib
 import logging
 import sqlite3
-from cmds_info import cmds_info
-from cmds_mod import cmds_mod
-from cmds_action import cmds_action
-from cmds_currency import cmds_currency
-from cmds_games import cmds_games
-from cmds_misc import cmds_misc
-from cmds_owner import cmds_owner
+
+# modules
+import cmds_info
+import cmds_mod
+import cmds_action
+import cmds_currency
+import cmds_games
+import cmds_misc
+import cmds_owner
 
 # client
 client = discord.Client()
@@ -18,6 +21,10 @@ client = discord.Client()
 # database
 conn = sqlite3.connect('renge.db')
 cur = conn.cursor()
+
+# startup variables
+prefix = 'prefix'
+token = 'token'
 
 # message received
 @client.event
@@ -47,19 +54,44 @@ async def on_message(message):
 		umsg.lower()
 		
 		# check prefix
-		if umsg.startswith('%'):
+		if umsg.startswith(prefix):
 			
 			# more formatting
 			umsg = umsg[1:]
 			
 			# command lists
-			await cmds_info(message, umsg, client)
-			await cmds_mod(message, umsg, client)
-			await cmds_action(message, umsg, client)
-			await cmds_currency(message, umsg, client, conn, cur)
-			await cmds_games(message, umsg, client, conn, cur)
-			await cmds_misc(message, umsg, client, conn, cur)
-			await cmds_owner(message, umsg, client, conn, cur)
+			await cmds_info.cmds_info(message, umsg, client)
+			await cmds_mod.cmds_mod(message, umsg, client)
+			await cmds_action.cmds_action(message, umsg, client)
+			await cmds_currency.cmds_currency(message, umsg, client, conn, cur)
+			await cmds_games.cmds_games(message, umsg, client, conn, cur)
+			await cmds_misc.cmds_misc(message, umsg, client, conn, cur)
+			await cmds_owner.cmds_owner(message, umsg, client, conn, cur)
+			
+			# reload module
+			if (message.author.id == '188663897279037440'):
+				args = umsg.split(' ')
+				if (args[0] == 'reload' and len(args) == 2):
+					try:
+						if (args[1] == 'action'):
+							importlib.reload(cmds_action)
+						elif (args[1] == 'currency'):
+							importlib.reload(cmds_currency)
+						elif (args[1] == 'games'):
+							importlib.reload(cmds_games)
+						elif (args[1] == 'info'):
+							importlib.reload(cmds_info)
+						elif (args[1] == 'misc'):
+							importlib.reload(cmds_misc)
+						elif (args[1] == 'mod'):
+							importlib.reload(cmds_mod)
+						elif (args[1] == 'owner'):
+							importlib.reload(cmds_owner)
+						else:
+							raise Exception
+						await client.send_message(message.channel, 'Reloaded ' + args[1] + ' command module successfully!')
+					except:
+						await client.send_message(message.channel, 'Failed to load module!')
 
 # server join
 @client.event
@@ -80,7 +112,7 @@ async def on_ready():
 	print(client.user.name)
 	print(client.user.id)
 	print('------')
-	await client.change_presence(game=discord.Game(type=0, name='$help | Nyanpasuuu~'), status=None, afk=False)
+	await client.change_presence(game=discord.Game(type=0, name=prefix+'help | Nyanpasuuu~'), status=None, afk=False)
 	cur.execute('DELETE FROM games')
 	conn.commit()
 
@@ -93,4 +125,4 @@ logger.addHandler(handler)
 
 # run
 random.seed(time.time())
-client.run('token')
+client.run(token)
