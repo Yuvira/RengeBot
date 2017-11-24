@@ -2,6 +2,8 @@
 import discord
 import time
 import datetime
+import platform
+from renge_utils import set_string_size
 
 # info cmds
 async def cmds_info(message, umsg, client):
@@ -11,6 +13,7 @@ async def cmds_info(message, umsg, client):
 	channel = message.channel
 	member = message.author
 	request_channel = discord.Object('315103432581185536')
+	bot_version = '0.3.3'
 	
 	# help
 	if (args[0] == 'help'):
@@ -22,6 +25,9 @@ async def cmds_info(message, umsg, client):
 				await client.send_message(channel, content=None, embed=embed)
 			elif (args[1] == 'about'):
 				embed = discord.Embed(title='About Command', type='rich', description='**Usage:**\n`$about` - Shows info about the bot')
+				await client.send_message(channel, content=None, embed=embed)
+			elif (args[1] == 'info'):
+				embed = discord.Embed(title='Info Command', type='rich', description='**Usage:**\n`$info` - Shows technical & bot information')
 				await client.send_message(channel, content=None, embed=embed)
 			elif (args[1] == 'ping'):
 				embed = discord.Embed(title='Ping Command', type='rich', description='**Usage:**\n`$ping` - Ping Renge')
@@ -39,10 +45,13 @@ async def cmds_info(message, umsg, client):
 				embed = discord.Embed(title='Sugoi Command', type='rich', description='**Usage:**\n`$sugoi` - SUGOI!')
 				await client.send_message(channel, content=None, embed=embed)
 			elif (args[1] == 'kick'):
-				embed = discord.Embed(title='Kick Command', type='rich', description='**Usage:**\n`$kick <mentions>` - Kicks one or more mentioned users')
+				embed = discord.Embed(title='Kick Command', type='rich', description='**Usage:**\n`$kick <@mentions>` - Kicks one or more mentioned users')
 				await client.send_message(channel, content=None, embed=embed)
 			elif (args[1] == 'ban'):
-				embed = discord.Embed(title='Ban Command', type='rich', description='**Usage:**\n`$ban <mentions>` - Bans one or more monetioned users\n`$ban <mentions> <days>` - Bans mentioned user(s) and deletes messages from the past given number of days')
+				embed = discord.Embed(title='Ban Command', type='rich', description='**Usage:**\n`$ban <@mentions>` - Bans one or more monetioned users\n`$ban <mentions> <days>` - Bans mentioned user(s) and deletes messages from the past given number of days')
+				await client.send_message(channel, content=None, embed=embed)
+			elif (args[1] == 'prune'):
+				embed = discord.Embed(title='Prune Command', type='rich', description='**Usage:**\n`$prune <amount>` - Deletes a given number of messages\n`$prune bot <amount>` - Deletes a given number of bot commands and responses (default 100 if no amount specified)')
 				await client.send_message(channel, content=None, embed=embed)
 			elif (args[1] == 'profile'):
 				embed = discord.Embed(title='Profile Command', type='rich', description='**Usage:**\n`$profile` - Displays your profile\n`$profile <@mention>` - Show the profile of someone else\n`$profile desc <description>` - Set the description for your profile')
@@ -71,9 +80,9 @@ async def cmds_info(message, umsg, client):
 		# command list
 		else:
 			embed = discord.Embed(title='Renge Help', type='rich', description='Use `$help <command>` for usage')
-			embed.add_field(name="Info Commands:",value="`help` `about` `ping` `avatar` `request`",inline=False)
+			embed.add_field(name="Info Commands:",value="`help` `about` `info` `ping` `avatar` `request`",inline=False)
 			if not message.server is None:
-				embed.add_field(name="Moderation Commands:",value="`ban` `kick`",inline=False)
+				embed.add_field(name="Moderation Commands:",value="`ban` `kick` `prune`",inline=False)
 			embed.add_field(name="Action Commands:",value="`shrug` `sugoi`",inline=False)
 			embed.add_field(name="Currency Commands:",value="`profile` `daily` `loot` `transfer` `richest`",inline=False)
 			embed.add_field(name="Game Commands:",value="`roulette`",inline=False)
@@ -90,6 +99,7 @@ async def cmds_info(message, umsg, client):
 				for member in server.members:
 					t2 += 1
 			embed = discord.Embed(title='About Renge', type='rich', description='Renge is a small bot but constantly growing with new commands and community suggestions!\n\nCreated by Yuvira\n\n**Version:** 0.3.2\n**Servers:** ' + str(t1) + '\n**Users:** ' + str(t2) + '\n\n[Invite Link](https://discordapp.com/oauth2/authorize?client_id=309002800703078400&scope=bot&permissions=271641670)\n[Support Guild](https://discord.gg/9ZxCkvv)')
+			embed = discord.Embed(title='About Renge', type='rich', description='Renge is a small bot but constantly growing with new commands and community suggestions!\n\nCreated by Yuvira\n\n**Version:** ' + bot_version + '\n**Servers:** ' + str(t1) + '\n**Users:** ' + str(t2) + '\n\n[Invite Link](https://discordapp.com/oauth2/authorize?client_id=309002800703078400&scope=bot&permissions=271641670)\n[Support Guild](https://discord.gg/9ZxCkvv)')
 			embed.set_thumbnail(url=client.user.avatar_url)
 			await client.send_message(channel, content=None, embed=embed)
 	
@@ -140,3 +150,30 @@ async def cmds_info(message, umsg, client):
 		else:
 			await client.send_message(request_channel, 'Request from `' + member.name + '#' + member.discriminator + '`: ' + umsg[8:])
 			await client.send_message(channel, 'Request sent! The creator will DM you if your suggestion is added')
+
+	# info
+	if (args[0] == 'info'):
+		before = time.monotonic()
+		await (await client.ws.ping())
+		after = time.monotonic()
+		ping = (after - before) * 1000
+		server_count = 0
+		member_count = 0
+		channel_count = 0
+		for guild in client.servers:
+			server_count += 1
+			for chan in guild.channels:
+				channel_count += 1
+			for member in guild.members:
+				member_count += 1
+		msg = "```============[ Technical Info ]============\n"
+		msg += "::DiscordPY Version :: " + set_string_size(str(discord.__version__), 17) + "::\n"
+		msg += "::Python Version    :: " + set_string_size(str(platform.python_version()), 17) + "::\n"
+		msg += "::Websocket Ping    :: " + set_string_size("{0:.0f}ms".format(ping), 17) + "::\n"
+		msg += "==============[ Renge Info ]==============\n"
+		msg += "::Bot Version       :: " + set_string_size(str(bot_version), 17) + "::\n"
+		msg += "::Guilds            :: " + set_string_size(str(server_count), 17) + "::\n"
+		msg += "::Users             :: " + set_string_size(str(member_count), 17) + "::\n"
+		msg += "::Channels          :: " + set_string_size(str(channel_count), 17) + "::\n"
+		msg += "==========================================```"
+		await client.send_message(channel, msg)
