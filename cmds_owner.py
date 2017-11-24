@@ -16,14 +16,6 @@ async def cmds_owner(message, umsg, client, conn, cur):
 	
 	# check owner
 	if (member.id == '188663897279037440'):
-		
-		# get user by id
-		if (args[0] == 'getuser'):
-			try:
-				user = await client.get_user_info(args[1])
-				await client.send_message(channel, 'User is `' + user.name + '#' + user.discriminator + '`')
-			except:
-				await client.send_message(channel, 'User not found!')
 			
 		# list servers
 		if (args[0] == 'serverlist'):
@@ -47,7 +39,7 @@ async def cmds_owner(message, umsg, client, conn, cur):
 					data[3] = 9200000000000000000
 					await client.send_message(channel, 'pls')
 				await save_profile(data, conn, cur)
-				await client.send_message(channel, 'Gave ' + args[2] + ' credits to ' + user.name + '!')
+				await client.send_message(channel, 'Gave ' + args[2] + ' credits to ' + str(user) + '!')
 			except:
 				await client.send_message(channel, 'You did something wrong!')
 				
