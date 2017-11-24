@@ -36,13 +36,9 @@ async def on_message(message):
 	
 	# check message source
 	check = True
-	try:
-		if (message.server.name != ''):
-			check = True
-	except AttributeError:
-		if (message.author.bot == False):
-			await client.send_message(dm_log, 'Received DM from `' + message.author.name + '#' + message.author.discriminator + '`: ' + message.content)
-			check = True
+	if (message.server is None):
+		await client.send_message(dm_log, 'Received DM from `' + message.author.name + '#' + message.author.discriminator + '`: ' + message.content)
+		check = True
 	if (message.author.bot == True):
 		check = False
 	
@@ -61,7 +57,7 @@ async def on_message(message):
 			
 			# command lists
 			await cmds_info.cmds_info(message, umsg, client)
-			await cmds_mod.cmds_mod(message, umsg, client)
+			await cmds_mod.cmds_mod(message, umsg, prefix, client)
 			await cmds_action.cmds_action(message, umsg, client)
 			await cmds_currency.cmds_currency(message, umsg, client, conn, cur)
 			await cmds_games.cmds_games(message, umsg, client, conn, cur)
