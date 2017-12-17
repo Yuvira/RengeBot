@@ -27,7 +27,11 @@ async def cmds_mod(message, umsg, prefix, client):
 					if member.top_role.position > message.mentions[i].top_role.position:
 						try:
 							try:
-								await client.send_message(message.mentions[i], 'You were kicked from **' + server.name + '** by **' + str(member) + '**')
+								reason = ''
+								t = 1 + len(message.mentions)
+								for a in range(t, len(args)):
+									reason += ' ' + args[a]
+								await client.send_message(message.mentions[i], 'You were kicked from **' + server.name + '** by **' + str(member) + '**:' + reason)
 							except:
 								pass
 							await client.kick(message.mentions[i])
