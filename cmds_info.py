@@ -56,6 +56,9 @@ async def cmds_info(message, umsg, client):
 			elif (args[1] == 'profile'):
 				embed = discord.Embed(title='Profile Command', type='rich', description='**Usage:**\n`$profile` - Displays your profile\n`$profile <@mention>` - Show the profile of someone else\n`$profile desc <description>` - Set the description for your profile')
 				await client.send_message(channel, content=None, embed=embed)
+			elif (args[1] == 'rep'):
+				embed = discord.Embed(title='Rep Command', type='rich', description='**Usage:**\n`$rep <@mention>` - Give rep to a mentioned user (Can be used once every 24 hours)')
+				await client.send_message(channel, content=None, embed=embed)
 			elif (args[1] == 'daily'):
 				embed = discord.Embed(title='Daily Command', type='rich', description='**Usage:**\n`$daily` - Gives you 100 free credits every 24 hours')
 				await client.send_message(channel, content=None, embed=embed)
@@ -84,7 +87,7 @@ async def cmds_info(message, umsg, client):
 			if not message.server is None:
 				embed.add_field(name="Moderation Commands:",value="`ban` `kick` `prune`",inline=False)
 			embed.add_field(name="Action Commands:",value="`shrug` `sugoi`",inline=False)
-			embed.add_field(name="Currency Commands:",value="`profile` `daily` `loot` `transfer` `richest`",inline=False)
+			embed.add_field(name="Currency Commands:",value="`profile` `rep` `daily` `loot` `transfer` `richest`",inline=False)
 			embed.add_field(name="Game Commands:",value="`roulette`",inline=False)
 			embed.add_field(name="Misc Commands:",value='`waifu`')
 			await client.send_message(channel, content=None, embed=embed)
