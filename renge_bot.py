@@ -37,7 +37,8 @@ async def on_message(message):
 	# check message source
 	check = True
 	if (message.server is None):
-		await client.send_message(dm_log, 'Received DM from `' + message.author.name + '#' + message.author.discriminator + '`: ' + message.content)
+		if (message.author.bot == False):
+			await client.send_message(dm_log, 'Received DM from `' + message.author.name + '#' + message.author.discriminator + '`: ' + message.content)
 		check = True
 	if (message.author.bot == True):
 		check = False
