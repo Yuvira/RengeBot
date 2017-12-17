@@ -250,6 +250,142 @@ async def cmds_games(message, umsg, client, conn, cur):
 				else:
 					await client.send_message(channel, 'There are no roulette games currently active!')
 			
+			# quick roulette
+			elif (args[1] == 'quick'):
+			
+				# variables
+				bet_amount = 0
+				bet_type = 'none'
+				msg = ''
+				
+				# bet amount
+				if (len(args) > 2):
+					
+					# check if integer
+					if (is_int(args[2])):
+						
+						# check bet more than zero
+						if (int(args[2]) > 0):
+							
+							#check bet within player's credits
+							udata = await load_profile(member, conn, cur)
+							if (int(args[2]) <= udata[3]):
+						
+								# bet type
+								if (len(args) > 3):
+									
+									# red/black/odd/even/low/high
+									if (args[3] == 'red' or args[3] == 'black' or args[3] == 'odd' or args[3] == 'even' or args[3] == 'low' or args[3] == 'high'):
+										bet_amount = int(args[2])
+										bet_type = args[3]
+										msg = 'You bet $' + str(bet_amount) + ' on ' + bet_type + '!\n'
+										
+									# columns/dozens
+									elif (args[3] == 'column' or args[3] == 'dozen'):
+										if (len(args) > 4):
+											if (args[4] == '1' or args[4] == '2' or args[4] == '3'):
+												bet_amount = int(args[2])
+												bet_type = args[3] + ' ' + args[4]
+												msg = 'You bet $' + str(bet_amount) + ' on ' + bet_type + '!\n'
+											else:
+												await client.send_message(channel, 'Invalid ' + args[3] + ' number!')
+										else:
+											await client.send_message(channel, 'You need to specify a ' + args[3] + ' number!')
+										
+									#invalid bet type
+									else:
+										await client.send_message(channel, 'Invalid bet type!')
+								
+								# no bet type
+								else:
+									await client.send_message(channel, 'You need to specify what to bet on!')
+								
+							# not enough credits
+							else:
+								await client.send_message(channel, 'You do not have enough credits to place this bet!')
+								
+						# bet less than 1
+						else:
+							await client.send_message(channel, 'You must bet more than zero!')
+					
+					# not integer bet
+					else:
+						await client.send_message(channel, 'Invalid bet amount!')
+						
+				# insufficient arguments
+				else:
+					await client.send_message(channel, 'You must specify an amount to bet!')
+					
+				# check message exists
+				if not (msg == ''):
+				
+					# values
+					nums_red = [2,  4,  6,  8,  10, 11, 13, 15, 17, 20, 22, 24, 26, 28, 29, 31, 33, 35]
+					nums_blk = [1,  3,  5,  7,  9,  12, 14, 16, 18, 19, 21, 23, 25, 27, 30, 32, 34, 36]
+					nums_odd = [1,  3,  5,  7,  9,  11, 13, 15, 17, 19, 21, 23, 25, 27, 29, 31, 33, 35]
+					nums_evn = [2,  4,  6,  8,  10, 12, 14, 16, 18, 20, 22, 24, 26, 28, 30, 32, 34, 36]
+					nums_low = [1,  2,  3,  4,  5,  6,  7,  8,  9,  10, 11, 12, 13, 14, 15, 16, 17, 18]
+					nums_hgh = [19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36]
+					nums_col1 = [1,  4,  7,  10, 13, 16, 19, 22, 25, 28, 31, 34]
+					nums_col2 = [2,  5,  8,  11, 14, 17, 20, 23, 26, 29, 32, 35]
+					nums_col3 = [3,  6,  9,  12, 15, 18, 21, 24, 27, 30, 33, 36]
+					nums_doz1 = [1,  2,  3,  4,  5,  6,  7,  8,  9,  10, 11, 12]
+					nums_doz2 = [13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24]
+					nums_doz3 = [25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36]
+					
+					# roll number
+					roll = int(random.random() * 37)
+					if (roll in nums_red):
+						msg = msg + 'The ball has landed on Red ' + str(roll) + '!\n'
+					elif (roll in nums_blk):
+						msg = msg + 'The ball has landed on Black ' + str(roll) + '!\n'
+					else:
+						msg = msg + 'The ball has landed on 0!\n'
+							
+					# retrieve and display results
+					winnings = 0
+					if (bet_type == 'red' and roll in nums_red):
+						winnings = bet_amount
+					elif (bet_type == 'black' and roll in nums_blk):
+						winnings = bet_amount
+					elif (bet_type == 'odd' and roll in nums_odd):
+						winnings = bet_amount
+					elif (bet_type == 'even' and roll in nums_evn):
+						winnings = bet_amount
+					elif (bet_type == 'low' and roll in nums_low):
+						winnings = bet_amount
+					elif (bet_type == 'high' and roll in nums_hgh):
+						winnings = bet_amount
+					elif (bet_type == 'column 1' and roll in nums_col1):
+						winnings = bet_amount * 2
+					elif (bet_type == 'column 2' and roll in nums_col2):
+						winnings = bet_amount * 2
+					elif (bet_type == 'column 3' and roll in nums_col3):
+						winnings = bet_amount * 2
+					elif (bet_type == 'dozen 1' and roll in nums_doz1):
+						winnings = bet_amount * 2
+					elif (bet_type == 'dozen 2' and roll in nums_doz2):
+						winnings = bet_amount * 2
+					elif (bet_type == 'dozen 3' and roll in nums_doz3):
+						winnings = bet_amount * 2
+					else:
+						winnings = -bet_amount
+					if (winnings > 0):
+						msg = msg + 'You won $' + str(winnings) + '!'
+					else:
+						msg = msg + 'You lost $' + str(bet_amount) + '!'
+						
+					# update user
+					udata = await load_profile(member.id, conn, cur)
+					udata[3] += int(winnings)
+					if (udata[3] > 9200000000000000000):
+						udata[3] = 9200000000000000000
+						await client.send_message(channel, ":tada: Good job, you reached the credit limit. Hope you're proud of yourself")
+					await save_profile(udata, conn, cur)
+							
+					# send results
+					await client.send_message(channel, msg)
+			
 			# invalid input
 			else:
 				await client.send_message(channel, 'Invalid action!')
@@ -257,3 +393,47 @@ async def cmds_games(message, umsg, client, conn, cur):
 		# insufficient arguments
 		else:
 			await client.send_message(channel, 'You need to specify what you want to do!')
+	
+	# slots (thanks Desii)
+	elif (args[0] == 'slots'):
+		
+		# credits
+		data = await load_profile(member, conn, cur)
+		if (data[3] >= 50):
+		
+			# vars for slot values
+			var1 = int(random.random() * 5)
+			var2 = int(random.random() * 5)
+			var3 = int(random.random() * 5)
+			var4 = int(random.random() * 5)
+			var5 = int(random.random() * 5)
+			var6 = int(random.random() * 5)
+			var7 = int(random.random() * 5)
+			var8 = int(random.random() * 5)
+			var9 = int(random.random() * 5)
+			
+			# emotes
+			col = [":moneybag:", ":cherries:", ":carrot:", ":popcorn:", ":seven:"]
+			
+			# win
+			if var6 == var5 and var5 == var4 and var4 == var6:
+				msg = "**You won 150 credits!**"
+				data[3] = data[3] + 150
+				if (data[3] > 9200000000000000000):
+					data[3] = 9200000000000000000
+					await client.send_message(channel, ':tada: Good job, ' + member.name + ", you reached the credit limit. Hope you're proud of yourself")
+				await save_profile(data, conn, cur)
+			
+			# lose
+			else:
+				msg = "**You lost 50 credits!**"
+				data = await load_profile(member, conn, cur)
+				data[3] = data[3] - 50
+				await save_profile(data, conn, cur)
+			
+			# show result and board
+			await client.send_message(channel, msg + "\n" + str(col[var1]) + str(col[var2]) + str(col[var3]) + "\n" + str(col[var4]) + str(col[var5]) + str(col[var6]) + "\n" + str(col[var7]) + str(col[var8]) + str(col[var9]))
+		
+		# insufficient credits
+		else:
+			await client.send_message(channel, "You don't have enough credits!")
