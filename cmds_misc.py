@@ -24,7 +24,7 @@ async def cmds_misc(message, umsg, client, conn, cur):
 						check1 = False
 						pos = 0
 						data = await load_profile(member, conn, cur)
-						for a in range(8,3,-1):
+						for a in range(9,4,-1):
 							if (data[a] == message.mentions[0].id):
 								check1 = True
 							elif (data[a] == None):
@@ -51,13 +51,20 @@ async def cmds_misc(message, umsg, client, conn, cur):
 					if (is_int(args[2])):
 						if (int(args[2]) > 0 and int(args[2]) < 6):
 							data = await load_profile(member, conn, cur)
-							if (data[int(args[2])+3] != None):
-								t = await load_profile(data[int(args[2])+3], conn, cur)
-								for a in range(int(args[2])+3,8):
-									data[a] = data[a+1]
-								data[8] = None
-								await save_profile(data, conn, cur)
-								await client.send_message(channel, '**' + t[1] + '** is no longer your waifu!')
+							if (data[int(args[2])+4] != None):
+								try:
+									t = await load_profile(data[int(args[2])+4], conn, cur)
+									for a in range(int(args[2])+4,9):
+										data[a] = data[a+1]
+									data[9] = None
+									await save_profile(data, conn, cur)
+									await client.send_message(channel, '**' + t[1] + '** is no longer your waifu!')
+								except:
+									for a in range(int(args[2])+4,9):
+										data[a] = data[a+1]
+									data[9] = None
+									await save_profile(data, conn, cur)
+									await client.send_message(channel, 'Waifu removed!')
 							else:
 								await client.send_message(channel, 'There are no waifus at that position!')
 						else:
