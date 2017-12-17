@@ -45,10 +45,10 @@ async def cmds_info(message, umsg, client):
 				embed = discord.Embed(title='Sugoi Command', type='rich', description='**Usage:**\n`$sugoi` - SUGOI!')
 				await client.send_message(channel, content=None, embed=embed)
 			elif (args[1] == 'kick'):
-				embed = discord.Embed(title='Kick Command', type='rich', description='**Usage:**\n`$kick <@mentions>` - Kicks one or more mentioned users')
+				embed = discord.Embed(title='Kick Command', type='rich', description='**Usage:**\n`$kick <@mentions> <reason>` - Kicks one or more mentioned users with optional reason')
 				await client.send_message(channel, content=None, embed=embed)
 			elif (args[1] == 'ban'):
-				embed = discord.Embed(title='Ban Command', type='rich', description='**Usage:**\n`$ban <@mentions>` - Bans one or more monetioned users\n`$ban <mentions> <days>` - Bans mentioned user(s) and deletes messages from the past given number of days')
+				embed = discord.Embed(title='Ban Command', type='rich', description='**Usage:**\n`$ban <@mentions>` - Bans one or more monetioned users\n`$ban <@mentions> <days>` - Bans mentioned user(s) and deletes messages from the past given number of days')
 				await client.send_message(channel, content=None, embed=embed)
 			elif (args[1] == 'prune'):
 				embed = discord.Embed(title='Prune Command', type='rich', description='**Usage:**\n`$prune <amount>` - Deletes a given number of messages\n`$prune bot <amount>` - Deletes a given number of bot commands and responses (default 100 if no amount specified)')
@@ -63,7 +63,7 @@ async def cmds_info(message, umsg, client):
 				embed = discord.Embed(title='Loot Command', type='rich', description='**Usage:**\n`$loot` - Loots a random number of credits every 5 minutes')
 				await client.send_message(channel, content=None, embed=embed)
 			elif (args[1] == 'roulette'):
-				embed = discord.Embed(title='Roulette Command', type='rich', description='Allows up to four people at a time to play a game of casino roulette\n**Usage:**\n`$roulette bet <amount> <type>` - Bets an amount on a certain value (bet types listed below)\n`$roulette cancel` - Cancels your current bet\n`$roulette spin` - Spin the roulette wheel\n**Bet Types:**\n`red/black` - Bets on the red or black colour (Payout 1:1)\n`odd/even` - Bets on odd or even numbers (Payout 1:1)\n`high/low` - Bets on high (19-36) or low (1-18) numbers (Payout 1:1)\n`column <#>` - Bet on column 1, 2 or 3 (Payout 2:1)\n`dozen <#>` - Bet on first (1-12), second (13-24) or third (25-36) dozen (Payout 2:1)\n**Note:**\nDue to limitations, only outside bets are currently allowed. Inside bets may be added in future')
+				embed = discord.Embed(title='Roulette Command', type='rich', description='Allows up to four people at a time to play a game of casino roulette\n**Usage:**\n`$roulette bet <amount> <type>` - Bets an amount on a certain value (bet types listed below)\n`$roulette quick <amount> <type>` - Plays an instant game for one person\n`$roulette cancel` - Cancels your current bet\n`$roulette spin` - Spin the roulette wheel\n**Bet Types:**\n`red/black` - Bets on the red or black colour (Payout 1:1)\n`odd/even` - Bets on odd or even numbers (Payout 1:1)\n`high/low` - Bets on high (19-36) or low (1-18) numbers (Payout 1:1)\n`column <#>` - Bet on column 1, 2 or 3 (Payout 2:1)\n`dozen <#>` - Bet on first (1-12), second (13-24) or third (25-36) dozen (Payout 2:1)\n**Note:**\nDue to input limitations, only outside bets are currently allowed. Inside bets may be added in future')
 				await client.send_message(channel, content=None, embed=embed)
 			elif (args[1] == 'richest'):
 				embed = discord.Embed(title='Richest Command', type='rich', description='**Usage:**\n`$richest` - Retrieves the top ten richest users')
