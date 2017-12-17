@@ -28,7 +28,7 @@ async def cmds_currency(message, umsg, client, conn, cur):
 			
 			# load waifus
 			waifu = ''
-			for a in range(4,9):
+			for a in range(5,10):
 				if (data[a] != None):
 					t = await load_profile(data[a], conn, cur)
 					waifu = waifu + '\n' + t[1]
@@ -37,9 +37,9 @@ async def cmds_currency(message, umsg, client, conn, cur):
 			
 			# display data
 			try:
-				embed = discord.Embed(title=message.mentions[0].display_name + "'s profile", type='rich', description=data[2] + '\n\n**Credits**\n' + str(data[3]) + '\n\n**Waifus**' + waifu, colour=message.mentions[0].colour)
+				embed = discord.Embed(title=message.mentions[0].display_name + "'s profile", type='rich', description=data[2] + '\n\n**Credits**\n' + str(data[3]) + '\n\n**Reputation**\n' + str(data[4]) + '\n\n**Waifus**' + waifu, colour=message.mentions[0].colour)
 			except:
-				embed = discord.Embed(title=message.mentions[0].display_name + "'s profile", type='rich', description=data[2] + '\n\n**Credits**\n' + str(data[3]) + '\n\n**Waifus**' + waifu)
+				embed = discord.Embed(title=message.mentions[0].display_name + "'s profile", type='rich', description=data[2] + '\n\n**Credits**\n' + str(data[3]) + '\n\n**Reputation**\n' + str(data[4]) + '\n\n**Waifus**' + waifu)
 			if (message.mentions[0].avatar_url == ''):
 				avatar = message.mentions[0].default_avatar_url
 			else:
@@ -72,7 +72,7 @@ async def cmds_currency(message, umsg, client, conn, cur):
 			
 			# load waifus
 			waifu = ''
-			for a in range(4,9):
+			for a in range(5,10):
 				if (data[a] != None):
 					t = await load_profile(data[a], conn, cur)
 					waifu = waifu + '\n' + t[1]
@@ -82,9 +82,9 @@ async def cmds_currency(message, umsg, client, conn, cur):
 			# display data
 			embed = None
 			try:
-				embed = discord.Embed(title=member.display_name + "'s profile", type='rich', description=data[2] + '\n\n**Credits**\n' + str(data[3]) + '\n\n**Waifus**' + waifu, colour=member.colour)
+				embed = discord.Embed(title=member.display_name + "'s profile", type='rich', description=data[2] + '\n\n**Credits**\n' + str(data[3]) + '\n\n**Reputation**\n' + str(data[4]) + '\n\n**Waifus**' + waifu, colour=member.colour)
 			except:
-				embed = discord.Embed(title=member.display_name + "'s profile", type='rich', description=data[2] + '\n\n**Credits**\n' + str(data[3]) + '\n\n**Waifus**' + waifu)
+				embed = discord.Embed(title=member.display_name + "'s profile", type='rich', description=data[2] + '\n\n**Credits**\n' + str(data[3]) + '\n\n**Reputation**\n' + str(data[4]) + '\n\n**Waifus**' + waifu)
 			avatar = None
 			if (member.avatar_url == ''):
 				avatar = member.default_avatar_url
@@ -188,6 +188,39 @@ async def cmds_currency(message, umsg, client, conn, cur):
 				await client.send_message(channel, 'You need to mention one user!')
 		else:
 			await client.send_message(channel, 'Incorrect number of arguments!')
+			
+	# rep
+	if (args[0] == 'rep'):
+		
+		# check ratelimit
+		rl = await load_ratelimit(member, conn, cur)
+		t = int(time.time()) - rl[3]
+		if (t > 86400):
+		
+			#add rep
+			if (len(args) == 2):
+				if (len(message.mentions) == 1):
+					data = await load_profile(message.mentions[0], conn, cur)
+					data[4] = data[4] + 1
+					await save_profile(data, conn, cur)
+					rl[3] = int(time.time())
+					await save_ratelimit(rl, conn, cur)
+					await client.send_message(channel, 'Gave rep to ' + message.mentions[0].name + '!')
+				else:
+					await client.send_message(channel, 'You need to mention one user!')
+			else:
+				await client.send_message(channel, 'Incorrect number of arguments!')
+			
+		# show time remaining
+		else:
+			msg = "Slow down! You can't rep yet!\nYou can give rep again in "
+			t = 86400 - t
+			msg = msg + str(int(t/3600)) + ' hours, '
+			t = t % 3600
+			msg = msg + str(int(t/60)) + ' minutes, '
+			t = t % 60
+			msg = msg + str(t) + ' seconds'
+			await client.send_message(channel, msg)
 			
 	# get global richest users
 	if (args[0] == 'richest'):
