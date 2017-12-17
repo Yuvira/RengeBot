@@ -10,8 +10,8 @@ async def create_profile(member, conn, cur):
 	cur.execute('SELECT * FROM profiles WHERE id=?', t)
 	t = cur.fetchone()
 	if (t == None):
-		profile = (member.id, member.name + '#' + member.discriminator, 'Nothing to see here', 0, None, None, None, None, None)
-		cur.execute('INSERT INTO profiles VALUES (?,?,?,?,?,?,?,?,?)', profile)
+		profile = (member.id, member.name + '#' + member.discriminator, 'Nothing to see here', 0, 0, None, None, None, None, None)
+		cur.execute('INSERT INTO profiles VALUES (?,?,?,?,?,?,?,?,?,?)', profile)
 		conn.commit()
 	t = (member.id,)
 	cur.execute('SELECT * FROM ratelimits WHERE id=?', t)
@@ -47,7 +47,7 @@ async def save_profile(data, conn, cur):
 	t = (data[0],)
 	profile = tuple(data)
 	cur.execute('DELETE FROM profiles WHERE id=?', t)
-	cur.execute('INSERT INTO profiles VALUES (?,?,?,?,?,?,?,?,?)', profile)
+	cur.execute('INSERT INTO profiles VALUES (?,?,?,?,?,?,?,?,?,?)', profile)
 	conn.commit()
 		
 # load ratelimit
@@ -64,7 +64,7 @@ async def save_ratelimit(data, conn, cur):
 	t = (data[0],)
 	ratelimit = tuple(data)
 	cur.execute('DELETE FROM ratelimits WHERE id=?', t)
-	cur.execute('INSERT INTO ratelimits VALUES (?,?,?)', ratelimit)
+	cur.execute('INSERT INTO ratelimits VALUES (?,?,?,?)', ratelimit)
 	conn.commit()
 	
 # games------------------------------------------------------------------------
