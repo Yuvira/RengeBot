@@ -17,8 +17,8 @@ async def create_profile(member, conn, cur):
 	cur.execute('SELECT * FROM ratelimits WHERE id=?', t)
 	t = cur.fetchone()
 	if (t == None):
-		ratelimit = (member.id, 0, 0)
-		cur.execute('INSERT INTO ratelimits VALUES (?,?,?)', ratelimit)
+		ratelimit = (member.id, 0, 0, 0)
+		cur.execute('INSERT INTO ratelimits VALUES (?,?,?,?)', ratelimit)
 		conn.commit()
 		
 # load profile
