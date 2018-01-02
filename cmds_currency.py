@@ -200,12 +200,15 @@ async def cmds_currency(message, umsg, client, conn, cur):
 			#add rep
 			if (len(args) == 2):
 				if (len(message.mentions) == 1):
-					data = await load_profile(message.mentions[0], conn, cur)
-					data[4] = data[4] + 1
-					await save_profile(data, conn, cur)
-					rl[3] = int(time.time())
-					await save_ratelimit(rl, conn, cur)
-					await client.send_message(channel, 'Gave rep to ' + message.mentions[0].name + '!')
+					if (message.mentions[0] != message.author):
+						data = await load_profile(message.mentions[0], conn, cur)
+						data[4] = data[4] + 1
+						await save_profile(data, conn, cur)
+						rl[3] = int(time.time())
+						await save_ratelimit(rl, conn, cur)
+						await client.send_message(channel, 'Gave rep to ' + message.mentions[0].name + '!')
+					else:
+						await client.send_message(channel, "You can't rep yourself!")
 				else:
 					await client.send_message(channel, 'You need to mention one user!')
 			else:
