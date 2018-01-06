@@ -13,6 +13,17 @@ async def cmds_misc(message, umsg, client, conn, cur):
 	channel = message.channel
 	member = message.author
 	
+	# song of the day
+	if (args[0] == 'sotd'):
+		try:
+			cur.execute('SELECT * FROM sotd ORDER BY rowid ASC LIMIT 1')
+			t = cur.fetchone()
+			embed = discord.Embed(title="Song of the Day", description=t[0] + ' - ' + t[1], url=t[2])
+			embed.set_thumbnail(url=t[3])
+			await client.send_message(channel, content=None, embed=embed)
+		except:
+			await client.send_message(channel, "Something went wrong (there probably isn't a song of the day queued)!")
+	
 	# waifu
 	if (args[0] == 'waifu'):
 		if (len(args) > 1):
