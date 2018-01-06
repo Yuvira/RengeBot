@@ -5,6 +5,8 @@ import random
 import importlib
 import logging
 import sqlite3
+import datetime
+import asyncio
 
 # modules
 import cmds_info
@@ -14,6 +16,9 @@ import cmds_currency
 import cmds_games
 import cmds_misc
 import cmds_owner
+
+# commands
+from renge_utils import create_profile
 
 # client
 client = discord.Client()
@@ -26,9 +31,22 @@ cur = conn.cursor()
 prefix = 'prefix'
 token = 'token'
 
+# song of the day values
+sotd_t1 = datetime.datetime.now().day
+sotd_t2 = sotd_t1
+
 # message received
 @client.event
 async def on_message(message):
+	
+	# update name in profile
+	try:
+		await create_profile(message.author, conn, cur)
+		t = (message.author.name + '#' + message.author.discriminator, message.author.id)
+		cur.execute('UPDATE profiles SET name=? WHERE id=?', t)
+		conn.commit()
+	except:
+		pass
 	
 	# variables
 	log_channel = discord.Object('314283195866677251')
@@ -90,17 +108,30 @@ async def on_message(message):
 					except:
 						await client.send_message(message.channel, 'Failed to load module!')
 
-# server join
+# log server join
 @client.event
 async def on_server_join(server):
 	log_channel = discord.Object('314283195866677251')
 	await client.send_message(log_channel, 'Joined server `' + server.name + '`, owned by `' + server.owner.name + '#' + server.owner.discriminator + '`')
 
-# server leave
+# log server leave
 @client.event
 async def on_server_remove(server):
 	log_channel = discord.Object('314283195866677251')
 	await client.send_message(log_channel, 'Left server `' + server.name + '`, owned by `' + server.owner.name + '#' + server.owner.discriminator + '`')
+	
+# song of the day updater
+async def sotd():
+	global sotd_t1
+	global sotd_t2
+	await client.wait_until_ready()
+	while not client.is_closed:
+		await asyncio.sleep(60)
+		sotd_t1 = sotd_t2
+		sotd_t2 = datetime.datetime.now().day
+		if (sotd_t1 != sotd_t2):
+			cur.execute('DELETE FROM sotd WHERE rowid=(SELECT MIN(rowid) FROM sotd)')
+			conn.commit()
 
 # startup
 @client.event
@@ -122,4 +153,5 @@ logger.addHandler(handler)
 
 # run
 random.seed(time.time())
+client.loop.create_task(sotd())
 client.run(token)
