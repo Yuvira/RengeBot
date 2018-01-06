@@ -16,59 +16,50 @@ async def cmds_currency(message, umsg, client, conn, cur):
 	args = umsg.split(' ')
 	channel = message.channel
 	member = message.author
+	server = message.server
 	
 	# profile
 	if (args[0] == 'profile'):
-		
-		# show other person's profile
-		if (len(args) == 2 and len(message.mentions) > 0):
-		
-			# load data
-			data = await load_profile(message.mentions[0], conn, cur)
-			
-			# load waifus
-			waifu = ''
-			for a in range(5,10):
-				if (data[a] != None):
-					t = await load_profile(data[a], conn, cur)
-					waifu = waifu + '\n' + t[1]
-			if (waifu == ''):
-				waifu = '\nNone'
-			
-			# display data
-			try:
-				embed = discord.Embed(title=message.mentions[0].display_name + "'s profile", type='rich', description=data[2] + '\n\n**Credits**\n' + str(data[3]) + '\n\n**Reputation**\n' + str(data[4]) + '\n\n**Waifus**' + waifu, colour=message.mentions[0].colour)
-			except:
-				embed = discord.Embed(title=message.mentions[0].display_name + "'s profile", type='rich', description=data[2] + '\n\n**Credits**\n' + str(data[3]) + '\n\n**Reputation**\n' + str(data[4]) + '\n\n**Waifus**' + waifu)
-			if (message.mentions[0].avatar_url == ''):
-				avatar = message.mentions[0].default_avatar_url
-			else:
-				avatar = message.mentions[0].avatar_url
-				avatar = avatar.replace("?size=1024", "")
-			embed.set_thumbnail(url=avatar)
-			await client.send_message(channel, content=None, embed=embed)
 				
-		# profile commands
-		elif (len(args) > 1):
-			
-			# description set
-			if (args[1] == 'desc'):
-				if (len(args) > 2):
-					data = await load_profile(member, conn, cur)
-					data[2] = umsg[13:]
-					if len(data[2]) > 500:
-						await client.send_message(channel, "I couldn't set your description because it is over 500 characters!")
-						return
-					await save_profile(data, conn, cur)
-					await client.send_message(channel, 'Description set to `' + data[2] + '`!')
-				else:
-					await client.send_message(channel, 'You need to enter a description!')
-		
+		# set profile description
+		if (len(args) > 1 and args[1] == 'desc'):
+			if (len(args) > 2):
+				data = await load_profile(member, conn, cur)
+				data[2] = umsg[13:]
+				if len(data[2]) > 500:
+					await client.send_message(channel, "I couldn't set your description because it is over 500 characters!")
+					return
+				await save_profile(data, conn, cur)
+				await client.send_message(channel, 'Description set to `' + data[2] + '`!')
+			else:
+				await client.send_message(channel, 'You need to enter a description!')
+				
 		# show profile
 		else:
 			
+			# get user being profiled
+			user = member
+			if (len(message.mentions) > 0):
+				user = message.mentions[0]
+			elif (len(args) > 1):
+				if (is_int(args[1])):
+					try:
+						user = await client.get_user_info(args[1])
+					except:
+						await client.send_message(channel, 'No user with that ID exists!')
+						return
+				else:
+					t = False
+					for m in server.members:
+						if (args[1] == m.display_name):
+							user = m
+							t = True
+					if (t == False):
+						await client.send_message(channel, 'There is no user with that name in this server!')
+						return
+		
 			# load data
-			data = await load_profile(member, conn, cur)
+			data = await load_profile(user, conn, cur)
 			
 			# load waifus
 			waifu = ''
@@ -80,16 +71,14 @@ async def cmds_currency(message, umsg, client, conn, cur):
 				waifu = '\nNone'
 			
 			# display data
-			embed = None
 			try:
-				embed = discord.Embed(title=member.display_name + "'s profile", type='rich', description=data[2] + '\n\n**Credits**\n' + str(data[3]) + '\n\n**Reputation**\n' + str(data[4]) + '\n\n**Waifus**' + waifu, colour=member.colour)
+				embed = discord.Embed(title=user.display_name + "'s profile", type='rich', description=data[2] + '\n\n**Credits**\n' + str(data[3]) + '\n\n**Reputation**\n' + str(data[4]) + '\n\n**Waifus**' + waifu, colour=user.colour)
 			except:
-				embed = discord.Embed(title=member.display_name + "'s profile", type='rich', description=data[2] + '\n\n**Credits**\n' + str(data[3]) + '\n\n**Reputation**\n' + str(data[4]) + '\n\n**Waifus**' + waifu)
-			avatar = None
-			if (member.avatar_url == ''):
-				avatar = member.default_avatar_url
+				embed = discord.Embed(title=user.display_name + "'s profile", type='rich', description=data[2] + '\n\n**Credits**\n' + str(data[3]) + '\n\n**Reputation**\n' + str(data[4]) + '\n\n**Waifus**' + waifu)
+			if (user.avatar_url == ''):
+				avatar = user.default_avatar_url
 			else:
-				avatar = member.avatar_url
+				avatar = user.avatar_url
 				avatar = avatar.replace("?size=1024", "")
 			embed.set_thumbnail(url=avatar)
 			await client.send_message(channel, content=None, embed=embed)
@@ -228,9 +217,18 @@ async def cmds_currency(message, umsg, client, conn, cur):
 	# get global richest users
 	if (args[0] == 'richest'):
 		msg = 'Top Ten'
-		cur.execute('SELECT * FROM profiles ORDER BY credits DESC')
-		for a in range(0,10):
-			t = cur.fetchone()
-			msg = msg + '\n' + str(a+1) + '. **' + t[1] + '** - $' + str(t[3])
-		embed = discord.Embed(title='Global Richest Users', type='rich', description=msg)
-		await client.send_message(channel, content=None, embed=embed)
+		if (len(args) > 1):
+			if (args[1] == 'rep'):
+				cur.execute('SELECT * FROM profiles ORDER BY rep DESC LIMIT 10')
+				for a in range(0,10):
+					t = cur.fetchone()
+					msg = msg + '\n' + str(a+1) + '. **' + t[1] + '** - ' + str(t[4])
+				embed = discord.Embed(title='Global Most Reputable Users', type='rich', description=msg)
+				await client.send_message(channel, content=None, embed=embed)
+		else:
+			cur.execute('SELECT * FROM profiles ORDER BY credits DESC LIMIT 10')
+			for a in range(0,10):
+				t = cur.fetchone()
+				msg = msg + '\n' + str(a+1) + '. **' + t[1] + '** - $' + str(t[3])
+			embed = discord.Embed(title='Global Richest Users', type='rich', description=msg)
+			await client.send_message(channel, content=None, embed=embed)
