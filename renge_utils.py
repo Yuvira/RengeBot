@@ -6,20 +6,26 @@ import sqlite3
 
 # create blank profile
 async def create_profile(member, conn, cur):
+	
+	# retrieve user
 	t = (member.id,)
 	cur.execute('SELECT * FROM profiles WHERE id=?', t)
 	t = cur.fetchone()
-	if (t == None):
-		profile = (member.id, member.name + '#' + member.discriminator, 'Nothing to see here', 0, 0, None, None, None, None, None)
-		cur.execute('INSERT INTO profiles VALUES (?,?,?,?,?,?,?,?,?,?)', profile)
-		conn.commit()
+	
+	# return if user found
+	if (t != None):
+		return
+		
+	# create profile and ratelimits
+	profile = (member.id, member.name + '#' + member.discriminator, 'Nothing to see here', 0, 0, None, None, None, None, None)
+	cur.execute('INSERT INTO profiles VALUES (?,?,?,?,?,?,?,?,?,?)', profile)
+	conn.commit()
 	t = (member.id,)
 	cur.execute('SELECT * FROM ratelimits WHERE id=?', t)
 	t = cur.fetchone()
-	if (t == None):
-		ratelimit = (member.id, 0, 0, 0)
-		cur.execute('INSERT INTO ratelimits VALUES (?,?,?,?)', ratelimit)
-		conn.commit()
+	ratelimit = (member.id, 0, 0, 0)
+	cur.execute('INSERT INTO ratelimits VALUES (?,?,?,?)', ratelimit)
+	conn.commit()
 		
 # load profile
 async def load_profile(member, conn, cur):
@@ -106,6 +112,7 @@ def is_int(s):
 	except:
 		return False
 		
+# set size of string by adding spaces
 def set_string_size(string, len1):
 	len0 = len(string)
 	if (len0 > len1):
