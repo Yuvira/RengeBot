@@ -17,17 +17,34 @@ async def cmds_owner(message, umsg, client, conn, cur):
 	# check owner
 	if (member.id == '188663897279037440'):
 			
-		# list servers
-		if (args[0] == 'serverlist'):
-			msg = '**Renge Server List**'
-			for server in client.servers:
-				msg = msg + '\n`' + server.name + '` owned by `' + server.owner.name + '#' + server.owner.discriminator + '`'
-			await client.send_message(channel, msg)
-			
 		# count members in server
 		if (args[0] == 'usercount'):
-			await client.send_message(channel, 'There are ' + str(len(server.members)) + ' users in this server!')
+			await client.send_message(channel, 'Total users: ' + str(len(server.members)) + '\nBot users: ' + str(len([member for member in server.members if member.bot])))
 			
+		# count total severs
+		if (args[0] == 'servercount'):
+			await client.send_message(channel, 'Total servers: ' + str(len(client.servers)) + '\nBot servers: ' + str(len([server for server in client.servers if len([member for member in server.members if member.bot]) > len([member for member in server.members if not member.bot])])))
+			
+		# add song to table
+		if (args[0] == 'addsotd'):
+			try:
+				sdata = umsg[8:].split(' | ')
+				t = (sdata[0], sdata[1], sdata[2], sdata[3])
+				cur.execute('INSERT INTO sotd VALUES (?,?,?,?)', t)
+				conn.commit()
+				await client.send_message(channel, 'Added ' + sdata[1] + ' by ' + sdata[0] + ' to the song table!')
+			except:
+				await client.send_message(channel, 'You did something wrong!')
+		
+		# force next song
+		if (args[0] == 'forcesotdupdate'):
+			try:
+				cur.execute('DELETE FROM sotd WHERE rowid=(SELECT MIN(rowid) FROM sotd)')
+				conn.commit()
+				await client.send_message(channel, 'Song of the Day successfully updated!')
+			except:
+				await client.send_message(channel, 'Something went wrong!')
+		
 		# give credits
 		if (args[0] == 'givecredits'):
 			try:
