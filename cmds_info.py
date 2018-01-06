@@ -54,7 +54,7 @@ async def cmds_info(message, umsg, client):
 				embed = discord.Embed(title='Prune Command', type='rich', description='**Usage:**\n`$prune <amount>` - Deletes a given number of messages\n`$prune bot <amount>` - Deletes a given number of bot commands and responses (default 100 if no amount specified)')
 				await client.send_message(channel, content=None, embed=embed)
 			elif (args[1] == 'profile'):
-				embed = discord.Embed(title='Profile Command', type='rich', description='**Usage:**\n`$profile` - Displays your profile\n`$profile <@mention>` - Show the profile of someone else\n`$profile desc <description>` - Set the description for your profile')
+				embed = discord.Embed(title='Profile Command', type='rich', description='**Usage:**\n`$profile` - Displays your profile\n`$profile <@mention>` - Show the profile of a mentioned user\n`$profile <nickname>` - Show the profile of a user with that name in the current server\n`$profile <id>` - Show the profile of a user with a given id\n`$profile desc <description>` - Set the description for your profile')
 				await client.send_message(channel, content=None, embed=embed)
 			elif (args[1] == 'rep'):
 				embed = discord.Embed(title='Rep Command', type='rich', description='**Usage:**\n`$rep <@mention>` - Give rep to a mentioned user (Can be used once every 24 hours)')
@@ -69,13 +69,16 @@ async def cmds_info(message, umsg, client):
 				embed = discord.Embed(title='Roulette Command', type='rich', description='Allows up to four people at a time to play a game of casino roulette\n**Usage:**\n`$roulette bet <amount> <type>` - Bets an amount on a certain value (bet types listed below)\n`$roulette quick <amount> <type>` - Plays an instant game for one person\n`$roulette cancel` - Cancels your current bet\n`$roulette spin` - Spin the roulette wheel\n**Bet Types:**\n`red/black` - Bets on the red or black colour (Payout 1:1)\n`odd/even` - Bets on odd or even numbers (Payout 1:1)\n`high/low` - Bets on high (19-36) or low (1-18) numbers (Payout 1:1)\n`column <#>` - Bet on column 1, 2 or 3 (Payout 2:1)\n`dozen <#>` - Bet on first (1-12), second (13-24) or third (25-36) dozen (Payout 2:1)\n**Note:**\nDue to input limitations, only outside bets are currently allowed. Inside bets may be added in future')
 				await client.send_message(channel, content=None, embed=embed)
 			elif (args[1] == 'richest'):
-				embed = discord.Embed(title='Richest Command', type='rich', description='**Usage:**\n`$richest` - Retrieves the top ten richest users')
+				embed = discord.Embed(title='Richest Command', type='rich', description='**Usage:**\n`$richest` - Retrieves the top ten richest users\n`$richest rep` - Retrieves the top ten users with the most rep')
 				await client.send_message(channel, content=None, embed=embed)
 			elif (args[1] == 'transfer'):
 				embed = discord.Embed(title='Transfer Command', type='rich', description='**Usage:**\n`$transfer <@mention> <amount>` - Transfer a given amount to a mentioned user')
 				await client.send_message(channel, content=None, embed=embed)
 			elif (args[1] == 'waifu'):
 				embed = discord.Embed(title='Waifu Command', type='rich', description='**Usage:**\n`$waifu add <@mention>` - Add the mentioned user as one of your waifus\n`$waifu rem <number>` - Remove the waifu at the given postion (1-5, in order seen on profile)')
+				await client.send_message(channel, content=None, embed=embed)
+			elif (args[1] == 'sotd'):
+				embed = discord.Embed(title='Song of the Day Command', type='rich', description="**Usage:**\n`$sotd` - Display today's song of the day (links to SoundCloud)")
 				await client.send_message(channel, content=None, embed=embed)
 			else:
 				await client.send_message(channel, 'That command does not exist!')
@@ -89,7 +92,7 @@ async def cmds_info(message, umsg, client):
 			embed.add_field(name="Action Commands:",value="`shrug` `sugoi`",inline=False)
 			embed.add_field(name="Currency Commands:",value="`profile` `rep` `daily` `loot` `transfer` `richest`",inline=False)
 			embed.add_field(name="Game Commands:",value="`roulette`",inline=False)
-			embed.add_field(name="Misc Commands:",value='`waifu`')
+			embed.add_field(name="Misc Commands:",value='`waifu` `sotd`')
 			await client.send_message(channel, content=None, embed=embed)
 	
 	# about
