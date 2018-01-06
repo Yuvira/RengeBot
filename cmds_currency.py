@@ -51,7 +51,7 @@ async def cmds_currency(message, umsg, client, conn, cur):
 				else:
 					t = False
 					for m in server.members:
-						if (args[1] == m.display_name):
+						if (args[1].lower() == m.display_name.lower()):
 							user = m
 							t = True
 					if (t == False):
