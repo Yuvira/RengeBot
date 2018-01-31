@@ -103,7 +103,7 @@ async def cmds_info(message, umsg, client):
 	
 	# invite
 	if (args[0] == 'invite'):
-		await client.send_message(channel, "You can invite me to your server here! http://polr.me/rengebot")
+		await client.send_message(channel, "You can invite me to your server here! https://polr.me/rengebot")
 	
 	# support
 	if (args[0] == 'support'):
