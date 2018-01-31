@@ -57,7 +57,7 @@ async def cmds_info(message, umsg, client):
 				embed = discord.Embed(title='Ban Command', type='rich', description='**Usage:**\n`$ban <@mentions>` - Bans one or more monetioned users\n`$ban <@mentions> <days>` - Bans mentioned user(s) and deletes messages from the past given number of days')
 				await client.send_message(channel, content=None, embed=embed)
 			elif (args[1] == 'prune'):
-				embed = discord.Embed(title='Prune Command', type='rich', description='**Usage:**\n`$prune <amount>` - Deletes a given number of messages\n`$prune bot <amount>` - Deletes a given number (5 to 99) of bot commands and responses (default 99 if no amount specified)')
+				embed = discord.Embed(title='Prune Command', type='rich', description='**Usage:**\n`$prune <amount>` - Deletes a given number (5 to 99) of messages (default 99 if more or no amount specified)\n`$prune bot <amount>` - Deletes a given number of bot commands and responses')
 				await client.send_message(channel, content=None, embed=embed)
 			elif (args[1] == 'profile'):
 				embed = discord.Embed(title='Profile Command', type='rich', description='**Usage:**\n`$profile` - Displays your profile\n`$profile <@mention>` - Show the profile of a mentioned user\n`$profile <nickname>` - Show the profile of a user with that name in the current server\n`$profile <id>` - Show the profile of a user with a given id\n`$profile desc <description>` - Set the description for your profile')
