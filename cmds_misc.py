@@ -18,9 +18,12 @@ async def cmds_misc(message, umsg, client, conn, cur):
 		try:
 			cur.execute('SELECT * FROM sotd ORDER BY rowid ASC LIMIT 1')
 			t = cur.fetchone()
-			embed = discord.Embed(title="Song of the Day", description=t[0] + ' - ' + t[1], url=t[2])
-			embed.set_thumbnail(url=t[3])
-			await client.send_message(channel, content=None, embed=embed)
+			if (len(args) > 1 and args[1] == 'url'):
+				await client.send_message(channel, t[2])
+			else:
+				embed = discord.Embed(title="Song of the Day", description=t[0] + ' - ' + t[1], url=t[2])
+				embed.set_thumbnail(url=t[3])
+				await client.send_message(channel, content=None, embed=embed)
 		except:
 			await client.send_message(channel, "Something went wrong (there probably isn't a song of the day queued)!")
 	
