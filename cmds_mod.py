@@ -94,7 +94,7 @@ async def cmds_mod(message, umsg, prefix, client):
 			if args[1] == 'bot':
 				num = 0
 				if (len(args) < 3):
-					num = 100
+					num = 99
 				else:
 					try:
 						num = int(args[2])
@@ -104,8 +104,8 @@ async def cmds_mod(message, umsg, prefix, client):
 					if num < 5:
 						await client.send_message(channel, "That's too few messages!")
 						return
-					if num > 100:
-						num = 100 # check max
+					if num > 99:
+						num = 99 # check max
 				mgs = []
 				async for x in client.logs_from(channel, limit=num+2):
 					if x.author.bot or x.content.lower().startswith(prefix):
@@ -130,8 +130,8 @@ async def cmds_mod(message, umsg, prefix, client):
 				if num < 5:
 					await client.send_message(channel, "That's too few messages!")
 					return
-				if num > 100:
-					num = 100
+				if num > 99:
+					num = 99
 				mgs = []
 				async for x in client.logs_from(channel, limit=num+1):
 					mgs.append(x)
