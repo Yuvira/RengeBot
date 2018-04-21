@@ -80,10 +80,17 @@ async def cmds_misc(message, umsg, client, conn, cur):
 									await save_profile(data, conn, cur)
 									await client.send_message(channel, 'Waifu removed!')
 							else:
-								await client.send_message(channel, 'There are no waifus at that position!')
+								await client.send_message(channel, 'There is no waifu at that number!')
 						else:
 							await client.send_message(channel, 'Invalid number, need 1-5!')
+					elif (args[2] == 'all'):
+						data = await load_profile(member, conn, cur)
+						if (data[5] != None):
+							for a in range(5,10):
+								data[a] = None
+							await save_profile(data, conn, cur)
+							await client.send_message(channel, 'All waifus removed!')
 					else:
-						await client.send_message(channel, "That isn't a number!")
+						await client.send_message(channel, "That isn't a number or `all`!")
 				else:
 					await client.send_message(channel, 'You must specify a waifu to remove (1-5)!')
