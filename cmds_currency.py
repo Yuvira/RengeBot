@@ -42,21 +42,18 @@ async def cmds_currency(message, umsg, client, conn, cur):
 			if (len(message.mentions) > 0):
 				user = message.mentions[0]
 			elif (len(args) > 1):
+				check = True
 				if (is_int(args[1])):
 					try:
 						user = await client.get_user_info(args[1])
 					except:
-						await client.send_message(channel, 'No user with that ID exists!')
-						return
+						check = False
 				else:
-					t = False
-					for m in server.members:
-						if (args[1].lower() == m.display_name.lower()):
-							user = m
-							t = True
-					if (t == False):
-						await client.send_message(channel, 'There is no user with that name in this server!')
-						return
+					check = False
+				if (check == False):
+					m = discord.utils.find(lambda u: args[1] in u.display_name.lower(), server.members)
+					if (m != None):
+						user = m
 		
 			# load data
 			data = await load_profile(user, conn, cur)
@@ -232,3 +229,33 @@ async def cmds_currency(message, umsg, client, conn, cur):
 				msg = msg + '\n' + str(a+1) + '. **' + t[1] + '** - $' + str(t[3])
 			embed = discord.Embed(title='Global Richest Users', type='rich', description=msg)
 			await client.send_message(channel, content=None, embed=embed)
+			
+	# return user balance
+	if (args[0] == 'balance'):
+	
+		# get user being checked
+		user = member
+		if (len(message.mentions) > 0):
+			user = message.mentions[0]
+		elif (len(args) > 1):
+			check = True
+			if (is_int(args[1])):
+				try:
+					user = await client.get_user_info(args[1])
+				except:
+					check = False
+			else:
+				check = False
+			if (check == False):
+				m = discord.utils.find(lambda u: args[1] in u.display_name.lower(), server.members)
+				if (m != None):
+					user = m
+					
+		# load data
+		data = await load_profile(user, conn, cur)
+		
+		# display data
+		if (member == message.author):
+			await client.send_message(channel, user.display_name + ' has ' + str(data[3]) + ' credits!')
+		else:
+			await client.send_message(channel, user.display_name + ' has ' + str(data[3]) + ' credits!')
