@@ -39,7 +39,7 @@ async def cmds_info(message, umsg, client):
 				embed = discord.Embed(title='Ping Command', type='rich', description='**Usage:**\n`$ping` - Ping Renge')
 				await client.send_message(channel, content=None, embed=embed)
 			elif (args[1] == 'avatar'):
-				embed = discord.Embed(title='Avatar Command', type='rich', description='**Usage:**\n`$avatar` - View your avatar\n`$avatar <@mention>` - View avatar of a mentioned user')
+				embed = discord.Embed(title='Avatar Command', type='rich', description='**Usage:**\n`$avatar` - View your avatar\n`$avatar <mention>` - View avatar of a mentioned user')
 				await client.send_message(channel, content=None, embed=embed)
 			elif (args[1] == 'request'):
 				embed = discord.Embed(title='Request Command', type='rich', description='**Usage:**\n`$request` - Send a request to the developer')
@@ -50,20 +50,29 @@ async def cmds_info(message, umsg, client):
 			elif (args[1] == 'sugoi'):
 				embed = discord.Embed(title='Sugoi Command', type='rich', description='**Usage:**\n`$sugoi` - SUGOI!')
 				await client.send_message(channel, content=None, embed=embed)
+			elif (args[1] == 'prefix'):
+				embed = discord.Embed(title='Custom Prefix Command', type='rich', description="**Usage:**\n`$prefix` - Display the server's custom prefix\n`$prefix set <prefix>` - Set the server's custom prefix\n`$prefix reset` - Remove the server's custom prefix\n**Note:**\nSetting or resetting the server's custom prefix requires the `Manage Server` permission")
+				await client.send_message(channel, content=None, embed=embed)
+			elif (args[1] == 'welcome'):
+				embed = discord.Embed(title='Welcome Message Command', type='rich', description="**Usage:**\n`$welcome` - Display the server's welcome message\n`$welcome set <channel> <message>` - Set the server's welcome message\n`$welcome reset` - Remove the server's welcome message\n**Note:**\nYou can use `!user.mention!` and `!user.name!` as placeholders for the new user's mention/name\n**Note:**\nSetting or resetting the server's welcome message requires the `Manage Server` permission")
+				await client.send_message(channel, content=None, embed=embed)
+			elif (args[1] == 'leave'):
+				embed = discord.Embed(title='Leave Message Command', type='rich', description="**Usage:**\n`$leave` - Display the server's leave message\n`$leave set <channel> <message>` - Set the server's leave message\n`$leave reset` - Remove the server's leave message\n**Note:**\nYou can use `!user.mention!` and `!user.name!` as placeholders for the old user's mention/name\n**Note:**\nSetting or resetting the server's leave message requires the `Manage Server` permission")
+				await client.send_message(channel, content=None, embed=embed)
 			elif (args[1] == 'kick'):
-				embed = discord.Embed(title='Kick Command', type='rich', description='**Usage:**\n`$kick <@mentions> <reason>` - Kicks one or more mentioned users with optional reason')
+				embed = discord.Embed(title='Kick Command', type='rich', description='**Usage:**\n`$kick <mention(s)> <reason>` - Kicks one or more mentioned users with optional reason')
 				await client.send_message(channel, content=None, embed=embed)
 			elif (args[1] == 'ban'):
-				embed = discord.Embed(title='Ban Command', type='rich', description='**Usage:**\n`$ban <@mentions>` - Bans one or more monetioned users\n`$ban <@mentions> <days>` - Bans mentioned user(s) and deletes messages from the past given number of days')
+				embed = discord.Embed(title='Ban Command', type='rich', description='**Usage:**\n`$ban <mention(s)>` - Bans one or more mentioned users\n`$ban <mention(s)> <days>` - Bans mentioned user(s) and deletes messages from the past given number of days')
 				await client.send_message(channel, content=None, embed=embed)
 			elif (args[1] == 'prune'):
 				embed = discord.Embed(title='Prune Command', type='rich', description='**Usage:**\n`$prune <amount>` - Deletes a given number (5 to 99) of messages (default 99 if more or no amount specified)\n`$prune bot <amount>` - Deletes a given number of bot commands and responses')
 				await client.send_message(channel, content=None, embed=embed)
 			elif (args[1] == 'profile'):
-				embed = discord.Embed(title='Profile Command', type='rich', description='**Usage:**\n`$profile` - Displays your profile\n`$profile <@mention>` - Show the profile of a mentioned user\n`$profile <nickname>` - Show the profile of a user with that name in the current server\n`$profile <id>` - Show the profile of a user with a given id\n`$profile desc <description>` - Set the description for your profile')
+				embed = discord.Embed(title='Profile Command', type='rich', description='**Usage:**\n`$profile` - Displays your profile\n`$profile <mention>` - Show the profile of a mentioned user\n`$profile <name>` - Show the profile of a user with that name in the current server\n`$profile <id>` - Show the profile of a user with a given id\n`$profile desc <description>` - Set the description for your profile')
 				await client.send_message(channel, content=None, embed=embed)
 			elif (args[1] == 'rep'):
-				embed = discord.Embed(title='Rep Command', type='rich', description='**Usage:**\n`$rep <@mention>` - Give rep to a mentioned user (Can be used once every 24 hours)')
+				embed = discord.Embed(title='Rep Command', type='rich', description='**Usage:**\n`$rep <mention>` - Give rep to a mentioned user (Can be used once every 24 hours)')
 				await client.send_message(channel, content=None, embed=embed)
 			elif (args[1] == 'daily'):
 				embed = discord.Embed(title='Daily Command', type='rich', description='**Usage:**\n`$daily` - Gives you 100 free credits every 24 hours')
@@ -71,17 +80,23 @@ async def cmds_info(message, umsg, client):
 			elif (args[1] == 'loot'):
 				embed = discord.Embed(title='Loot Command', type='rich', description='**Usage:**\n`$loot` - Loots a random number of credits every 5 minutes')
 				await client.send_message(channel, content=None, embed=embed)
-			elif (args[1] == 'roulette'):
-				embed = discord.Embed(title='Roulette Command', type='rich', description='Allows up to four people at a time to play a game of casino roulette\n**Usage:**\n`$roulette bet <amount> <type>` - Bets an amount on a certain value (bet types listed below)\n`$roulette quick <amount> <type>` - Plays an instant game for one person\n`$roulette cancel` - Cancels your current bet\n`$roulette spin` - Spin the roulette wheel\n**Bet Types:**\n`red/black` - Bets on the red or black colour (Payout 1:1)\n`odd/even` - Bets on odd or even numbers (Payout 1:1)\n`high/low` - Bets on high (19-36) or low (1-18) numbers (Payout 1:1)\n`column <#>` - Bet on column 1, 2 or 3 (Payout 2:1)\n`dozen <#>` - Bet on first (1-12), second (13-24) or third (25-36) dozen (Payout 2:1)\n**Note:**\nDue to input limitations, only outside bets are currently allowed. Inside bets may be added in future')
-				await client.send_message(channel, content=None, embed=embed)
 			elif (args[1] == 'richest'):
 				embed = discord.Embed(title='Richest Command', type='rich', description='**Usage:**\n`$richest` - Retrieves the top ten richest users\n`$richest rep` - Retrieves the top ten users with the most rep')
 				await client.send_message(channel, content=None, embed=embed)
 			elif (args[1] == 'transfer'):
-				embed = discord.Embed(title='Transfer Command', type='rich', description='**Usage:**\n`$transfer <@mention> <amount>` - Transfer a given amount to a mentioned user')
+				embed = discord.Embed(title='Transfer Command', type='rich', description='**Usage:**\n`$transfer <mention> <amount>` - Transfer a given amount to a mentioned user')
+				await client.send_message(channel, content=None, embed=embed)
+			elif (args[1] == 'balance'):
+				embed = discord.Embed(title='Balance Command', type='rich', description="**Usage:**\n`$balance` - Displays your total credits\n`$balance <mention>` - Show a mentioned user's total credits\n`$balance <name>` - Show the credits of a user with that name in the current server\n`$balance <id>` - Show the credits of a user with a given id\n")
+				await client.send_message(channel, content=None, embed=embed)
+			elif (args[1] == 'roulette'):
+				embed = discord.Embed(title='Roulette Command', type='rich', description='**Usage:**\n`$roulette <amount> <bet type>` - Bet credits on roulette\n**Bet Types:**\n`red/black` - Bets on the red or black colour (Payout 1:1)\n`odd/even` - Bets on odd or even numbers (Payout 1:1)\n`high/low` - Bets on high (19-36) or low (1-18) numbers (Payout 1:1)\n`column <#>` - Bet on column 1, 2 or 3 (Payout 2:1)\n`dozen <#>` - Bet on first (1-12), second (13-24) or third (25-36) dozen (Payout 2:1)\n**Note:**\nDue to input limitations, only outside bets are currently allowed. Inside bets may be added in future')
+				await client.send_message(channel, content=None, embed=embed)
+			elif (args[1] == 'slots'):
+				embed = discord.Embed(title='Slots Command', type='rich', description='**Usage:**\n`$slots <amount>` - Bet credits on the slot machine\n**Payouts:**\n:cherries: - 3x Bet amount\n:rice_ball: - 5x Bet amount\n:butterfly: - 8x Bet amount\n:cherry_blossom: - 12x Bet amount\n:dollar: - 75x Bet amount\n:gem: - 100x Bet amount\n')
 				await client.send_message(channel, content=None, embed=embed)
 			elif (args[1] == 'waifu'):
-				embed = discord.Embed(title='Waifu Command', type='rich', description='**Usage:**\n`$waifu add <@mention>` - Add the mentioned user as one of your waifus\n`$waifu rem <number>` - Remove the waifu at the given postion (1-5, in order seen on profile)')
+				embed = discord.Embed(title='Waifu Command', type='rich', description='**Usage:**\n`$waifu add <mention>` - Add the mentioned user as one of your waifus\n`$waifu rem <number>` - Remove the waifu at the given postion (1-5, in order seen on profile)')
 				await client.send_message(channel, content=None, embed=embed)
 			elif (args[1] == 'sotd'):
 				embed = discord.Embed(title='Song of the Day Command', type='rich', description="**Usage:**\n`$sotd` - Display today's song of the day (links to SoundCloud)\n`$sotd url` - Displays just the song url so the player gets embedded into Discord")
@@ -94,10 +109,11 @@ async def cmds_info(message, umsg, client):
 			embed = discord.Embed(title='Renge Help', type='rich', description='Use `$help <command>` for usage')
 			embed.add_field(name="Info Commands:",value="`help` `invite` `support` `about` `info` `ping` `avatar` `request`",inline=False)
 			if not message.server is None:
+				embed.add_field(name="Management Commands:",value="`prefix` `welcome` `leave`",inline=False)
 				embed.add_field(name="Moderation Commands:",value="`ban` `kick` `prune`",inline=False)
 			embed.add_field(name="Action Commands:",value="`shrug` `sugoi`",inline=False)
-			embed.add_field(name="Currency Commands:",value="`profile` `rep` `daily` `loot` `transfer` `richest`",inline=False)
-			embed.add_field(name="Game Commands:",value="`roulette`",inline=False)
+			embed.add_field(name="Currency Commands:",value="`profile` `rep` `daily` `loot` `transfer` `richest` `balance`",inline=False)
+			embed.add_field(name="Game Commands:",value="`roulette` `slots`",inline=False)
 			embed.add_field(name="Misc Commands:",value='`waifu` `sotd`')
 			await client.send_message(channel, content=None, embed=embed)
 	
