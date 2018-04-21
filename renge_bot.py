@@ -9,15 +9,17 @@ import datetime
 import asyncio
 
 # modules
-import cmds_info
-import cmds_mod
 import cmds_action
 import cmds_currency
 import cmds_games
+import cmds_info
+import cmds_mgmt
 import cmds_misc
+import cmds_mod
 import cmds_owner
 
 # commands
+from renge_utils import load_server
 from renge_utils import create_profile
 
 # client
@@ -61,26 +63,36 @@ async def on_message(message):
 	if (message.author.bot == True):
 		check = False
 	
-	# if message received from server
+	# if message received from user
 	if (check == True):
+		
+		# retrieve server prefix
+		custom_prefix = prefix
+		data = await load_server(message.server, conn, cur)
+		if data[1] != None:
+			custom_prefix = data[1]
 		
 		# transfer message to variable and format
 		umsg = message.content
 		umsg.lower()
 		
 		# check prefix
-		if umsg.startswith(prefix):
+		if (umsg.startswith(prefix) or umsg.startswith(custom_prefix)):
 			
 			# more formatting
-			umsg = umsg[1:]
+			if umsg.startswith(custom_prefix):
+				umsg = umsg[len(custom_prefix):]
+			else:
+				umsg = umsg[1:]
 			
 			# command lists
-			await cmds_info.cmds_info(message, umsg, client)
-			await cmds_mod.cmds_mod(message, umsg, prefix, client)
 			await cmds_action.cmds_action(message, umsg, client)
 			await cmds_currency.cmds_currency(message, umsg, client, conn, cur)
 			await cmds_games.cmds_games(message, umsg, client, conn, cur)
+			await cmds_info.cmds_info(message, umsg, client)
+			await cmds_mgmt.cmds_mgmt(message, umsg, client, conn, cur)
 			await cmds_misc.cmds_misc(message, umsg, client, conn, cur)
+			await cmds_mod.cmds_mod(message, umsg, prefix, client)
 			await cmds_owner.cmds_owner(message, umsg, client, conn, cur)
 			
 			# reload module
@@ -96,6 +108,8 @@ async def on_message(message):
 							importlib.reload(cmds_games)
 						elif (args[1] == 'info'):
 							importlib.reload(cmds_info)
+						elif (args[1] == 'mgmt'):
+							importlib.reload(cmds_mgmt)
 						elif (args[1] == 'misc'):
 							importlib.reload(cmds_misc)
 						elif (args[1] == 'mod'):
@@ -119,6 +133,26 @@ async def on_server_join(server):
 async def on_server_remove(server):
 	log_channel = discord.Object('314283195866677251')
 	await client.send_message(log_channel, 'Left server `' + server.name + '`, owned by `' + server.owner.name + '#' + server.owner.discriminator + '`')
+
+# member join
+@client.event
+async def on_member_join(member):
+	data = await load_server(member.server, conn, cur)
+	if (data[2] != None and data[3] != None):
+		channel = discord.Object(data[2])
+		data[3] = data[3].replace('!user.mention!', member.mention)
+		data[3] = data[3].replace('!user.name!', member.name)
+		await client.send_message(channel, data[3])
+
+# member leave
+@client.event
+async def on_member_remove(member):
+	data = await load_server(member.server, conn, cur)
+	if (data[4] != None and data[5] != None):
+		channel = discord.Object(data[4])
+		data[5] = data[5].replace('!user.mention!', member.mention)
+		data[5] = data[5].replace('!user.name!', member.name)
+		await client.send_message(channel, data[5])
 	
 # song of the day updater
 async def sotd():
@@ -140,9 +174,9 @@ async def on_ready():
 	print(client.user.name)
 	print(client.user.id)
 	print('------')
-	await client.change_presence(game=discord.Game(type=0, name=prefix+'help | Nyanpasuuu~'), status=None, afk=False)
-	cur.execute('DELETE FROM games')
-	conn.commit()
+	await client.change_presence(game=discord.Game(type=1, name=prefix+'help | Nyanpasuuu~'), status=None, afk=False)
+	log_channel = discord.Object('314283195866677251')
+	await client.send_message(log_channel, 'Booted successfully!')
 
 # logging
 logger = logging.getLogger('discord')
