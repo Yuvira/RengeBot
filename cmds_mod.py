@@ -38,7 +38,7 @@ async def cmds_mod(message, umsg, prefix, client):
 							msg += "`{}` ".format(str(message.mentions[i]))
 							test = True
 						except:
-							await client.send_message(channel, "Something happened while trying to kick the member :<")
+							await client.send_message(channel, "Something happened, failed to kick!")
 					else:
 						await client.send_message(channel, "You can't kick someone with a higher role than you!")
 				else:
@@ -74,13 +74,13 @@ async def cmds_mod(message, umsg, prefix, client):
 							msg += "`{}` ".format(str(message.mentions[i]))
 							test = True
 						except:
-							await client.send_message(channel, "Something happened while trying to ban the member.") # this shouldn't happen
+							await client.send_message(channel, "Something happened, failed to ban!")
 					else:
-						await client.send_message(channel, "Can't allow you to ban someone with a higher role than you.")
+						await client.send_message(channel, "You can't ban someone with a higher role than you!")
 				else:
-					await client.send_message(channel, "I can't ban that person because they have a role higher than me.")
+					await client.send_message(channel, "I can't ban that person because they have a role higher than me!")
 			if (test == True):
-				await client.send_message(channel, msg + "and deleted **" + str(t) + "** days of messages.")
+				await client.send_message(channel, msg + "and deleted **" + str(t) + "** days of messages")
 				
 	# prune
 	if (args[0] == 'prune'):
@@ -105,7 +105,7 @@ async def cmds_mod(message, umsg, prefix, client):
 						await client.send_message(channel, "That's too few messages!")
 						return
 					if num > 99:
-						num = 99 # check max
+						num = 99
 				mgs = []
 				async for x in client.logs_from(channel, limit=num+2):
 					if x.author.bot or x.content.lower().startswith(prefix):
@@ -115,11 +115,11 @@ async def cmds_mod(message, umsg, prefix, client):
 				except discord.HTTPException:
 					await client.send_message(channel, "Failed to prune, messages are probably too old")
 					return
-				pruned = await client.send_message(channel, "Deleted `" + str(len(mgs)-1) + "` bot messages & bot calls.") # get number of messages pruned
+				pruned = await client.send_message(channel, "Deleted `" + str(len(mgs)-1) + "` bot messages & bot calls")
 				await asyncio.sleep(5)
 				try:
 					await client.delete_message(pruned)
-				except discord.NotFound: # check if message deleted already
+				except discord.NotFound:
 					pass
 			else:
 				try:
@@ -140,9 +140,10 @@ async def cmds_mod(message, umsg, prefix, client):
 				except discord.HTTPException:
 					await client.send_message(channel, "Failed to prune, messages are probably too old")
 					return
-				pruned = await client.send_message(channel, "Deleted `" + str(len(mgs)-1) + "` messages.")
+				pruned = await client.send_message(channel, "Deleted `" + str(len(mgs)-1) + "` messages")
 				await asyncio.sleep(5)
 				try:
 					await client.delete_message(pruned)
 				except discord.NotFound:
 					pass
+	
