@@ -174,7 +174,7 @@ async def on_ready():
 	print(client.user.name)
 	print(client.user.id)
 	print('------')
-	await client.change_presence(game=discord.Game(type=1, name=prefix+'help | Nyanpasuuu~'), status=None, afk=False)
+	await client.change_presence(game=discord.Game(type=0, name=prefix+'help | Nyanpasuuu~'), status=None, afk=False)
 	log_channel = discord.Object('314283195866677251')
 	await client.send_message(log_channel, 'Booted successfully!')
 
