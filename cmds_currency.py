@@ -51,7 +51,7 @@ async def cmds_currency(message, umsg, client, conn, cur):
 				else:
 					check = False
 				if (check == False):
-					m = discord.utils.find(lambda u: args[1] in u.display_name.lower(), server.members)
+					m = discord.utils.find(lambda u: args[1].lower() in u.display_name.lower(), server.members)
 					if (m != None):
 						user = m
 		
@@ -250,7 +250,7 @@ async def cmds_currency(message, umsg, client, conn, cur):
 			else:
 				check = False
 			if (check == False):
-				m = discord.utils.find(lambda u: args[1] in u.display_name.lower(), server.members)
+				m = discord.utils.find(lambda u: args[1].lower() in u.display_name.lower(), server.members)
 				if (m != None):
 					user = m
 					
