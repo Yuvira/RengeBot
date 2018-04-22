@@ -13,7 +13,7 @@ async def cmds_info(message, umsg, client):
 	channel = message.channel
 	member = message.author
 	request_channel = discord.Object('315103432581185536')
-	bot_version = '0.4.0'
+	bot_version = '0.4.1'
 	
 	# help
 	if (args[0] == 'help'):
@@ -49,6 +49,24 @@ async def cmds_info(message, umsg, client):
 				await client.send_message(channel, content=None, embed=embed)
 			elif (args[1] == 'sugoi'):
 				embed = discord.Embed(title='Sugoi Command', type='rich', description='**Usage:**\n`$sugoi` - SUGOI!')
+				await client.send_message(channel, content=None, embed=embed)
+			elif (args[1] == 'pat'):
+				embed = discord.Embed(title='Pat Command', type='rich', description='**Usage:**\n`$pat <mention(s)>` - Give someone a well-deserved pat')
+				await client.send_message(channel, content=None, embed=embed)
+			elif (args[1] == 'hug'):
+				embed = discord.Embed(title='Hug Command', type='rich', description='**Usage:**\n`$hug <mention(s)>` - Give a special someone a warm hug')
+				await client.send_message(channel, content=None, embed=embed)
+			elif (args[1] == 'pout'):
+				embed = discord.Embed(title='Pout Command', type='rich', description='**Usage:**\n`$pout` - Pout\n`$pout <mention(s)>` - Pout at someone')
+				await client.send_message(channel, content=None, embed=embed)
+			elif (args[1] == 'slap'):
+				embed = discord.Embed(title='Slap Command', type='rich', description='**Usage:**\n`$slap <mention(s)>` - Give someone a good smack')
+				await client.send_message(channel, content=None, embed=embed)
+			elif (args[1] == 'stare'):
+				embed = discord.Embed(title='Stare Command', type='rich', description='**Usage:**\n`$stare <mention(s)>` - Get someone to notice you')
+				await client.send_message(channel, content=None, embed=embed)
+			elif (args[1] == 'nom'):
+				embed = discord.Embed(title='Nom Command', type='rich', description='**Usage:**\n`$nom` - Eat something\n`$nom <mention(s)>` - Eat some*one*')
 				await client.send_message(channel, content=None, embed=embed)
 			elif (args[1] == 'prefix'):
 				embed = discord.Embed(title='Custom Prefix Command', type='rich', description="**Usage:**\n`$prefix` - Display the server's custom prefix\n`$prefix set <prefix>` - Set the server's custom prefix\n`$prefix reset` - Remove the server's custom prefix\n**Note:**\nSetting or resetting the server's custom prefix requires the `Manage Server` permission")
@@ -111,7 +129,7 @@ async def cmds_info(message, umsg, client):
 			if not message.server is None:
 				embed.add_field(name="Management Commands:",value="`prefix` `welcome` `leave`",inline=False)
 				embed.add_field(name="Moderation Commands:",value="`ban` `kick` `prune`",inline=False)
-			embed.add_field(name="Action Commands:",value="`shrug` `sugoi`",inline=False)
+			embed.add_field(name="Action Commands:",value="`pat` `hug` `pout` `slap` `stare` `nom` `shrug` `sugoi`",inline=False)
 			embed.add_field(name="Currency Commands:",value="`profile` `rep` `daily` `loot` `transfer` `richest` `balance`",inline=False)
 			embed.add_field(name="Game Commands:",value="`roulette` `slots`",inline=False)
 			embed.add_field(name="Misc Commands:",value='`waifu` `sotd`')
