@@ -55,22 +55,23 @@ async def on_message(message):
 	dm_log = discord.Object('342097197443317760')
 	
 	# check message source
-	check = True
-	if (message.server is None):
-		if (message.author.bot == False):
+	botMsg = True
+	usrMsg = False
+	if (message.author.bot == False):
+		botMsg = False
+		if (message.server is None):
+			usrMsg = True
 			await client.send_message(dm_log, 'Received DM from `' + message.author.name + '#' + message.author.discriminator + '`: ' + message.content)
-		check = True
-	if (message.author.bot == True):
-		check = False
 	
 	# if message received from user
-	if (check == True):
+	if (botMsg == False):
 		
 		# retrieve server prefix
 		custom_prefix = prefix
-		data = await load_server(message.server, conn, cur)
-		if data[1] != None:
-			custom_prefix = data[1]
+		if (usrMsg == False):
+			data = await load_server(message.server, conn, cur)
+			if data[1] != None:
+				custom_prefix = data[1]
 		
 		# transfer message to variable and format
 		umsg = message.content
