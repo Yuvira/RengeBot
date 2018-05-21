@@ -13,7 +13,7 @@ async def cmds_info(message, umsg, client):
 	channel = message.channel
 	member = message.author
 	request_channel = discord.Object('315103432581185536')
-	bot_version = '0.4.1'
+	bot_version = '0.4.2'
 	
 	# help
 	if (args[0] == 'help'):
@@ -111,7 +111,7 @@ async def cmds_info(message, umsg, client):
 				embed = discord.Embed(title='Roulette Command', type='rich', description='**Usage:**\n`$roulette <amount> <bet type>` - Bet credits on roulette\n**Bet Types:**\n`red/black` - Bets on the red or black colour (Payout 1:1)\n`odd/even` - Bets on odd or even numbers (Payout 1:1)\n`high/low` - Bets on high (19-36) or low (1-18) numbers (Payout 1:1)\n`column <#>` - Bet on column 1, 2 or 3 (Payout 2:1)\n`dozen <#>` - Bet on first (1-12), second (13-24) or third (25-36) dozen (Payout 2:1)\n**Note:**\nDue to input limitations, only outside bets are currently allowed. Inside bets may be added in future')
 				await client.send_message(channel, content=None, embed=embed)
 			elif (args[1] == 'slots'):
-				embed = discord.Embed(title='Slots Command', type='rich', description='**Usage:**\n`$slots <amount>` - Bet credits on the slot machine\n**Payouts:**\n:cherries: - 3x Bet amount\n:rice_ball: - 5x Bet amount\n:butterfly: - 8x Bet amount\n:cherry_blossom: - 12x Bet amount\n:dollar: - 75x Bet amount\n:gem: - 100x Bet amount\n')
+				embed = discord.Embed(title='Slots Command', type='rich', description='**Usage:**\n`$slots <amount>` - Bet credits on the slot machine\n**Payouts:**\n:cherries: - 2x Bet amount\n:rice_ball: - 3x Bet amount\n:butterfly: - 5x Bet amount\n:cherry_blossom: - 10x Bet amount\n:dollar: - 25x Bet amount\n:gem: - 50x Bet amount\n')
 				await client.send_message(channel, content=None, embed=embed)
 			elif (args[1] == 'waifu'):
 				embed = discord.Embed(title='Waifu Command', type='rich', description='**Usage:**\n`$waifu add <mention>` - Add the mentioned user as one of your waifus\n`$waifu rem <number>` - Remove the waifu at the given postion (1-5, in order seen on profile)')
