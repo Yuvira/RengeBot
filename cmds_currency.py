@@ -234,7 +234,7 @@ async def cmds_currency(message, umsg, client, conn, cur):
 			await client.send_message(channel, content=None, embed=embed)
 			
 	# return user balance
-	if (args[0] == 'balance'):
+	if (args[0] == 'balance' or args[0] == 'bal'):
 	
 		# get user being checked
 		user = member
