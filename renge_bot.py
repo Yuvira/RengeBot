@@ -75,7 +75,7 @@ async def on_message(message):
 		
 		# transfer message to variable and format
 		umsg = message.content
-		umsg.lower()
+		umsg = umsg.lower()
 		
 		# check prefix
 		if (umsg.startswith(prefix) or umsg.startswith(custom_prefix)):
