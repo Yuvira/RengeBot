@@ -175,7 +175,7 @@ async def cmds_games(message, umsg, client, conn, cur):
 						bet_amount = int(args[1])
 						msg = 'You bet $' + str(bet_amount) + '\n'
 						
-						# take mode if owner
+						# get mode override if owner
 						if (len(args) > 3 and member.id == '188663897279037440'):
 							if (args[2] == 'mode'):
 								if (args[3] == '0'):
@@ -214,7 +214,7 @@ async def cmds_games(message, umsg, client, conn, cur):
 			wheel3 = wheel3 + wheel3[1:]
 			
 			# decide mode
-			t = int(random.random() * 50)
+			t = int(random.random() * 30)
 			if (t == 0):
 				mode = 2 # "super" mode, tries to guarantee high payout
 			elif (t < 11):
@@ -288,17 +288,17 @@ async def cmds_games(message, umsg, client, conn, cur):
 			winnings = 0
 			if (wheel1[spin1] == wheel2[spin2] and wheel2[spin2] == wheel3[spin3]):
 				if (wheel1[spin1] == s[0]):
-					winnings = bet_amount * 3
+					winnings = bet_amount * 2
 				elif (wheel1[spin1] == s[1]):
-					winnings = bet_amount * 5
+					winnings = bet_amount * 3
 				elif (wheel1[spin1] == s[2]):
-					winnings = bet_amount * 8
+					winnings = bet_amount * 5
 				elif (wheel1[spin1] == s[3]):
-					winnings = bet_amount * 12
+					winnings = bet_amount * 10
 				elif (wheel1[spin1] == s[4]):
-					winnings = bet_amount * 75
+					winnings = bet_amount * 25
 				elif (wheel1[spin1] == s[5]):
-					winnings = bet_amount * 100
+					winnings = bet_amount * 50
 			else:
 				winnings = -bet_amount
 			if (winnings > 0):
