@@ -1,7 +1,7 @@
 # import
 import discord
-import random
 import sqlite3
+import random
 from renge_utils import load_profile
 from renge_utils import save_profile
 from renge_utils import is_int
@@ -33,7 +33,7 @@ async def cmds_games(message, umsg, client, conn, cur):
 					
 					# check bet within player's credits
 					udata = await load_profile(member, conn, cur)
-					if (int(args[1]) <= udata[3]):
+					if (int(args[1]) <= int(udata[3])):
 						
 						# bet type
 						if (len(args) > 2):
@@ -141,17 +141,14 @@ async def cmds_games(message, umsg, client, conn, cur):
 				
 			# update user
 			udata = await load_profile(member.id, conn, cur)
-			udata[3] += int(winnings)
-			if (udata[3] > 9200000000000000000):
-				udata[3] = 9200000000000000000
-				await client.send_message(channel, ":tada: Good job, you reached the credit limit. Hope you're proud of yourself")
+			udata[3] = str(int(udata[3]) + int(winnings))
 			await save_profile(udata, conn, cur)
 					
 			# send results
 			await client.send_message(channel, msg)
 	
 	# slots--------------------------------------------------------------------
-	# based somewhat heavily on Pokémon RBY slot mechanics
+	# based on Pokémon RBY slot mechanics
 	elif (args[0] == 'slots'):
 		
 		# variables
@@ -171,7 +168,7 @@ async def cmds_games(message, umsg, client, conn, cur):
 					
 					# check bet within player's credits
 					udata = await load_profile(member, conn, cur)
-					if (int(args[1]) <= udata[3]):
+					if (int(args[1]) <= int(udata[3])):
 						bet_amount = int(args[1])
 						msg = 'You bet $' + str(bet_amount) + '\n'
 						
@@ -311,10 +308,7 @@ async def cmds_games(message, umsg, client, conn, cur):
 				
 			# update user
 			udata = await load_profile(member.id, conn, cur)
-			udata[3] += int(winnings)
-			if (udata[3] > 9200000000000000000):
-				udata[3] = 9200000000000000000
-				await client.send_message(channel, ":tada: Good job, you reached the credit limit. Hope you're proud of yourself")
+			udata[3] = str(int(udata[3]) + int(winnings))
 			await save_profile(udata, conn, cur)
 					
 			# send results
