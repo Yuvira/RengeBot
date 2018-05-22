@@ -51,10 +51,7 @@ async def cmds_owner(message, umsg, client, conn, cur):
 				user = await client.get_user_info(args[1])
 				t = int(args[2])
 				data = await load_profile(user, conn, cur)
-				data[3] += t
-				if (data[3] > 9200000000000000000):
-					data[3] = 9200000000000000000
-					await client.send_message(channel, 'pls')
+				data[3] = str(int(data[3]) + t)
 				await save_profile(data, conn, cur)
 				await client.send_message(channel, 'Gave ' + args[2] + ' credits to ' + str(user) + '!')
 			except:
