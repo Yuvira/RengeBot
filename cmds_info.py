@@ -13,7 +13,7 @@ async def cmds_info(message, umsg, client):
 	channel = message.channel
 	member = message.author
 	request_channel = discord.Object('315103432581185536')
-	bot_version = '0.4.2'
+	bot_version = '0.5.0'
 	
 	# help
 	if (args[0] == 'help'):
@@ -119,6 +119,12 @@ async def cmds_info(message, umsg, client):
 			elif (args[1] == 'sotd'):
 				embed = discord.Embed(title='Song of the Day Command', type='rich', description="**Usage:**\n`$sotd` - Display today's song of the day (links to SoundCloud)\n`$sotd url` - Displays just the song url so the player gets embedded into Discord")
 				await client.send_message(channel, content=None, embed=embed)
+			elif (args[1] == 'anime'):
+				embed = discord.Embed(title='Anime Command', type='rich', description="**Usage:**\n`$anime <title>` - Search MAL for an anime")
+				await client.send_message(channel, content=None, embed=embed)
+			elif (args[1] == '8ball'):
+				embed = discord.Embed(title='Magic 8-Ball Command', type='rich', description="**Usage:**\n`$8ball <question>` - Ask the Magic 8-Ball a question")
+				await client.send_message(channel, content=None, embed=embed)
 			else:
 				await client.send_message(channel, 'That command does not exist!')
 		
@@ -132,7 +138,7 @@ async def cmds_info(message, umsg, client):
 			embed.add_field(name="Action Commands:",value="`pat` `hug` `pout` `slap` `stare` `nom` `shrug` `sugoi`",inline=False)
 			embed.add_field(name="Currency Commands:",value="`profile` `rep` `daily` `loot` `transfer` `richest` `balance`",inline=False)
 			embed.add_field(name="Game Commands:",value="`roulette` `slots`",inline=False)
-			embed.add_field(name="Misc Commands:",value='`waifu` `sotd`')
+			embed.add_field(name="Misc Commands:",value='`anime` `sotd` `waifu` `8ball`')
 			await client.send_message(channel, content=None, embed=embed)
 	
 	# invite
