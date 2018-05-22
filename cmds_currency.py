@@ -69,9 +69,9 @@ async def cmds_currency(message, umsg, client, conn, cur):
 			
 			# display data
 			try:
-				embed = discord.Embed(title=user.display_name + "'s profile", type='rich', description=data[2] + '\n\n**Credits**\n' + str(data[3]) + '\n\n**Reputation**\n' + str(data[4]) + '\n\n**Waifus**' + waifu, colour=user.colour)
+				embed = discord.Embed(title=user.display_name + "'s profile", type='rich', description=data[2] + '\n\n**Credits**\n' + data[3] + '\n\n**Reputation**\n' + data[4] + '\n\n**Waifus**' + waifu, colour=user.colour)
 			except:
-				embed = discord.Embed(title=user.display_name + "'s profile", type='rich', description=data[2] + '\n\n**Credits**\n' + str(data[3]) + '\n\n**Reputation**\n' + str(data[4]) + '\n\n**Waifus**' + waifu)
+				embed = discord.Embed(title=user.display_name + "'s profile", type='rich', description=data[2] + '\n\n**Credits**\n' + data[3] + '\n\n**Reputation**\n' + data[4] + '\n\n**Waifus**' + waifu)
 			if (user.avatar_url == ''):
 				avatar = user.default_avatar_url
 			else:
@@ -90,10 +90,7 @@ async def cmds_currency(message, umsg, client, conn, cur):
 		
 			# add 100 credits to profile
 			data = await load_profile(member, conn, cur)
-			data[3] = data[3] + 100
-			if (data[3] > 9200000000000000000):
-				data[3] = 9200000000000000000
-				await client.send_message(channel, ':tada: Good job, ' + member.name + ", you reached the credit limit. Hope you're proud of yourself")
+			data[3] = str(int(data[3]) + 100)
 			await save_profile(data, conn, cur)
 			
 			# update ratelimit
@@ -124,10 +121,7 @@ async def cmds_currency(message, umsg, client, conn, cur):
 			loot = int(random.random() * 40) - 10
 			if (loot > 0):
 				data = await load_profile(member, conn, cur)
-				data[3] += loot
-				if (data[3] > 9200000000000000000):
-					data[3] = 9200000000000000000
-					await client.send_message(channel, ':tada: Good job, ' + member.name + ", you reached the credit limit. Hope you're proud of yourself")
+				data[3] = str(int(data[3]) + loot)
 				await save_profile(data, conn, cur)
 			
 			# update ratelimit
@@ -154,11 +148,11 @@ async def cmds_currency(message, umsg, client, conn, cur):
 				if (is_int(args[2])):
 					if (int(args[2]) > 0):
 						usr1 = await load_profile(member, conn, cur)
-						if (int(args[2]) <= usr1[3]):
+						if (int(args[2]) <= int(usr1[3])):
 							usr2 = await load_profile(message.mentions[0], conn, cur)
 							if (usr1[0] != usr2[0]):
-								usr1[3] -= int(args[2])
-								usr2[3] += int(args[2])
+								usr1[3] = str(int(usr1[3]) - int(args[2]))
+								usr2[3] = str(int(usr2[3]) + int(args[2]))
 								await save_profile(usr1, conn, cur)
 								await save_profile(usr2, conn, cur)
 								if (message.mentions[0] == server.me):
@@ -191,7 +185,7 @@ async def cmds_currency(message, umsg, client, conn, cur):
 				if (len(message.mentions) == 1):
 					if (message.mentions[0] != message.author):
 						data = await load_profile(message.mentions[0], conn, cur)
-						data[4] = data[4] + 1
+						data[4] = str(int(data[4]) + 1)
 						await save_profile(data, conn, cur)
 						rl[3] = int(time.time())
 						await save_ratelimit(rl, conn, cur)
@@ -219,14 +213,14 @@ async def cmds_currency(message, umsg, client, conn, cur):
 		msg = 'Top Ten'
 		if (len(args) > 1):
 			if (args[1] == 'rep'):
-				cur.execute('SELECT * FROM profiles ORDER BY rep DESC LIMIT 10')
+				cur.execute('SELECT * FROM profiles ORDER BY CAST(rep AS INTEGER) DESC LIMIT 10')
 				for a in range(0,10):
 					t = cur.fetchone()
 					msg = msg + '\n' + str(a+1) + '. **' + t[1] + '** - ' + str(t[4])
 				embed = discord.Embed(title='Global Most Reputable Users', type='rich', description=msg)
 				await client.send_message(channel, content=None, embed=embed)
 		else:
-			cur.execute('SELECT * FROM profiles ORDER BY credits DESC LIMIT 10')
+			cur.execute('SELECT * FROM profiles ORDER BY CAST(credits AS INTEGER) DESC LIMIT 10')
 			for a in range(0,10):
 				t = cur.fetchone()
 				msg = msg + '\n' + str(a+1) + '. **' + t[1] + '** - $' + str(t[3])
@@ -259,6 +253,6 @@ async def cmds_currency(message, umsg, client, conn, cur):
 		
 		# display data
 		if (member == message.author):
-			await client.send_message(channel, user.display_name + ' has ' + str(data[3]) + ' credits!')
+			await client.send_message(channel, user.display_name + ' has ' + data[3] + ' credits!')
 		else:
-			await client.send_message(channel, user.display_name + ' has ' + str(data[3]) + ' credits!')
+			await client.send_message(channel, user.display_name + ' has ' + data[3] + ' credits!')
