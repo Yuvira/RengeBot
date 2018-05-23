@@ -19,10 +19,10 @@ async def cmds_currency(message, umsg, client, conn, cur):
 	server = message.server
 	
 	# profile
-	if (args[0] == 'profile'):
+	if (args[0].lower() == 'profile'):
 				
 		# set profile description
-		if (len(args) > 1 and args[1] == 'desc'):
+		if (len(args) > 1 and args[1].lower() == 'desc'):
 			if (len(args) > 2):
 				data = await load_profile(member, conn, cur)
 				data[2] = umsg[13:]
@@ -81,7 +81,7 @@ async def cmds_currency(message, umsg, client, conn, cur):
 			await client.send_message(channel, content=None, embed=embed)
 			
 	# daily
-	if (args[0] == 'daily'):
+	if (args[0].lower() == 'daily'):
 		
 		# check ratelimit
 		rl = await load_ratelimit(member, conn, cur)
@@ -110,7 +110,7 @@ async def cmds_currency(message, umsg, client, conn, cur):
 			await client.send_message(channel, msg)
 			
 	# loot
-	if (args[0] == 'loot'):
+	if (args[0].lower() == 'loot'):
 		
 		# check ratelimit
 		rl = await load_ratelimit(member, conn, cur)
@@ -142,7 +142,7 @@ async def cmds_currency(message, umsg, client, conn, cur):
 			await client.send_message(channel, msg)
 			
 	# transfer
-	if (args[0] == 'transfer'):
+	if (args[0].lower() == 'transfer'):
 		if (len(args) == 3):
 			if (len(message.mentions) == 1):
 				if (is_int(args[2])):
@@ -173,7 +173,7 @@ async def cmds_currency(message, umsg, client, conn, cur):
 			await client.send_message(channel, 'Incorrect number of arguments!')
 			
 	# rep
-	if (args[0] == 'rep'):
+	if (args[0].lower() == 'rep'):
 		
 		# check ratelimit
 		rl = await load_ratelimit(member, conn, cur)
@@ -209,10 +209,10 @@ async def cmds_currency(message, umsg, client, conn, cur):
 			await client.send_message(channel, msg)
 			
 	# get global richest users
-	if (args[0] == 'richest'):
+	if (args[0].lower() == 'richest'):
 		msg = 'Top Ten'
 		if (len(args) > 1):
-			if (args[1] == 'rep'):
+			if (args[1].lower() == 'rep'):
 				cur.execute('SELECT * FROM profiles ORDER BY CAST(rep AS INTEGER) DESC LIMIT 10')
 				for a in range(0,10):
 					t = cur.fetchone()
@@ -228,7 +228,7 @@ async def cmds_currency(message, umsg, client, conn, cur):
 			await client.send_message(channel, content=None, embed=embed)
 			
 	# return user balance
-	if (args[0] == 'balance' or args[0] == 'bal'):
+	if (args[0].lower() == 'balance' or args[0].lower() == 'bal'):
 	
 		# get user being checked
 		user = member
