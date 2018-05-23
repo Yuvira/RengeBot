@@ -40,11 +40,11 @@ async def cmds_misc(message, umsg, client, conn, cur):
 	member = message.author
 	
 	# song of the day
-	if (args[0] == 'sotd'):
+	if (args[0].lower() == 'sotd'):
 		try:
 			cur.execute('SELECT * FROM sotd ORDER BY rowid ASC LIMIT 1')
 			t = cur.fetchone()
-			if (len(args) > 1 and args[1] == 'url'):
+			if (len(args) > 1 and args[1].lower() == 'url'):
 				await client.send_message(channel, t[2])
 			else:
 				embed = discord.Embed(title="Song of the Day", description=t[0] + ' - ' + t[1], url=t[2])
@@ -54,11 +54,11 @@ async def cmds_misc(message, umsg, client, conn, cur):
 			await client.send_message(channel, "Something went wrong (there probably isn't a song of the day queued)!")
 	
 	# waifu
-	if (args[0] == 'waifu'):
+	if (args[0].lower() == 'waifu'):
 		if (len(args) > 1):
 			
 			# add
-			if (args[1] == 'add'):
+			if (args[1].lower() == 'add'):
 				if (len(args) > 2 and len(message.mentions) == 1):
 					if (message.mentions[0].id != member.id):
 						check1 = False
@@ -86,7 +86,7 @@ async def cmds_misc(message, umsg, client, conn, cur):
 					await client.send_message(channel, 'You must mention one user!')
 					
 			# remove
-			elif (args[1] == 'rem' or args[1] == "rm"):
+			elif (args[1].lower() == 'rem' or args[1].lower() == "rm"):
 				if (len(args) > 2):
 					if (is_int(args[2])):
 						if (int(args[2]) > 0 and int(args[2]) < 6):
@@ -109,7 +109,7 @@ async def cmds_misc(message, umsg, client, conn, cur):
 								await client.send_message(channel, 'There is no waifu at that number!')
 						else:
 							await client.send_message(channel, 'Invalid number, need 1-5!')
-					elif (args[2] == 'all'):
+					elif (args[2].lower() == 'all'):
 						data = await load_profile(member, conn, cur)
 						if (data[5] != None):
 							for a in range(5,10):
@@ -122,7 +122,7 @@ async def cmds_misc(message, umsg, client, conn, cur):
 					await client.send_message(channel, 'You must specify a waifu to remove (1-5)!')
 					
 	# anime lookup
-	if (args[0] == 'anime'):
+	if (args[0].lower() == 'anime'):
 		if (len(args) > 1):
 			try:
 				userpass = base64.b64encode(b'username:password').decode('ascii')
@@ -150,7 +150,7 @@ async def cmds_misc(message, umsg, client, conn, cur):
 			await client.send_message(channel, 'You need to specify an anime to look for!')
 	
 	# magic 8 ball
-	if (args[0] == '8ball'):
+	if (args[0].lower() == '8ball'):
 		if (len(args) > 1):
 			str = ':8ball: '
 			t = int(random.random() * 23)
