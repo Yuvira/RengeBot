@@ -73,9 +73,8 @@ async def on_message(message):
 			if data[1] != None:
 				custom_prefix = data[1]
 		
-		# transfer message to variable and format
+		# shorten variable name
 		umsg = message.content
-		umsg = umsg.lower()
 		
 		# check prefix
 		if (umsg.startswith(prefix) or umsg.startswith(custom_prefix)):
@@ -99,23 +98,23 @@ async def on_message(message):
 			# reload module
 			if (message.author.id == '188663897279037440'):
 				args = umsg.split(' ')
-				if (args[0] == 'reload' and len(args) == 2):
+				if (args[0].lower() == 'reload' and len(args) == 2):
 					try:
-						if (args[1] == 'action'):
+						if (args[1].lower() == 'action'):
 							importlib.reload(cmds_action)
-						elif (args[1] == 'currency'):
+						elif (args[1].lower() == 'currency'):
 							importlib.reload(cmds_currency)
-						elif (args[1] == 'games'):
+						elif (args[1].lower() == 'games'):
 							importlib.reload(cmds_games)
-						elif (args[1] == 'info'):
+						elif (args[1].lower() == 'info'):
 							importlib.reload(cmds_info)
-						elif (args[1] == 'mgmt'):
+						elif (args[1].lower() == 'mgmt'):
 							importlib.reload(cmds_mgmt)
-						elif (args[1] == 'misc'):
+						elif (args[1].lower() == 'misc'):
 							importlib.reload(cmds_misc)
-						elif (args[1] == 'mod'):
+						elif (args[1].lower() == 'mod'):
 							importlib.reload(cmds_mod)
-						elif (args[1] == 'owner'):
+						elif (args[1].lower() == 'owner'):
 							importlib.reload(cmds_owner)
 						else:
 							raise Exception
