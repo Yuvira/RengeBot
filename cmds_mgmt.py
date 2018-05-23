@@ -14,11 +14,11 @@ async def cmds_mgmt(message, umsg, client, conn, cur):
 	member = message.author
 	
 	# prefix
-	if (args[0] == 'prefix'):
+	if (args[0].lower() == 'prefix'):
 		
 		# set prefix
 		if (len(args) > 1):
-			if (args[1] == 'set'):
+			if (args[1].lower() == 'set'):
 				if (member.server_permissions.manage_server == False):
 					await client.send_message(channel, 'You do not have manage server permissions!')
 				else:
@@ -32,7 +32,7 @@ async def cmds_mgmt(message, umsg, client, conn, cur):
 					
 		# remove prefix
 		if (len(args) > 1):
-			if (args[1] == 'reset'):
+			if (args[1].lower() == 'reset'):
 				if (member.server_permissions.manage_server == False):
 					await client.send_message(channel, 'You do not have manage server permissions!')
 				else:
@@ -50,11 +50,11 @@ async def cmds_mgmt(message, umsg, client, conn, cur):
 				await client.send_message(channel, 'The custom prefix for this server is `' + data[1] + '`')
 				
 	# welcome message
-	if (args[0] == 'welcome'):
+	if (args[0].lower() == 'welcome'):
 		
 		#set welcome message
 		if (len(args) > 1):
-			if (args[1] == 'set'):
+			if (args[1].lower() == 'set'):
 				if (member.server_permissions.manage_server == False):
 					await client.send_message(channel, 'You do not have manage server permissions!')
 				else:
@@ -87,7 +87,7 @@ async def cmds_mgmt(message, umsg, client, conn, cur):
 					
 		# remove welcome message
 		if (len(args) > 1):
-			if (args[1] == 'reset'):
+			if (args[1].lower() == 'reset'):
 				if (member.server_permissions.manage_server == False):
 					await client.send_message(channel, 'You do not have manage server permissions!')
 				else:
@@ -106,11 +106,11 @@ async def cmds_mgmt(message, umsg, client, conn, cur):
 				await client.send_message(channel, 'The welcome message for this server is `' + data[3] + '` and displays in <#' + data[2] + '>')
 				
 	# leave message
-	if (args[0] == 'leave'):
+	if (args[0].lower() == 'leave'):
 		
 		#set leave message
 		if (len(args) > 1):
-			if (args[1] == 'set'):
+			if (args[1].lower() == 'set'):
 				if (member.server_permissions.manage_server == False):
 					await client.send_message(channel, 'You do not have manage server permissions!')
 				else:
@@ -143,7 +143,7 @@ async def cmds_mgmt(message, umsg, client, conn, cur):
 					
 		# remove leave message
 		if (len(args) > 1):
-			if (args[1] == 'reset'):
+			if (args[1].lower() == 'reset'):
 				if (member.server_permissions.manage_server == False):
 					await client.send_message(channel, 'You do not have manage server permissions!')
 				else:
