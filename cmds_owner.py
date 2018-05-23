@@ -18,15 +18,15 @@ async def cmds_owner(message, umsg, client, conn, cur):
 	if (member.id == '188663897279037440'):
 			
 		# count members in server
-		if (args[0] == 'usercount'):
+		if (args[0].lower() == 'usercount'):
 			await client.send_message(channel, 'Total users: ' + str(len(server.members)) + '\nBot users: ' + str(len([member for member in server.members if member.bot])))
 			
 		# count total severs
-		if (args[0] == 'servercount'):
+		if (args[0].lower() == 'servercount'):
 			await client.send_message(channel, 'Total servers: ' + str(len(client.servers)) + '\nBot servers: ' + str(len([server for server in client.servers if len([member for member in server.members if member.bot]) > len([member for member in server.members if not member.bot])])))
 			
 		# add song to table
-		if (args[0] == 'addsotd'):
+		if (args[0].lower() == 'addsotd'):
 			try:
 				sdata = umsg[8:].split(' | ')
 				t = (sdata[0], sdata[1], sdata[2], sdata[3])
@@ -37,7 +37,7 @@ async def cmds_owner(message, umsg, client, conn, cur):
 				await client.send_message(channel, 'You did something wrong!')
 		
 		# force next song
-		if (args[0] == 'forcesotdupdate'):
+		if (args[0].lower() == 'forcesotdupdate'):
 			try:
 				cur.execute('DELETE FROM sotd WHERE rowid=(SELECT MIN(rowid) FROM sotd)')
 				conn.commit()
@@ -46,7 +46,7 @@ async def cmds_owner(message, umsg, client, conn, cur):
 				await client.send_message(channel, 'Something went wrong!')
 		
 		# give credits
-		if (args[0] == 'givecredits'):
+		if (args[0].lower() == 'givecredits'):
 			try:
 				user = await client.get_user_info(args[1])
 				t = int(args[2])
@@ -58,7 +58,7 @@ async def cmds_owner(message, umsg, client, conn, cur):
 				await client.send_message(channel, 'You did something wrong!')
 				
 		# shutdown
-		if (args[0] == 'shutdown'):
+		if (args[0].lower() == 'shutdown'):
 			await client.send_message(channel, '*Shutting down...*')
 			conn.close()
 			await client.logout()
