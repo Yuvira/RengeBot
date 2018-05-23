@@ -12,7 +12,7 @@ async def cmds_mod(message, umsg, prefix, client):
 	member = message.author
 	
 	# kick
-	if (args[0] == 'kick'):
+	if (args[0].lower() == 'kick'):
 		if (server.me.server_permissions.kick_members == False):
 			await client.send_message(channel, 'I do not have permissions to kick!')
 		elif (member.server_permissions.kick_members == False):
@@ -47,7 +47,7 @@ async def cmds_mod(message, umsg, prefix, client):
 				await client.send_message(channel, msg)
 	
 	# ban
-	if (args[0] == 'ban'):
+	if (args[0].lower() == 'ban'):
 		t = 0
 		if (server.me.server_permissions.ban_members == False):
 			await client.send_message(channel, 'I do not have permissions to ban!')
@@ -83,7 +83,7 @@ async def cmds_mod(message, umsg, prefix, client):
 				await client.send_message(channel, msg + "and deleted **" + str(t) + "** days of messages")
 				
 	# prune
-	if (args[0] == 'prune'):
+	if (args[0].lower() == 'prune'):
 		if (server.me.server_permissions.manage_messages == False):
 			await client.send_message(channel, "I do not have permissions to manage messages!")
 		elif (member.server_permissions.manage_messages == False):
@@ -91,7 +91,7 @@ async def cmds_mod(message, umsg, prefix, client):
 		elif (len(args) < 2):
 			await client.send_message(channel, "You need to specify the number of messages to prune!")
 		else:
-			if args[1] == 'bot':
+			if args[1].lower() == 'bot':
 				num = 0
 				if (len(args) < 3):
 					num = 99
