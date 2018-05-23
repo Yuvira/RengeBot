@@ -39,7 +39,7 @@ async def cmds_action(message, umsg, client):
 	member = message.author
 	
 	# pat
-	if (args[0] == 'pat'):
+	if (args[0].lower() == 'pat'):
 		if (len(message.mentions) > 0):
 			if (len(message.mentions) == 1 and message.mentions[0] == member):
 				await get_image(client, channel, 'pat', 'Pat', '*Pats you*')
@@ -50,7 +50,7 @@ async def cmds_action(message, umsg, client):
 			await client.send_message(channel, 'You need to mention someone to pat!')
 	
 	# hug
-	if (args[0] == 'hug'):
+	if (args[0].lower() == 'hug'):
 		if (len(message.mentions) > 0):
 			if (len(message.mentions) == 1 and message.mentions[0] == member):
 				await get_image(client, channel, 'hug', 'Hug', '*Hugs you*')
@@ -61,7 +61,7 @@ async def cmds_action(message, umsg, client):
 			await client.send_message(channel, 'You need to mention someone to hug!')
 	
 	# pout
-	if (args[0] == 'pout'):
+	if (args[0].lower() == 'pout'):
 		if (len(message.mentions) > 0):
 			if (len(message.mentions) == 1 and message.mentions[0] == member):
 				await get_image(client, channel, 'pout', 'Pout', '*Pouts at you*')
@@ -72,7 +72,7 @@ async def cmds_action(message, umsg, client):
 			await get_image(client, channel, 'pout', 'Pout', '**' + member.display_name + '**' + ' is pouting, alone')
 	
 	# slap
-	if (args[0] == 'slap'):
+	if (args[0].lower() == 'slap'):
 		if (len(message.mentions) > 0):
 			if (len(message.mentions) == 1 and message.mentions[0] == member):
 				await get_image(client, channel, 'slap', 'Slap', 'Why am I doing this? *Slaps you*')
@@ -83,7 +83,7 @@ async def cmds_action(message, umsg, client):
 			await client.send_message(channel, 'You need to mention someone to slap!')
 	
 	# stare
-	if (args[0] == 'stare'):
+	if (args[0].lower() == 'stare'):
 		if (len(message.mentions) > 0):
 			if (len(message.mentions) == 1 and message.mentions[0] == member):
 				await get_image(client, channel, 'stare', 'Stare', '*Stares at you*')
@@ -94,7 +94,7 @@ async def cmds_action(message, umsg, client):
 			await client.send_message(channel, 'You need to mention someone to stare at!')
 	
 	# nom
-	if (args[0] == 'nom'):
+	if (args[0].lower() == 'nom'):
 		if (len(message.mentions) > 0):
 			if (len(message.mentions) == 1 and message.mentions[0] == member):
 				await get_image(client, channel, 'nom', 'Nom', '*Nibbles on you*')
@@ -105,13 +105,13 @@ async def cmds_action(message, umsg, client):
 			await get_image(client, channel, 'nom', 'Nom', '**' + member.display_name + '**' + ' is eating by themselves')
 	
 	# shrug
-	if (args[0] == 'shrug'):
+	if (args[0].lower() == 'shrug'):
 		embed = discord.Embed(title='Shrug', type='rich')
 		embed.set_image(url='http://i.imgur.com/dka933e.gif')
 		await client.send_message(channel, content=None, embed=embed)
 	
 	# sugoi
-	if (args[0] == 'sugoi'):
+	if (args[0].lower() == 'sugoi'):
 		embed = discord.Embed(title='SUGOI!', type='rich')
 		embed.set_image(url='http://i.imgur.com/ELdj5Nn.gif')
 		await client.send_message(channel, content=None, embed=embed)
