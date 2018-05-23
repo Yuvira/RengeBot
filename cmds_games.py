@@ -15,7 +15,7 @@ async def cmds_games(message, umsg, client, conn, cur):
 	member = message.author
 	
 	# roulette-----------------------------------------------------------------
-	if (args[0] == 'roulette'):
+	if (args[0].lower() == 'roulette'):
 		
 		# variables
 		bet_amount = 0
@@ -39,17 +39,17 @@ async def cmds_games(message, umsg, client, conn, cur):
 						if (len(args) > 2):
 							
 							# red/black/odd/even/low/high
-							if (args[2] == 'red' or args[2] == 'black' or args[2] == 'odd' or args[2] == 'even' or args[2] == 'low' or args[2] == 'high'):
+							if (args[2].lower() == 'red' or args[2].lower() == 'black' or args[2].lower() == 'odd' or args[2].lower() == 'even' or args[2].lower() == 'low' or args[2].lower() == 'high'):
 								bet_amount = int(args[1])
-								bet_type = args[2]
+								bet_type = args[2].lower()
 								msg = 'You bet $' + str(bet_amount) + ' on ' + bet_type + '!\n'
 								
 							# columns/dozens
-							elif (args[2] == 'column' or args[2] == 'dozen'):
+							elif (args[2].lower() == 'column' or args[2].lower() == 'dozen'):
 								if (len(args) > 3):
 									if (args[3] == '1' or args[3] == '2' or args[3] == '3'):
 										bet_amount = int(args[1])
-										bet_type = args[2] + ' ' + args[3]
+										bet_type = args[2].lower() + ' ' + args[3]
 										msg = 'You bet $' + str(bet_amount) + ' on ' + bet_type + '!\n'
 									else:
 										await client.send_message(channel, 'Invalid ' + args[2] + ' number!')
@@ -149,7 +149,7 @@ async def cmds_games(message, umsg, client, conn, cur):
 	
 	# slots--------------------------------------------------------------------
 	# based on Pokémon RBY slot mechanics
-	elif (args[0] == 'slots'):
+	elif (args[0].lower() == 'slots'):
 		
 		# variables
 		bet_amount = 0
@@ -174,7 +174,7 @@ async def cmds_games(message, umsg, client, conn, cur):
 						
 						# get mode override if owner
 						if (len(args) > 3 and member.id == '188663897279037440'):
-							if (args[2] == 'mode'):
+							if (args[2].lower() == 'mode'):
 								if (args[3] == '0'):
 									mode_override = 1
 								elif (args[3] == '1'):
