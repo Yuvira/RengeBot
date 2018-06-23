@@ -37,13 +37,26 @@ async def cmds_owner(message, umsg, client, conn, cur):
 				await client.send_message(channel, 'You did something wrong!')
 		
 		# force next song
-		if (args[0].lower() == 'forcesotdupdate'):
+		if (args[0].lower() == 'updatesotd'):
 			try:
 				cur.execute('DELETE FROM sotd WHERE rowid=(SELECT MIN(rowid) FROM sotd)')
 				conn.commit()
 				await client.send_message(channel, 'Song of the Day successfully updated!')
 			except:
 				await client.send_message(channel, 'Something went wrong!')
+		
+		# list tracks
+		if (args[0].lower() == 'listsotd'):
+			msg = 'List'
+			cur.execute('SELECT * FROM sotd ORDER BY rowid')
+			for a in range(0,10):
+				t = cur.fetchone()
+				if (t == None):
+					break
+				else:
+					msg = msg + '\n' + str(a+1) + ': ' + t[0] + ' - ' + t[1]
+			embed = discord.Embed(title='SOTD List', type='rich', description=msg)
+			await client.send_message(channel, content=None, embed=embed)
 		
 		# give credits
 		if (args[0].lower() == 'givecredits'):
