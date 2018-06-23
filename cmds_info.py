@@ -6,7 +6,7 @@ import platform
 from renge_utils import set_string_size
 
 # info cmds
-async def cmds_info(message, umsg, client):
+async def cmds_info(message, umsg, startup, client):
 	
 	# args/variables
 	args = umsg.split(' ')
@@ -30,10 +30,10 @@ async def cmds_info(message, umsg, client):
 				embed = discord.Embed(title='Info Command', type='rich', description='**Usage:**\n`$info` - Shows technical & bot information')
 				await client.send_message(channel, content=None, embed=embed)
 			elif (args[1].lower() == 'invite'):
-				embed = discord.Embed(title='Invite Command', type='rich', description='**Usage:**\n`$invite` - Display a link to invite Renge to your server')
+				embed = discord.Embed(title='Invite Command', type='rich', description='**Usage:**\n`$invite` - Displays helpful links including one for inviting Renge to your own server')
 				await client.send_message(channel, content=None, embed=embed)
 			elif (args[1].lower() == 'support'):
-				embed = discord.Embed(title='Support Command', type='rich', description='**Usage:**\n`$support` - Display a link to the support guild')
+				embed = discord.Embed(title='Support Command', type='rich', description='**Usage:**\n`$support` - Displays helpful links including an invite to the support server')
 				await client.send_message(channel, content=None, embed=embed)
 			elif (args[1].lower() == 'ping'):
 				embed = discord.Embed(title='Ping Command', type='rich', description='**Usage:**\n`$ping` - Ping Renge')
@@ -114,7 +114,7 @@ async def cmds_info(message, umsg, client):
 				embed = discord.Embed(title='Slots Command', type='rich', description='**Usage:**\n`$slots <amount>` - Bet credits on the slot machine\n**Payouts:**\n:cherries: - 2x Bet amount\n:rice_ball: - 3x Bet amount\n:butterfly: - 5x Bet amount\n:cherry_blossom: - 10x Bet amount\n:dollar: - 25x Bet amount\n:gem: - 50x Bet amount\n')
 				await client.send_message(channel, content=None, embed=embed)
 			elif (args[1].lower() == 'waifu'):
-				embed = discord.Embed(title='Waifu Command', type='rich', description='**Usage:**\n`$waifu add <mention>` - Add the mentioned user as one of your waifus\n`$waifu rem <number>` - Remove the waifu at the given postion (1-5, in order seen on profile)')
+				embed = discord.Embed(title='Waifu Command', type='rich', description='**Usage:**\n`$waifu add <mention>` - Add the mentioned user as one of your waifus\n`$waifu remove <number>` - Remove the waifu at the given postion (1-5, in order seen on profile)')
 				await client.send_message(channel, content=None, embed=embed)
 			elif (args[1].lower() == 'sotd'):
 				embed = discord.Embed(title='Song of the Day Command', type='rich', description="**Usage:**\n`$sotd` - Display today's song of the day (links to SoundCloud)\n`$sotd url` - Displays just the song url so the player gets embedded into Discord")
@@ -141,13 +141,11 @@ async def cmds_info(message, umsg, client):
 			embed.add_field(name="Misc Commands:",value='`anime` `sotd` `waifu` `8ball`')
 			await client.send_message(channel, content=None, embed=embed)
 	
-	# invite
-	if (args[0].lower() == 'invite'):
-		await client.send_message(channel, "You can invite me to your server here! https://polr.me/rengebot")
-	
-	# support
-	if (args[0].lower() == 'support'):
-		await client.send_message(channel, "You can join the support guild here! https://discord.gg/9ZxCkvv")
+	# invite/support
+	if (args[0].lower() == 'invite' or args[0].lower() == 'support'):
+		embed = discord.Embed(title='Helpful Links', type='rich', description='[Invite Link](http://polr.me/rengebot)\n[Support Guild](https://discord.gg/9ZxCkvv)\n[GitHub Repo](https://github.com/Yuvira/RengeBot)')
+		embed.set_thumbnail(url=client.user.avatar_url)
+		await client.send_message(channel, content=None, embed=embed)
 	
 	# about
 	if (args[0].lower() == 'about'):
@@ -157,7 +155,7 @@ async def cmds_info(message, umsg, client):
 			t1 += 1
 			for member in server.members:
 				t2 += 1
-		embed = discord.Embed(title='About Renge', type='rich', description='Renge is a small bot but constantly growing with new commands and community suggestions!\n\nCreated by Yuvira\n\n**Version:** ' + bot_version + '\n**Servers:** ' + str(t1) + '\n**Users:** ' + str(t2) + '\n\n[Invite Link](http://polr.me/rengebot)\n[Support Guild](https://discord.gg/9ZxCkvv)')
+		embed = discord.Embed(title='About Renge', type='rich', description='Renge is a small bot but constantly growing with new commands and community suggestions!\n\nCreated by Yuvira\n\n**Version:** ' + bot_version + '\n**Servers:** ' + str(t1) + '\n**Users:** ' + str(t2) + '\n\n[Invite Link](http://polr.me/rengebot)\n[Support Guild](https://discord.gg/9ZxCkvv)\n[GitHub Repo](https://github.com/Yuvira/RengeBot)')
 		embed.set_thumbnail(url=client.user.avatar_url)
 		await client.send_message(channel, content=None, embed=embed)
 	
@@ -224,6 +222,14 @@ async def cmds_info(message, umsg, client):
 				channel_count += 1
 			for member in guild.members:
 				member_count += 1
+		t = time.time() - startup
+		uptime = str(int(t/86400)) + 'd '
+		t = t % 86400
+		uptime = uptime + str(int(t/3600)) + 'h '
+		t = t % 3600
+		uptime = uptime + str(int(t/60)) + 'm '
+		t = t % 60
+		uptime = uptime + str(int(t)) + 's'
 		msg = "```============[ Technical Info ]============\n"
 		msg += "::DiscordPY Version :: " + set_string_size(str(discord.__version__), 17) + "::\n"
 		msg += "::Python Version    :: " + set_string_size(str(platform.python_version()), 17) + "::\n"
@@ -233,5 +239,6 @@ async def cmds_info(message, umsg, client):
 		msg += "::Guilds            :: " + set_string_size(str(server_count), 17) + "::\n"
 		msg += "::Users             :: " + set_string_size(str(member_count), 17) + "::\n"
 		msg += "::Channels          :: " + set_string_size(str(channel_count), 17) + "::\n"
+		msg += "::Uptime            :: " + set_string_size(uptime, 17) + "::\n"
 		msg += "==========================================```"
 		await client.send_message(channel, msg)
