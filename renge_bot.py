@@ -37,6 +37,9 @@ token = 'token'
 sotd_t1 = datetime.datetime.now().day
 sotd_t2 = sotd_t1
 
+# startup time
+startup = time.time()
+
 # message received
 @client.event
 async def on_message(message):
@@ -89,7 +92,7 @@ async def on_message(message):
 			await cmds_action.cmds_action(message, umsg, client)
 			await cmds_currency.cmds_currency(message, umsg, client, conn, cur)
 			await cmds_games.cmds_games(message, umsg, client, conn, cur)
-			await cmds_info.cmds_info(message, umsg, client)
+			await cmds_info.cmds_info(message, umsg, startup, client)
 			await cmds_mgmt.cmds_mgmt(message, umsg, client, conn, cur)
 			await cmds_misc.cmds_misc(message, umsg, client, conn, cur)
 			await cmds_mod.cmds_mod(message, umsg, prefix, client)
