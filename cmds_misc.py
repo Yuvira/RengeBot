@@ -86,7 +86,7 @@ async def cmds_misc(message, umsg, client, conn, cur):
 					await client.send_message(channel, 'You must mention one user!')
 					
 			# remove
-			elif (args[1].lower() == 'rem' or args[1].lower() == "rm"):
+			elif (args[1].lower() == 'remove' or args[1].lower() == 'rem' or args[1].lower() == "rm"):
 				if (len(args) > 2):
 					if (is_int(args[2])):
 						if (int(args[2]) > 0 and int(args[2]) < 6):
@@ -120,6 +120,10 @@ async def cmds_misc(message, umsg, client, conn, cur):
 						await client.send_message(channel, "That isn't a number or `all`!")
 				else:
 					await client.send_message(channel, 'You must specify a waifu to remove (1-5)!')
+			
+			# invalid action
+			else:
+				await client.send_message(channel, "That's not something you can do with your waifus!")
 					
 	# anime lookup
 	if (args[0].lower() == 'anime'):
