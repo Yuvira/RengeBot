@@ -13,7 +13,7 @@ async def cmds_info(message, umsg, startup, client):
 	channel = message.channel
 	member = message.author
 	request_channel = discord.Object('315103432581185536')
-	bot_version = '0.5.1'
+	bot_version = '0.5.2'
 	
 	# help
 	if (args[0].lower() == 'help'):
