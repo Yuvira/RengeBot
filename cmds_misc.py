@@ -2,34 +2,55 @@
 import discord
 import sqlite3
 import random
-import urllib.request
-import urllib.parse
-import xml.etree.ElementTree
-import base64
+import requests
+import json
 import html
 from renge_utils import load_profile
 from renge_utils import save_profile
 from renge_utils import is_int
 
 # parse dates in yyyy-mm-dd format to text
-async def get_date(date):
+def get_date(date):
 	args = date.split('-')
-	str = ''
-	if args[1] == '01': str='Jan'
-	elif args[1] == '02': str='Feb'
-	elif args[1] == '03': str='Mar'
-	elif args[1] == '04': str='Apr'
-	elif args[1] == '05': str='May'
-	elif args[1] == '06': str='Jun'
-	elif args[1] == '07': str='Jul'
-	elif args[1] == '08': str='Aug'
-	elif args[1] == '09': str='Sept'
+	s = ''
+	if args[1] == '1': str='Jan'
+	elif args[1] == '2': str='Feb'
+	elif args[1] == '3': str='Mar'
+	elif args[1] == '4': str='Apr'
+	elif args[1] == '5': str='May'
+	elif args[1] == '6': str='Jun'
+	elif args[1] == '7': str='Jul'
+	elif args[1] == '8': str='Aug'
+	elif args[1] == '9': str='Sept'
 	elif args[1] == '10': str='Oct'
 	elif args[1] == '11': str='Nov'
 	elif args[1] == '12': str='Dec'
-	if (args[2].startswith('0')): args[2]=args[2][1]
-	str = str + ' ' + args[1] + ', ' + args[0]
-	return str
+	s = str + ' ' + args[1] + ', ' + args[0]
+	return s
+	
+# get format
+def get_format(format):
+	s = ''
+	if format == 'TV': s='TV'
+	if format == 'TV_SHORT': s='Short'
+	if format == 'MOVIE': s='Movie'
+	if format == 'SPECIAL': s='Special'
+	if format == 'OVA': s='OVA'
+	if format == 'ONA': s='ONA'
+	if format == 'MUSIC': s='Music'
+	if format == 'MANGA': s='Manga'
+	if format == 'NOVEL': s='Novel'
+	if format == 'ONE_SHOT': s='One-Shot'
+	return s
+
+# get status
+def get_status(status):
+	s = ''
+	if status == 'FINISHED': s='Finished'
+	if status == 'RELEASING': s='Active'
+	if status == 'NOT_YET_RELEASED': s='Unreleased'
+	if status == 'CANCELLED': s='Cancelled'
+	return s
 
 # misc cmds
 async def cmds_misc(message, umsg, client, conn, cur):
@@ -128,59 +149,162 @@ async def cmds_misc(message, umsg, client, conn, cur):
 	# anime lookup
 	if (args[0].lower() == 'anime'):
 		if (len(args) > 1):
+			
+			# setup query
+			query = '''
+			query ($search: String) {
+				Media (search: $search, type:ANIME) {
+					id
+					title {
+						romaji
+						english
+					}
+					description
+					format
+					status
+					startDate {
+						year
+						month
+						day
+					}
+					endDate {
+						year
+						month
+						day
+					}
+					episodes
+					averageScore
+					coverImage {
+						medium
+					}
+				}
+			}
+			'''
+			
+			# set search query
+			variables = {
+				'search': umsg[6:]
+			}
+			
+			# get response and load to json
+			url = 'https://graphql.anilist.co'
+			response = requests.post(url, json={'query': query, 'variables': variables})
+			j = json.loads(response.text)
+			
+			# send data
 			try:
-				userpass = base64.b64encode(b'username:password').decode('ascii')
-				req = urllib.request.Request(
-					'https://myanimelist.net/api/anime/search.xml?' + urllib.parse.urlencode({'q': umsg[6:]}), 
-					data=None, 
-					headers={'Authorization': 'Basic ' + userpass}
-				)
-				with urllib.request.urlopen(req) as url:
-					root = xml.etree.ElementTree.parse(url).getroot()
-					desc = root[0][10].text.replace('<br />', '')
-					embed = discord.Embed(title=root[0][1].text, description=html.unescape(desc), url='https://myanimelist.net/anime/' + root[0][0].text)
-					embed.add_field(name='Type', value=root[0][6].text, inline=True)
-					embed.add_field(name='Episodes', value=root[0][4].text, inline=True)
-					embed.add_field(name='Status', value=root[0][7].text, inline=True)
-					embed.add_field(name='Rating', value=root[0][5].text, inline=True)
-					embed.add_field(name='Aired', value=await get_date(root[0][8].text), inline=True)
-					embed.add_field(name='Ended', value=await get_date(root[0][9].text), inline=True)
-					embed.add_field(name='English Title', value=root[0][2].text, inline=False)
-					embed.set_thumbnail(url=root[0][11].text)
-					await client.send_message(channel, content=None, embed=embed)
+				data = j["data"]["Media"]
+				desc = data["description"].replace('<br>', '')
+				embed = discord.Embed(title=data["title"]["romaji"], description=html.unescape(desc), url='https://anilist.co/anime/' + str(data["id"]))
+				embed.add_field(name='Type', value=get_format(data["format"]), inline=True)
+				embed.add_field(name='Episodes', value=str(data["episodes"]), inline=True)
+				embed.add_field(name='Status', value=get_status(data["status"]), inline=True)
+				embed.add_field(name='Rating', value=str(data["averageScore"])[0] + '.' + str(data["averageScore"])[1], inline=True)
+				embed.add_field(name='Aired', value=get_date(str(data["startDate"]["year"]) + '-' + str(data["startDate"]["month"]) + '-' + str(data["startDate"]["day"])), inline=True)
+				embed.add_field(name='Ended', value=get_date(str(data["endDate"]["year"]) + '-' + str(data["endDate"]["month"]) + '-' + str(data["endDate"]["day"])), inline=True)
+				embed.add_field(name='English Title', value=data["title"]["english"], inline=True)
+				embed.set_thumbnail(url=data["coverImage"]["medium"])
+				await client.send_message(channel, content=None, embed=embed)
 			except:
 				await client.send_message(channel, 'Anime not found!')
+			
+		else:
+			await client.send_message(channel, 'You need to specify an anime to look for!')
+					
+	# manga lookup
+	if (args[0].lower() == 'manga'):
+		if (len(args) > 1):
+			
+			# setup query
+			query = '''
+			query ($search: String) {
+				Media (search: $search, type:MANGA) {
+					id
+					title {
+						romaji
+						english
+					}
+					description
+					format
+					status
+					startDate {
+						year
+						month
+						day
+					}
+					endDate {
+						year
+						month
+						day
+					}
+					chapters
+					volumes
+					averageScore
+					coverImage {
+						medium
+					}
+				}
+			}
+			'''
+			
+			# set search query
+			variables = {
+				'search': umsg[6:]
+			}
+			
+			# get response and load to json
+			url = 'https://graphql.anilist.co'
+			response = requests.post(url, json={'query': query, 'variables': variables})
+			j = json.loads(response.text)
+			
+			# send data
+			try:
+				data = j["data"]["Media"]
+				desc = data["description"].replace('<br>', '')
+				embed = discord.Embed(title=data["title"]["romaji"], description=html.unescape(desc), url='https://anilist.co/manga/' + str(data["id"]))
+				embed.add_field(name='Type', value=get_format(data["format"]), inline=True)
+				embed.add_field(name='Volumes/Chapters', value=str(data["volumes"]) + '/' + str(data["chapters"]), inline=True)
+				embed.add_field(name='Status', value=get_status(data["status"]), inline=True)
+				embed.add_field(name='Rating', value=str(data["averageScore"])[0] + '.' + str(data["averageScore"])[1], inline=True)
+				embed.add_field(name='Aired', value=get_date(str(data["startDate"]["year"]) + '-' + str(data["startDate"]["month"]) + '-' + str(data["startDate"]["day"])), inline=True)
+				embed.add_field(name='Ended', value=get_date(str(data["endDate"]["year"]) + '-' + str(data["endDate"]["month"]) + '-' + str(data["endDate"]["day"])), inline=True)
+				embed.add_field(name='English Title', value=data["title"]["english"], inline=True)
+				embed.set_thumbnail(url=data["coverImage"]["medium"])
+				await client.send_message(channel, content=None, embed=embed)
+			except:
+				await client.send_message(channel, 'Anime not found!')
+			
 		else:
 			await client.send_message(channel, 'You need to specify an anime to look for!')
 	
 	# magic 8 ball
 	if (args[0].lower() == '8ball'):
 		if (len(args) > 1):
-			str = ':8ball: '
+			s = ':8ball: '
 			t = int(random.random() * 23)
-			if t == 0: str=str + 'It is certain'
-			elif t == 1: str=str + 'It is decidedly so'
-			elif t == 2: str=str + 'Without a doubt'
-			elif t == 3: str=str + 'Yes, definitely'
-			elif t == 4: str=str + 'You can rely on it'
-			elif t == 5: str=str + 'You can count on it'
-			elif t == 6: str=str + 'As I see it, yes'
-			elif t == 7: str=str + 'Most likely'
-			elif t == 8: str=str + 'Outlook is good'
-			elif t == 9: str=str + 'Yes'
-			elif t == 10: str=str + 'Signs point to yes'
-			elif t == 11: str=str + 'Absolutely'
-			elif t == 12: str=str + 'Reply hazy, try again'
-			elif t == 13: str=str + 'Ask again later'
-			elif t == 14: str=str + 'Better not tell you now'
-			elif t == 15: str=str + 'Cannot predict now'
-			elif t == 16: str=str + 'Concentrate and ask again'
-			elif t == 17: str=str + "Don't count on it"
-			elif t == 18: str=str + 'I think not'
-			elif t == 19: str=str + 'My sources say no'
-			elif t == 20: str=str + 'Outlook is not so good'
-			elif t == 21: str=str + 'Very doubtful'
-			elif t == 22: str=str + 'No'
-			await client.send_message(channel, str)
+			if t == 0: s=s + 'It is certain'
+			elif t == 1: s=s + 'It is decidedly so'
+			elif t == 2: s=s + 'Without a doubt'
+			elif t == 3: s=s + 'Yes, definitely'
+			elif t == 4: s=s + 'You can rely on it'
+			elif t == 5: s=s + 'You can count on it'
+			elif t == 6: s=s + 'As I see it, yes'
+			elif t == 7: s=s + 'Most likely'
+			elif t == 8: s=s + 'Outlook is good'
+			elif t == 9: s=s + 'Yes'
+			elif t == 10: s=s + 'Signs point to yes'
+			elif t == 11: s=s + 'Absolutely'
+			elif t == 12: s=s + 'Reply hazy, try again'
+			elif t == 13: s=s + 'Ask again later'
+			elif t == 14: s=s+ 'Better not tell you now'
+			elif t == 15: s=s + 'Cannot predict now'
+			elif t == 16: s=s + 'Concentrate and ask again'
+			elif t == 17: s=s + "Don't count on it"
+			elif t == 18: s=s + 'I think not'
+			elif t == 19: s=s + 'My sources say no'
+			elif t == 20: s=s + 'Outlook is not so good'
+			elif t == 21: s=s + 'Very doubtful'
+			elif t == 22: s=s + 'No'
+			await client.send_message(channel, s)
 		else:
 			await client.send_message(channel, 'You need to ask a question!')
