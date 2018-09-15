@@ -13,7 +13,7 @@ async def cmds_info(message, umsg, startup, client):
 	channel = message.channel
 	member = message.author
 	request_channel = discord.Object('315103432581185536')
-	bot_version = '0.5.2'
+	bot_version = '0.6.0'
 	
 	# help
 	if (args[0].lower() == 'help'):
@@ -77,6 +77,9 @@ async def cmds_info(message, umsg, startup, client):
 			elif (args[1].lower() == 'leave'):
 				embed = discord.Embed(title='Leave Message Command', type='rich', description="**Usage:**\n`$leave` - Display the server's leave message\n`$leave set <channel> <message>` - Set the server's leave message\n`$leave reset` - Remove the server's leave message\n**Note:**\nYou can use `!user.mention!` and `!user.name!` as placeholders for the old user's mention/name\n**Note:**\nSetting or resetting the server's leave message requires the `Manage Server` permission")
 				await client.send_message(channel, content=None, embed=embed)
+			elif (args[1].lower() == 'autorole'):
+				embed = discord.Embed(title='Autorole Command', type='rich', description="**Usage:**\n`$autorole` - Display the server's active autorole\n`$autorole set <role>` - Set the server's autorole\n`$autorole reset` - Remove the server's autorole\n**Note:**\nAn autorole is a role that is automatically applied to any new member who joins the server"
+				await client.send_message(channel, content=None, embed=embed)
 			elif (args[1].lower() == 'kick'):
 				embed = discord.Embed(title='Kick Command', type='rich', description='**Usage:**\n`$kick <mention(s)> <reason>` - Kicks one or more mentioned users with optional reason')
 				await client.send_message(channel, content=None, embed=embed)
@@ -87,7 +90,7 @@ async def cmds_info(message, umsg, startup, client):
 				embed = discord.Embed(title='Prune Command', type='rich', description='**Usage:**\n`$prune <amount>` - Deletes a given number (5 to 99) of messages (default 99 if more or no amount specified)\n`$prune bot <amount>` - Deletes a given number of bot commands and responses')
 				await client.send_message(channel, content=None, embed=embed)
 			elif (args[1].lower() == 'profile'):
-				embed = discord.Embed(title='Profile Command', type='rich', description='**Usage:**\n`$profile` - Displays your profile\n`$profile <mention>` - Show the profile of a mentioned user\n`$profile <name>` - Show the profile of a user with that name in the current server\n`$profile <id>` - Show the profile of a user with a given id\n`$profile desc <description>` - Set the description for your profile')
+				embed = discord.Embed(title='Profile Command', type='rich', description='**Usage:**\n`$profile` - Displays your profile\n`$profile <mention>` - Show the profile of a mentioned user\n`$profile <name>` - Show the profile of a user with that name in the current server\n`$profile <id>` - Show the profile of a user with a given id\n`$profile description <description>` - Set the description for your profile')
 				await client.send_message(channel, content=None, embed=embed)
 			elif (args[1].lower() == 'rep'):
 				embed = discord.Embed(title='Rep Command', type='rich', description='**Usage:**\n`$rep <mention>` - Give rep to a mentioned user (Can be used once every 24 hours)')
@@ -120,7 +123,10 @@ async def cmds_info(message, umsg, startup, client):
 				embed = discord.Embed(title='Song of the Day Command', type='rich', description="**Usage:**\n`$sotd` - Display today's song of the day (links to SoundCloud)\n`$sotd url` - Displays just the song url so the player gets embedded into Discord")
 				await client.send_message(channel, content=None, embed=embed)
 			elif (args[1].lower() == 'anime'):
-				embed = discord.Embed(title='Anime Command', type='rich', description="**Usage:**\n`$anime <title>` - Search MAL for an anime")
+				embed = discord.Embed(title='Anime Command', type='rich', description="**Usage:**\n`$anime <title>` - Search AniList for an anime")
+				await client.send_message(channel, content=None, embed=embed)
+			elif (args[1].lower() == 'manga'):
+				embed = discord.Embed(title='Manga Command', type='rich', description="**Usage:**\n`$manga <title>` - Search AniList for an manga")
 				await client.send_message(channel, content=None, embed=embed)
 			elif (args[1].lower() == '8ball'):
 				embed = discord.Embed(title='Magic 8-Ball Command', type='rich', description="**Usage:**\n`$8ball <question>` - Ask the Magic 8-Ball a question")
@@ -133,12 +139,12 @@ async def cmds_info(message, umsg, startup, client):
 			embed = discord.Embed(title='Renge Help', type='rich', description='Use `$help <command>` for usage')
 			embed.add_field(name="Info Commands:",value="`help` `invite` `support` `about` `info` `ping` `avatar` `request`",inline=False)
 			if not message.server is None:
-				embed.add_field(name="Management Commands:",value="`prefix` `welcome` `leave`",inline=False)
+				embed.add_field(name="Management Commands:",value="`prefix` `welcome` `leave` `autorole`",inline=False)
 				embed.add_field(name="Moderation Commands:",value="`ban` `kick` `prune`",inline=False)
 			embed.add_field(name="Action Commands:",value="`pat` `hug` `pout` `slap` `stare` `nom` `shrug` `sugoi`",inline=False)
 			embed.add_field(name="Currency Commands:",value="`profile` `rep` `daily` `loot` `transfer` `richest` `balance`",inline=False)
 			embed.add_field(name="Game Commands:",value="`roulette` `slots`",inline=False)
-			embed.add_field(name="Misc Commands:",value='`anime` `sotd` `waifu` `8ball`')
+			embed.add_field(name="Misc Commands:",value='`anime` `manga` `sotd` `waifu` `8ball`')
 			await client.send_message(channel, content=None, embed=embed)
 	
 	# invite/support
