@@ -59,7 +59,7 @@ async def cmds_mgmt(message, umsg, client, conn, cur):
 					await client.send_message(channel, 'I do not have manage server permissions!')
 				elif (server.me.server_permissions.manage_roles == False):
 					await client.send_message(channel, 'I do not have manage roles permissions!')
-				if (member.server_permissions.manage_server == False):
+				elif (member.server_permissions.manage_server == False):
 					await client.send_message(channel, 'You do not have manage server permissions!')
 				elif (member.server_permissions.manage_roles == False):
 					await client.send_message(channel, 'You do not have manage roles permissions!')
@@ -97,7 +97,7 @@ async def cmds_mgmt(message, umsg, client, conn, cur):
 					await client.send_message(channel, 'I do not have manage server permissions!')
 				elif (server.me.server_permissions.manage_roles == False):
 					await client.send_message(channel, 'I do not have manage roles permissions!')
-				if (member.server_permissions.manage_server == False):
+				elif (member.server_permissions.manage_server == False):
 					await client.send_message(channel, 'You do not have manage server permissions!')
 				elif (member.server_permissions.manage_roles == False):
 					await client.send_message(channel, 'You do not have manage roles permissions!')
