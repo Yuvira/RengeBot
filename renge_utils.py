@@ -17,8 +17,8 @@ async def create_server(server, conn, cur):
 		return
 	
 	# create server
-	server = (server.id, None, None, None, None, None)
-	cur.execute('INSERT INTO servers VALUES (?,?,?,?,?,?)', server)
+	server = (server.id, None, None, None, None, None, None)
+	cur.execute('INSERT INTO servers VALUES (?,?,?,?,?,?,?)', server)
 	conn.commit()
 		
 # load server
@@ -35,7 +35,7 @@ async def save_server(data, conn, cur):
 	t = (data[0],)
 	server = tuple(data)
 	cur.execute('DELETE FROM servers WHERE id=?', t)
-	cur.execute('INSERT INTO servers VALUES (?,?,?,?,?,?)', server)
+	cur.execute('INSERT INTO servers VALUES (?,?,?,?,?,?,?)', server)
 	conn.commit()
 
 # profiles---------------------------------------------------------------------
