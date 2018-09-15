@@ -272,7 +272,7 @@ async def cmds_misc(message, umsg, client, conn, cur):
 				embed.set_thumbnail(url=data["coverImage"]["medium"])
 				await client.send_message(channel, content=None, embed=embed)
 			except:
-				await client.send_message(channel, 'Anime not found!')
+				await client.send_message(channel, 'Manga not found!')
 			
 		else:
 			await client.send_message(channel, 'You need to specify an anime to look for!')
