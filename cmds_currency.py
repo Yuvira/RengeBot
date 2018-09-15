@@ -22,10 +22,13 @@ async def cmds_currency(message, umsg, client, conn, cur):
 	if (args[0].lower() == 'profile'):
 				
 		# set profile description
-		if (len(args) > 1 and args[1].lower() == 'desc'):
+		if (len(args) > 1 and (args[1].lower() == 'desc' or args[1].lower() == 'description')):
 			if (len(args) > 2):
 				data = await load_profile(member, conn, cur)
-				data[2] = umsg[13:]
+				if (args[1].lower() == 'desc'):
+					data[2] = umsg[13:]
+				else:
+					data[2] = umsg[20:]
 				if len(data[2]) > 500:
 					await client.send_message(channel, "I couldn't set your description because it is over 500 characters!")
 					return
@@ -193,9 +196,9 @@ async def cmds_currency(message, umsg, client, conn, cur):
 					else:
 						await client.send_message(channel, "You can't rep yourself!")
 				else:
-					await client.send_message(channel, 'You need to mention one user!')
+					await client.send_message(channel, 'You need to mention someone!')
 			else:
-				await client.send_message(channel, 'Incorrect number of arguments!')
+				await client.send_message(channel, 'You need to mention someone!')
 			
 		# show time remaining
 		else:
