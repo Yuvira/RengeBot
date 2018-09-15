@@ -80,13 +80,17 @@ async def on_message(message):
 		umsg = message.content
 		
 		# check prefix
-		if (umsg.startswith(prefix) or umsg.startswith(custom_prefix)):
+		if (umsg.startswith(prefix) or umsg.startswith(custom_prefix) or umsg.startswith('<@309002800703078400> ') or umsg.startswith('<@309002800703078400>')):
 			
 			# more formatting
-			if umsg.startswith(custom_prefix):
-				umsg = umsg[len(custom_prefix):]
-			else:
+			if umsg.startswith(prefix):
 				umsg = umsg[1:]
+			elif umsg.startswith(custom_prefix):
+				umsg = umsg[len(custom_prefix):]
+			elif umsg.startswith('<@309002800703078400> '):
+				umsg = umsg[22:]
+			elif umsg.startswith('<@309002800703078400>'):
+				umsg = umsg[21:]
 			
 			# command lists
 			await cmds_action.cmds_action(message, umsg, client)
@@ -146,6 +150,9 @@ async def on_member_join(member):
 		data[3] = data[3].replace('!user.mention!', member.mention)
 		data[3] = data[3].replace('!user.name!', member.name)
 		await client.send_message(channel, data[3])
+	if (data[6] != None):
+		role = discord.Object(data[6])
+		await client.add_roles(member, role)
 
 # member leave
 @client.event
