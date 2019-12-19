@@ -16,7 +16,7 @@ async def cmds_currency(message, umsg, client, conn, cur):
 	args = umsg.split(' ')
 	channel = message.channel
 	member = message.author
-	server = message.server
+	server = message.guild
 	
 	# profile
 	if (args[0].lower() == 'profile'):
@@ -30,12 +30,12 @@ async def cmds_currency(message, umsg, client, conn, cur):
 				else:
 					data[2] = umsg[20:]
 				if len(data[2]) > 500:
-					await client.send_message(channel, "I couldn't set your description because it is over 500 characters!")
+					await channel.send('I couldn\'t set your description because i\'s over 500 characters!')
 					return
 				await save_profile(data, conn, cur)
-				await client.send_message(channel, 'Description set to `' + data[2] + '`!')
+				await channel.send('Description set to `' + data[2] + '`!')
 			else:
-				await client.send_message(channel, 'You need to enter a description!')
+				await channel.send('You need to enter a description!')
 				
 		# show profile
 		else:
@@ -45,15 +45,9 @@ async def cmds_currency(message, umsg, client, conn, cur):
 			if (len(message.mentions) > 0):
 				user = message.mentions[0]
 			elif (len(args) > 1):
-				check = True
-				if (is_int(args[1])):
-					try:
-						user = await client.get_user_info(args[1])
-					except:
-						check = False
-				else:
-					check = False
-				if (check == False):
+				try:
+					user = await client.fetch_user(args[1])
+				except:
 					m = discord.utils.find(lambda u: args[1].lower() in u.display_name.lower(), server.members)
 					if (m != None):
 						user = m
@@ -72,16 +66,16 @@ async def cmds_currency(message, umsg, client, conn, cur):
 			
 			# display data
 			try:
-				embed = discord.Embed(title=user.display_name + "'s profile", type='rich', description=data[2] + '\n\n**Credits**\n' + data[3] + '\n\n**Reputation**\n' + data[4] + '\n\n**Waifus**' + waifu, colour=user.colour)
+				embed = discord.Embed(title = user.display_name + '\'s profile', type = 'rich', description = data[2] + '\n\n**Credits**\n' + data[3] + '\n\n**Reputation**\n' + data[4] + '\n\n**Waifus**' + waifu, colour = user.colour)
 			except:
-				embed = discord.Embed(title=user.display_name + "'s profile", type='rich', description=data[2] + '\n\n**Credits**\n' + data[3] + '\n\n**Reputation**\n' + data[4] + '\n\n**Waifus**' + waifu)
+				embed = discord.Embed(title = user.display_name + '\'s profile', type = 'rich', description = data[2] + '\n\n**Credits**\n' + data[3] + '\n\n**Reputation**\n' + data[4] + '\n\n**Waifus**' + waifu)
 			if (user.avatar_url == ''):
-				avatar = user.default_avatar_url
+				avatar = str(user.default_avatar_url)
 			else:
-				avatar = user.avatar_url
-				avatar = avatar.replace("?size=1024", "")
-			embed.set_thumbnail(url=avatar)
-			await client.send_message(channel, content=None, embed=embed)
+				avatar = str(user.avatar_url)
+				avatar = avatar.replace('?size=1024', '')
+			embed.set_thumbnail(url = avatar)
+			await channel.send(content = None, embed = embed)
 			
 	# daily
 	if (args[0].lower() == 'daily'):
@@ -99,18 +93,18 @@ async def cmds_currency(message, umsg, client, conn, cur):
 			# update ratelimit
 			rl[1] = int(time.time())
 			await save_ratelimit(rl, conn, cur)
-			await client.send_message(channel, 'You have received your daily 100 credits!')
+			await channel.send('You have received your daily 100 credits!')
 			
 		# show time remaining
 		else:
-			msg = "Slow down! Your daily credits aren't ready yet!\nYou can get your next daily in "
+			msg = 'Slow down! Your daily credits aren\'t ready yet!\nYou can get your next daily in '
 			t = 86400 - t
 			msg = msg + str(int(t/3600)) + ' hours, '
 			t = t % 3600
 			msg = msg + str(int(t/60)) + ' minutes, '
 			t = t % 60
 			msg = msg + str(t) + ' seconds'
-			await client.send_message(channel, msg)
+			await channel.send(msg)
 			
 	# loot
 	if (args[0].lower() == 'loot'):
@@ -131,18 +125,18 @@ async def cmds_currency(message, umsg, client, conn, cur):
 			rl[2] = int(time.time())
 			await save_ratelimit(rl, conn, cur)
 			if (loot > 0):
-				await client.send_message(channel, 'You looted a whole ' + str(loot) + ' credits!')
+				await channel.send('You looted a whole ' + str(loot) + ' credits!')
 			else:
-				await client.send_message(channel, "You couldn't find anything to loot!")
+				await channel.send('You couldn\'t find anything to loot!')
 			
 		# show time remaining
 		else:
-			msg = "Slow down! You just looted not that long ago!\nYou can loot again in "
+			msg = 'Slow down! You just looted not that long ago!\nYou can loot again in '
 			t = 300 - t
 			msg = msg + str(int(t/60)) + ' minutes, '
 			t = t % 60
 			msg = msg + str(t) + ' seconds'
-			await client.send_message(channel, msg)
+			await channel.send(msg)
 			
 	# transfer
 	if (args[0].lower() == 'transfer'):
@@ -159,21 +153,21 @@ async def cmds_currency(message, umsg, client, conn, cur):
 								await save_profile(usr1, conn, cur)
 								await save_profile(usr2, conn, cur)
 								if (message.mentions[0] == server.me):
-									await client.send_message(channel, 'Thank you for your donation of ' + args[2] + ' credits!')
+									await channel.send('Thank you for your donation of ' + args[2] + ' credits!')
 								else:
-									await client.send_message(channel, 'Successfully transferred ' + args[2] + ' credits to ' + message.mentions[0].name + '!')
+									await channel.send('Successfully transferred ' + args[2] + ' credits to ' + message.mentions[0].name + '!')
 							else:
-								await client.send_message(channel, "You can't transfer to yourself!")
+								await channel.send('You can\'t transfer to yourself!')
 						else:
-							await client.send_message(channel, "You don't have that much money!")
+							await channel.send('You don\'t have that much money!')
 					else:
-						await client.send_message(channel, "You can't transfer negative credits!")
+						await channel.send('You can\'t transfer negative credits!')
 				else:
-					await client.send_message(channel, 'Invalid transfer amount!')
+					await channel.send('Invalid transfer amount!')
 			else:
-				await client.send_message(channel, 'You need to mention one user!')
+				await channel.send('You need to mention one user!')
 		else:
-			await client.send_message(channel, 'Incorrect number of arguments!')
+			await channel.send('Incorrect number of arguments!')
 			
 	# rep
 	if (args[0].lower() == 'rep'):
@@ -192,24 +186,24 @@ async def cmds_currency(message, umsg, client, conn, cur):
 						await save_profile(data, conn, cur)
 						rl[3] = int(time.time())
 						await save_ratelimit(rl, conn, cur)
-						await client.send_message(channel, 'Gave rep to ' + message.mentions[0].name + '!')
+						await channel.send('Gave rep to ' + message.mentions[0].name + '!')
 					else:
-						await client.send_message(channel, "You can't rep yourself!")
+						await channel.send('You can\'t rep yourself!')
 				else:
-					await client.send_message(channel, 'You need to mention someone!')
+					await channel.send('You need to mention someone!')
 			else:
-				await client.send_message(channel, 'You need to mention someone!')
+				await channel.send('You need to mention someone!')
 			
 		# show time remaining
 		else:
-			msg = "Slow down! You can't rep yet!\nYou can give rep again in "
+			msg = 'Slow down! You can\'t rep yet!\nYou can give rep again in '
 			t = 86400 - t
 			msg = msg + str(int(t/3600)) + ' hours, '
 			t = t % 3600
 			msg = msg + str(int(t/60)) + ' minutes, '
 			t = t % 60
 			msg = msg + str(t) + ' seconds'
-			await client.send_message(channel, msg)
+			await channel.send(msg)
 			
 	# get global richest users
 	if (args[0].lower() == 'richest'):
@@ -219,16 +213,16 @@ async def cmds_currency(message, umsg, client, conn, cur):
 				cur.execute('SELECT * FROM profiles ORDER BY CAST(rep AS INTEGER) DESC LIMIT 10')
 				for a in range(0,10):
 					t = cur.fetchone()
-					msg = msg + '\n' + str(a+1) + '. **' + t[1] + '** - ' + str(t[4])
-				embed = discord.Embed(title='Global Most Reputable Users', type='rich', description=msg)
-				await client.send_message(channel, content=None, embed=embed)
+					msg = msg + '\n' + str(a + 1) + '. **' + t[1] + '** - ' + str(t[4])
+				embed = discord.Embed(title = 'Global Most Reputable Users', type = 'rich', description = msg)
+				await channel.send(content = None, embed = embed)
 		else:
 			cur.execute('SELECT * FROM profiles ORDER BY CAST(credits AS INTEGER) DESC LIMIT 10')
 			for a in range(0,10):
 				t = cur.fetchone()
-				msg = msg + '\n' + str(a+1) + '. **' + t[1] + '** - $' + str(t[3])
-			embed = discord.Embed(title='Global Richest Users', type='rich', description=msg)
-			await client.send_message(channel, content=None, embed=embed)
+				msg = msg + '\n' + str(a + 1) + '. **' + t[1] + '** - $' + str(t[3])
+			embed = discord.Embed(title = 'Global Richest Users', type = 'rich', description = msg)
+			await channel.send(content = None, embed = embed)
 			
 	# return user balance
 	if (args[0].lower() == 'balance' or args[0].lower() == 'bal'):
@@ -238,15 +232,9 @@ async def cmds_currency(message, umsg, client, conn, cur):
 		if (len(message.mentions) > 0):
 			user = message.mentions[0]
 		elif (len(args) > 1):
-			check = True
-			if (is_int(args[1])):
-				try:
-					user = await client.get_user_info(args[1])
-				except:
-					check = False
-			else:
-				check = False
-			if (check == False):
+			try:
+				user = await client.fetch_user(args[1])
+			except:
 				m = discord.utils.find(lambda u: args[1].lower() in u.display_name.lower(), server.members)
 				if (m != None):
 					user = m
@@ -256,6 +244,6 @@ async def cmds_currency(message, umsg, client, conn, cur):
 		
 		# display data
 		if (member == message.author):
-			await client.send_message(channel, user.display_name + ' has ' + data[3] + ' credits!')
+			await channel.send(user.display_name + ' has ' + data[3] + ' credits!')
 		else:
-			await client.send_message(channel, user.display_name + ' has ' + data[3] + ' credits!')
+			await channel.send(user.display_name + ' has ' + data[3] + ' credits!')
