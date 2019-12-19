@@ -10,7 +10,7 @@ async def cmds_mgmt(message, umsg, client, conn, cur):
 	# args/variables
 	args = umsg.split(' ')
 	channel = message.channel
-	server = message.server
+	server = message.guild
 	member = message.author
 	
 	# prefix
@@ -19,35 +19,35 @@ async def cmds_mgmt(message, umsg, client, conn, cur):
 		# set prefix
 		if (len(args) > 1):
 			if (args[1].lower() == 'set'):
-				if (member.server_permissions.manage_server == False):
-					await client.send_message(channel, 'You do not have manage server permissions!')
+				if (member.guild_permissions.manage_guild == False):
+					await channel.send('You do not have manage server permissions!')
 				else:
 					if (len(args) > 2):
 						data = await load_server(server, conn, cur)
 						data[1] = umsg[11:]
 						await save_server(data, conn, cur)
-						await client.send_message(channel, 'Prefix set to `' + data[1] + '`!')
+						await channel.send('Prefix set to `' + data[1] + '`!')
 					else:
-						await client.send_message(channel, 'No prefix given!')
+						await channel.send('No prefix given!')
 					
 		# remove prefix
 		if (len(args) > 1):
 			if (args[1].lower() == 'reset'):
-				if (member.server_permissions.manage_server == False):
-					await client.send_message(channel, 'You do not have manage server permissions!')
+				if (member.guild_permissions.manage_guild == False):
+					await channel.send('You do not have manage server permissions!')
 				else:
 					data = await load_server(server, conn, cur)
 					data[1] = None
 					await save_server(data, conn, cur)
-					await client.send_message(channel, 'Custom prefix removed!')
+					await channel.send('Custom prefix removed!')
 				
 		# display prefix
 		else:
 			data = await load_server(server, conn, cur)
 			if (data[1] == None):
-				await client.send_message(channel, 'This server has no custom prefix!')
+				await channel.send('This server has no custom prefix!')
 			else:
-				await client.send_message(channel, 'The custom prefix for this server is `' + data[1] + '`')
+				await channel.send('The custom prefix for this server is `' + data[1] + '`')
 				
 	# autorole
 	if (args[0].lower() == 'autorole'):
@@ -55,14 +55,14 @@ async def cmds_mgmt(message, umsg, client, conn, cur):
 		# set autorole
 		if (len(args) > 1):
 			if (args[1].lower() == 'set'):
-				if (server.me.server_permissions.manage_server == False):
-					await client.send_message(channel, 'I do not have manage server permissions!')
-				elif (server.me.server_permissions.manage_roles == False):
-					await client.send_message(channel, 'I do not have manage roles permissions!')
-				elif (member.server_permissions.manage_server == False):
-					await client.send_message(channel, 'You do not have manage server permissions!')
-				elif (member.server_permissions.manage_roles == False):
-					await client.send_message(channel, 'You do not have manage roles permissions!')
+				if (server.me.guild_permissions.manage_guild == False):
+					await channel.send('I do not have manage server permissions!')
+				elif (server.me.guild_permissions.manage_roles == False):
+					await channel.send('I do not have manage roles permissions!')
+				elif (member.guild_permissions.manage_guild == False):
+					await channel.send('You do not have manage server permissions!')
+				elif (member.guild_permissions.manage_roles == False):
+					await channel.send('You do not have manage roles permissions!')
 				else:
 					if (len(args) > 2):
 						check = 0
@@ -84,45 +84,45 @@ async def cmds_mgmt(message, umsg, client, conn, cur):
 							data = await load_server(server, conn, cur)
 							data[6] = role.id
 							await save_server(data, conn, cur)
-							await client.send_message(channel, 'Autorole set to `' + role.name + '`!')
+							await channel.send('Autorole set to `' + role.name + '`!')
 						else:
-							await client.send_message(channel, 'That role does not exist!')
+							await channel.send('That role does not exist!')
 					else:
-						await client.send_message(channel, 'Insufficient arguments!')
+						await channel.send('Insufficient arguments!')
 					
 		# remove autorole
 		if (len(args) > 1):
 			if (args[1].lower() == 'reset'):
-				if (server.me.server_permissions.manage_server == False):
-					await client.send_message(channel, 'I do not have manage server permissions!')
-				elif (server.me.server_permissions.manage_roles == False):
-					await client.send_message(channel, 'I do not have manage roles permissions!')
-				elif (member.server_permissions.manage_server == False):
-					await client.send_message(channel, 'You do not have manage server permissions!')
-				elif (member.server_permissions.manage_roles == False):
-					await client.send_message(channel, 'You do not have manage roles permissions!')
+				if (server.me.guild_permissions.manage_guild == False):
+					await channel.send('I do not have manage server permissions!')
+				elif (server.me.guild_permissions.manage_roles == False):
+					await channel.send('I do not have manage roles permissions!')
+				elif (member.guild_permissions.manage_guild == False):
+					await channel.send('You do not have manage server permissions!')
+				elif (member.guild_permissions.manage_roles == False):
+					await channel.send('You do not have manage roles permissions!')
 				else:
 					data = await load_server(server, conn, cur)
 					data[6] = None
 					await save_server(data, conn, cur)
-					await client.send_message(channel, 'Autorole removed!')
+					await channel.send('Autorole removed!')
 				
 		# display autorole
 		else:
 			data = await load_server(server, conn, cur)
 			if (data[6] == None):
-				await client.send_message(channel, 'This server has no autorole!')
+				await channel.send('This server has no autorole!')
 			else:
 				check = 0
 				for r in server.roles:
-					if (r.id == data[6]):
+					if (str(r.id) == data[6]):
 						check = 1
-						await client.send_message(channel, 'The autorole for this server is `' + r.name + '` and has id `' + r.id + '`')
+						await channel.send('The autorole for this server is `' + r.name + '` and has id `' + str(r.id) + '`')
 						break
 				if (check == 0):
 					data[6] = None
 					await save_server(data, conn, cur)
-					await client.send_message(channel, 'The autorole for this server could not be found (it was probably deleted)!')
+					await channel.send('The autorole for this server could not be found (it was probably deleted)!')
 				
 	# welcome message
 	if (args[0].lower() == 'welcome'):
@@ -130,8 +130,8 @@ async def cmds_mgmt(message, umsg, client, conn, cur):
 		#set welcome message
 		if (len(args) > 1):
 			if (args[1].lower() == 'set'):
-				if (member.server_permissions.manage_server == False):
-					await client.send_message(channel, 'You do not have manage server permissions!')
+				if (member.guild_permissions.manage_guild == False):
+					await channel.send('You do not have manage server permissions!')
 				else:
 					if (len(args) > 2):
 						check = 0
@@ -160,33 +160,33 @@ async def cmds_mgmt(message, umsg, client, conn, cur):
 								else:
 									data[3] = umsg[12 + len(chan.name):]
 								await save_server(data, conn, cur)
-								await client.send_message(channel, 'Welcome message set to `' + data[3] + '`!')
+								await channel.send('Welcome message set to `' + data[3] + '`!')
 							else:
-								await client.send_message(channel, 'No welcome message provided!')
+								await channel.send('No welcome message provided!')
 						else:
-							await client.send_message(channel, 'That channel does not exist!')
+							await channel.send('That channel does not exist!')
 					else:
-						await client.send_message(channel, 'Insufficient arguments!')
+						await channel.send('Insufficient arguments!')
 					
 		# remove welcome message
 		if (len(args) > 1):
 			if (args[1].lower() == 'reset'):
-				if (member.server_permissions.manage_server == False):
-					await client.send_message(channel, 'You do not have manage server permissions!')
+				if (member.guild_permissions.manage_guild == False):
+					await channel.send('You do not have manage server permissions!')
 				else:
 					data = await load_server(server, conn, cur)
 					data[2] = None
 					data[3] = None
 					await save_server(data, conn, cur)
-					await client.send_message(channel, 'Welcome message removed!')
+					await channel.send('Welcome message removed!')
 				
 		# display welcome message
 		else:
 			data = await load_server(server, conn, cur)
 			if (data[3] == None):
-				await client.send_message(channel, 'This server has no welcome message!')
+				await channel.send('This server has no welcome message!')
 			else:
-				await client.send_message(channel, 'The welcome message for this server is `' + data[3] + '` and displays in <#' + data[2] + '>')
+				await channel.send('The welcome message for this server is `' + data[3] + '` and displays in <#' + data[2] + '>')
 				
 	# leave message
 	if (args[0].lower() == 'leave'):
@@ -194,8 +194,8 @@ async def cmds_mgmt(message, umsg, client, conn, cur):
 		#set leave message
 		if (len(args) > 1):
 			if (args[1].lower() == 'set'):
-				if (member.server_permissions.manage_server == False):
-					await client.send_message(channel, 'You do not have manage server permissions!')
+				if (member.guild_permissions.manage_guild == False):
+					await channel.send('You do not have manage server permissions!')
 				else:
 					if (len(args) > 2):
 						check = 0
@@ -224,30 +224,30 @@ async def cmds_mgmt(message, umsg, client, conn, cur):
 								else:
 									data[5] = umsg[10 + len(chan.name):]
 								await save_server(data, conn, cur)
-								await client.send_message(channel, 'Leave message set to `' + data[5] + '`!')
+								await channel.send('Leave message set to `' + data[5] + '`!')
 							else:
-								await client.send_message(channel, 'No leave message provided!')
+								await channel.send('No leave message provided!')
 						else:
-							await client.send_message(channel, 'That channel does not exist!')
+							await channel.send('That channel does not exist!')
 					else:
-						await client.send_message(channel, 'Insufficient arguments!')
+						await channel.send('Insufficient arguments!')
 					
 		# remove leave message
 		if (len(args) > 1):
 			if (args[1].lower() == 'reset'):
-				if (member.server_permissions.manage_server == False):
-					await client.send_message(channel, 'You do not have manage server permissions!')
+				if (member.guild_permissions.manage_guild == False):
+					await channel.send('You do not have manage server permissions!')
 				else:
 					data = await load_server(server, conn, cur)
 					data[4] = None
 					data[5] = None
 					await save_server(data, conn, cur)
-					await client.send_message(channel, 'Leave message removed!')
+					await channel.send('Leave message removed!')
 				
 		# display leave message
 		else:
 			data = await load_server(server, conn, cur)
 			if (data[5] == None):
-				await client.send_message(channel, 'This server has no leave message!')
+				await channel.send('This server has no leave message!')
 			else:
-				await client.send_message(channel, 'The leave message for this server is `' + data[5] + '` and displays in <#' + data[4] + '>')
+				await channel.send('The leave message for this server is `' + data[5] + '` and displays in <#' + data[4] + '>')
