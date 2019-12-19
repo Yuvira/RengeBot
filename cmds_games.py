@@ -52,33 +52,33 @@ async def cmds_games(message, umsg, client, conn, cur):
 										bet_type = args[2].lower() + ' ' + args[3]
 										msg = 'You bet $' + str(bet_amount) + ' on ' + bet_type + '!\n'
 									else:
-										await client.send_message(channel, 'Invalid ' + args[2] + ' number!')
+										await channel.send('Invalid ' + args[2] + ' number!')
 								else:
-									await client.send_message(channel, 'You need to specify a ' + args[2] + ' number!')
+									await channel.send('You need to specify a ' + args[2] + ' number!')
 								
 							# invalid bet type
 							else:
-								await client.send_message(channel, 'Invalid bet type!')
+								await channel.send('Invalid bet type!')
 							
 						# no bet type
 						else:
-							await client.send_message(channel, 'You need to specify what to bet on!')
+							await channel.send('You need to specify what to bet on!')
 						
 					# not enough credits
 					else:
-						await client.send_message(channel, 'You do not have enough credits to place this bet!')
+						await channel.send('You do not have enough credits to place this bet!')
 						
 				# bet less than 1
 				else:
-					await client.send_message(channel, 'You must bet more than zero!')
+					await channel.send('You must bet more than zero!')
 			
 			# not integer bet
 			else:
-				await client.send_message(channel, 'Invalid bet amount!')
+				await channel.send('Invalid bet amount!')
 				
 		# insufficient arguments
 		else:
-			await client.send_message(channel, 'You must specify an amount to bet!')
+			await channel.send('You must specify an amount to bet!')
 			
 		# check message exists
 		if not (msg == ''):
@@ -145,7 +145,7 @@ async def cmds_games(message, umsg, client, conn, cur):
 			await save_profile(udata, conn, cur)
 					
 			# send results
-			await client.send_message(channel, msg)
+			await channel.send(msg)
 	
 	# slots--------------------------------------------------------------------
 	# based on Pokémon RBY slot mechanics
@@ -173,7 +173,7 @@ async def cmds_games(message, umsg, client, conn, cur):
 						msg = 'You bet $' + str(bet_amount) + '\n'
 						
 						# get mode override if owner
-						if (len(args) > 3 and member.id == '188663897279037440'):
+						if (len(args) > 3 and member.id == 188663897279037440):
 							if (args[2].lower() == 'mode'):
 								if (args[3] == '0'):
 									mode_override = 1
@@ -184,19 +184,19 @@ async def cmds_games(message, umsg, client, conn, cur):
 						
 					# not enough credits
 					else:
-						await client.send_message(channel, 'You do not have enough credits to place this bet!')
+						await channel.send('You do not have enough credits to place this bet!')
 						
 				# bet less than 1
 				else:
-					await client.send_message(channel, 'You must bet more than zero!')
+					await channel.send('You must bet more than zero!')
 			
 			# not integer bet
 			else:
-				await client.send_message(channel, 'Invalid bet amount!')
+				await channel.send('Invalid bet amount!')
 				
 		# insufficient arguments
 		else:
-			await client.send_message(channel, 'You must specify an amount to bet!')
+			await channel.send('You must specify an amount to bet!')
 		
 		# check message exists
 		if not (msg == ''):
@@ -213,17 +213,17 @@ async def cmds_games(message, umsg, client, conn, cur):
 			# decide mode
 			t = int(random.random() * 30)
 			if (t == 0):
-				mode = 2 # "super" mode, tries to guarantee high payout
+				mode = 2 # 'super' mode, tries to guarantee high payout
 			elif (t < 11):
-				mode = 1 # "good" mode, tries to guarantee low payout
+				mode = 1 # 'good' mode, tries to guarantee low payout
 			else:
-				mode = 0 # "bad" mode, guarantees no payout
+				mode = 0 # 'bad' mode, guarantees no payout
 			
 			# override
 			if (mode_override > 0):
 				mode = mode_override-1
 			
-			# first spin (advance up to five times on "super" to get high payout)
+			# first spin (advance up to five times on 'super' to get high payout)
 			spin1 = int(random.random() * 18) + 1
 			for a in range(0,5):
 				if (mode == 2):
@@ -232,7 +232,7 @@ async def cmds_games(message, umsg, client, conn, cur):
 					else:
 						spin1 += 1
 			
-			# second spin (advance up to five times on "super" to match high payout, advance until any match on "good")
+			# second spin (advance up to five times on 'super' to match high payout, advance until any match on 'good')
 			spin2 = int(random.random() * 18) + 1
 			for a in range(0,17):
 				if (mode == 2 and a < 5):
@@ -254,7 +254,7 @@ async def cmds_games(message, umsg, client, conn, cur):
 					else:
 						spin2 += 1
 			
-			# third spin (advance up to five times for any match on "good" or "super", advance past high payout on "good", avoid any match on "bad")
+			# third spin (advance up to five times for any match on 'good' or 'super', advance past high payout on 'good', avoid any match on 'bad')
 			spin3 = int(random.random() * 18) + 1
 			for a in range(0,17):
 				if (mode == 2 and a < 5):
@@ -312,4 +312,4 @@ async def cmds_games(message, umsg, client, conn, cur):
 			await save_profile(udata, conn, cur)
 					
 			# send results
-			await client.send_message(channel, msg)
+			await channel.send(msg)
