@@ -14,7 +14,7 @@ async def cmds_info(message, umsg, startup, client):
 	member = message.author
 	server = message.guild
 	request_channel = client.get_channel(315103432581185536)
-	bot_version = '0.7.0'
+	bot_version = '1.0.0'
 	
 	# help
 	if (args[0].lower() == 'help'):
