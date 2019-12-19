@@ -133,5 +133,5 @@ def set_string_size(string, len1):
 	if (len0 > len1):
 		return string
 	for a in range(len0, len1):
-		string = string + " "
+		string = string + ' '
 	return string
