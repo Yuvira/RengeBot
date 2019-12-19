@@ -8,142 +8,123 @@ async def cmds_mod(message, umsg, prefix, client):
 	# args/variables
 	args = umsg.split(' ')
 	channel = message.channel
-	server = message.server
+	server = message.guild
 	member = message.author
 	
 	# kick
 	if (args[0].lower() == 'kick'):
-		if (server.me.server_permissions.kick_members == False):
-			await client.send_message(channel, 'I do not have permissions to kick!')
-		elif (member.server_permissions.kick_members == False):
-			await client.send_message(channel, 'You do not have permissions to kick!')
+		if (server.me.guild_permissions.kick_members == False):
+			await channel.send('I don\'t have permission to kick!')
+		elif (member.guild_permissions.kick_members == False):
+			await channel.send('You don\'t have permission to kick!')
 		elif (len(message.mentions) < 1):
-			await client.send_message(channel, 'You must mention the person(s) to kick!')
+			await channel.send('You must mention the person(s) to kick!')
 		else:
 			test = False
-			msg = "Kicked "
-			for i in range(0, len(message.mentions)):
-				if server.me.top_role.position > message.mentions[i].top_role.position:
-					if member.top_role.position > message.mentions[i].top_role.position:
+			msg = 'Kicked'
+			reason = ''
+			for a in range(len(message.mentions) + 1, len(args)):
+				reason += ' ' + args[a]
+			for u in message.mentions:
+				if (server.me.top_role.position > u.top_role.position):
+					if (member.top_role.position > u.top_role.position):
 						try:
+							await u.kick()
+							msg += ' `' + u.display_name + '`'
+							test = True
 							try:
-								reason = ''
-								t = 1 + len(message.mentions)
-								for a in range(t, len(args)):
-									reason += ' ' + args[a]
-								await client.send_message(message.mentions[i], 'You were kicked from **' + server.name + '** by **' + str(member) + '**:' + reason)
+								await u.send('You were kicked from **' + server.name + '** by **' + member.display_name + '**:' + reason)
 							except:
 								pass
-							await client.kick(message.mentions[i])
-							msg += "`{}` ".format(str(message.mentions[i]))
-							test = True
 						except:
-							await client.send_message(channel, "Something happened, failed to kick!")
+							await channel.send('Failed to kick `' + u.display_name + '`!')
 					else:
-						await client.send_message(channel, "You can't kick someone with a higher role than you!")
+						await channel.send('`' + u.display_name + '` has a higher role than you!')
 				else:
-					await client.send_message(channel, "I can't kick that person because they have a role higher than me!")
+					await channel.send('`' + u.display_name + '` has a higher role than me!')
 			if (test == True):
-				await client.send_message(channel, msg)
+				await channel.send(msg)
 	
 	# ban
 	if (args[0].lower() == 'ban'):
-		t = 0
-		if (server.me.server_permissions.ban_members == False):
-			await client.send_message(channel, 'I do not have permissions to ban!')
-		elif (member.server_permissions.ban_members == False):
-			await client.send_message(channel, 'You do not have permissions to ban!')
+		if (server.me.guild_permissions.ban_members == False):
+			await channel.send('I don\'t have permission to ban!')
+		elif (member.guild_permissions.ban_members == False):
+			await channel.send('You don\'t have permission to ban!')
 		elif (len(message.mentions) < 1):
-			await client.send_message(channel, 'You must mention the person(s) to ban!')
+			await channel.send('You must mention the person(s) to ban!')
 		else:
-			test = False
 			try:
-				t = int(args[len(args)-1])
+				t = int(args[len(args) - 1])
 			except ValueError:
 				t = 0
-			msg = "Banned "
-			for i in range(0, len(message.mentions)):
-				if server.me.top_role.position > message.mentions[i].top_role.position:
-					if member.top_role.position > message.mentions[i].top_role.position:
+			test = False
+			msg = 'Banned'
+			for u in message.mentions:
+				if (server.me.top_role.position > u.top_role.position):
+					if (member.top_role.position > u.top_role.position):
 						try:
+							await u.ban(delete_message_days = t)
+							msg += ' `' + u.display_name + '`'
+							test = True
 							try:
-								await client.send_message(message.mentions[i], 'You were banned from **' + server.name + '** by **' + str(member) + '**')
+								await u.send('You were banned from **' + server.name + '** by **' + member.display_name + '**')
 							except:
 								pass
-							await client.ban(message.mentions[i],delete_message_days=t)
-							msg += "`{}` ".format(str(message.mentions[i]))
-							test = True
 						except:
-							await client.send_message(channel, "Something happened, failed to ban!")
+							await channel.send('Failed to ban `' + u.display_name + '`!')
 					else:
-						await client.send_message(channel, "You can't ban someone with a higher role than you!")
+						await channel.send('`' + u.display_name + '` has a higher role than you!')
 				else:
-					await client.send_message(channel, "I can't ban that person because they have a role higher than me!")
+					await channel.send('`' + u.display_name + '` has a higher role than me!')
 			if (test == True):
-				await client.send_message(channel, msg + "and deleted **" + str(t) + "** days of messages")
+				await channel.send(msg + ' and deleted **' + str(t) + '** days of messages')
 				
 	# prune
 	if (args[0].lower() == 'prune'):
-		if (server.me.server_permissions.manage_messages == False):
-			await client.send_message(channel, "I do not have permissions to manage messages!")
-		elif (member.server_permissions.manage_messages == False):
-			await client.send_message(channel, 'You do not have permissions to manage messages!')
+		if (server.me.guild_permissions.manage_messages == False):
+			await channel.send('I don\'t have permission to manage messages!')
+		elif (member.guild_permissions.manage_messages == False):
+			await channel.send('You don\'t have permission to manage messages!')
 		elif (len(args) < 2):
-			await client.send_message(channel, "You need to specify the number of messages to prune!")
+			await channel.send('You need to specify the number of messages to prune!')
 		else:
+			bot = False
+			num = 0
 			if args[1].lower() == 'bot':
-				num = 0
+				bot = True
 				if (len(args) < 3):
 					num = 99
 				else:
 					try:
 						num = int(args[2])
 					except ValueError:
-						await client.send_message(channel, "That's not a number!")
+						await channel.send('That\'s not a number!')
 						return
-					if num < 5:
-						await client.send_message(channel, "That's too few messages!")
-						return
-					if num > 99:
-						num = 99
-				mgs = []
-				async for x in client.logs_from(channel, limit=num+2):
-					if x.author.bot or x.content.lower().startswith(prefix):
-						mgs.append(x)
-				try:
-					await client.delete_messages(mgs)
-				except discord.HTTPException:
-					await client.send_message(channel, "Failed to prune, messages are probably too old")
-					return
-				pruned = await client.send_message(channel, "Deleted `" + str(len(mgs)-1) + "` bot messages & bot calls")
-				await asyncio.sleep(5)
-				try:
-					await client.delete_message(pruned)
-				except discord.NotFound:
-					pass
 			else:
 				try:
 					num = int(args[1])
 				except ValueError:
-					await client.send_message(channel, "That's not a number or `bot`!")
+					await channel.send('That\'s not a number!')
 					return
-				if num < 5:
-					await client.send_message(channel, "That's too few messages!")
-					return
-				if num > 99:
-					num = 99
-				mgs = []
-				async for x in client.logs_from(channel, limit=num+1):
+			mgs = []
+			async for x in channel.history(limit = num + 1):
+				if (bot == True):
+					if (x.author.bot or x.content.lower().startswith(prefix)):
+						mgs.append(x)
+				else:
 					mgs.append(x)
-				try:
-					await client.delete_messages(mgs)
-				except discord.HTTPException:
-					await client.send_message(channel, "Failed to prune, messages are probably too old")
-					return
-				pruned = await client.send_message(channel, "Deleted `" + str(len(mgs)-1) + "` messages")
-				await asyncio.sleep(5)
-				try:
-					await client.delete_message(pruned)
-				except discord.NotFound:
-					pass
-	
+			try:
+				await channel.delete_messages(mgs)
+			except discord.HTTPException:
+				await channel.send('Failed to prune (messages are probably too old)!')
+				return
+			m = '` messages!'
+			if (bot == True):
+				m = '` bot messages & bot calls!'
+			pruned = await channel.send('Deleted `' + str(len(mgs)-1) + m)
+			await asyncio.sleep(5)
+			try:
+				await pruned.delete()
+			except discord.NotFound:
+				pass
