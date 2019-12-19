@@ -3,7 +3,6 @@ import discord
 import time
 import random
 import importlib
-import logging
 import sqlite3
 import datetime
 import asyncio
@@ -30,7 +29,7 @@ conn = sqlite3.connect('renge.db')
 cur = conn.cursor()
 
 # startup variables
-prefix = 'prefix'
+prefix = '$'
 token = 'token'
 
 # song of the day values
@@ -54,17 +53,17 @@ async def on_message(message):
 		pass
 	
 	# variables
-	log_channel = discord.Object('314283195866677251')
-	dm_log = discord.Object('342097197443317760')
+	log_channel = client.get_channel(314283195866677251)
+	dm_log = client.get_channel(342097197443317760)
 	
 	# check message source
 	botMsg = True
 	usrMsg = False
 	if (message.author.bot == False):
 		botMsg = False
-		if (message.server is None):
+		if (message.guild is None):
 			usrMsg = True
-			await client.send_message(dm_log, 'Received DM from `' + message.author.name + '#' + message.author.discriminator + '`: ' + message.content)
+			await dm_log.send('Received DM from `' + message.author.name + '#' + message.author.discriminator + '`: ' + message.content)
 	
 	# if message received from user
 	if (botMsg == False):
@@ -72,7 +71,7 @@ async def on_message(message):
 		# retrieve server prefix
 		custom_prefix = prefix
 		if (usrMsg == False):
-			data = await load_server(message.server, conn, cur)
+			data = await load_server(message.guild, conn, cur)
 			if data[1] != None:
 				custom_prefix = data[1]
 		
@@ -103,7 +102,7 @@ async def on_message(message):
 			await cmds_owner.cmds_owner(message, umsg, client, conn, cur)
 			
 			# reload module
-			if (message.author.id == '188663897279037440'):
+			if (message.author.id == 188663897279037440):
 				args = umsg.split(' ')
 				if (args[0].lower() == 'reload' and len(args) == 2):
 					try:
@@ -125,44 +124,44 @@ async def on_message(message):
 							importlib.reload(cmds_owner)
 						else:
 							raise Exception
-						await client.send_message(message.channel, 'Reloaded ' + args[1] + ' command module successfully!')
+						await message.channel.send('Reloaded ' + args[1] + ' command module successfully!')
 					except:
-						await client.send_message(message.channel, 'Failed to load module!')
+						await message.channel.send('Failed to load module!')
 
 # log server join
 @client.event
-async def on_server_join(server):
-	log_channel = discord.Object('314283195866677251')
-	await client.send_message(log_channel, 'Joined server `' + server.name + '`, owned by `' + server.owner.name + '#' + server.owner.discriminator + '`')
+async def on_guild_join(server):
+	log_channel = client.get_channel(314283195866677251)
+	await log_channel.send('Joined server `' + server.name + '`, owned by `' + server.owner.name + '#' + server.owner.discriminator + '`')
 
 # log server leave
 @client.event
-async def on_server_remove(server):
-	log_channel = discord.Object('314283195866677251')
-	await client.send_message(log_channel, 'Left server `' + server.name + '`, owned by `' + server.owner.name + '#' + server.owner.discriminator + '`')
+async def on_guild_remove(server):
+	log_channel = client.get_channel(314283195866677251)
+	await log_channel.send('Left server `' + server.name + '`, owned by `' + server.owner.name + '#' + server.owner.discriminator + '`')
 
 # member join
 @client.event
 async def on_member_join(member):
-	data = await load_server(member.server, conn, cur)
+	data = await load_server(member.guild, conn, cur)
 	if (data[2] != None and data[3] != None):
-		channel = discord.Object(data[2])
+		channel = client.get_channel(int(data[2]))
 		data[3] = data[3].replace('!user.mention!', member.mention)
 		data[3] = data[3].replace('!user.name!', member.name)
-		await client.send_message(channel, data[3])
+		await channel.send(data[3])
 	if (data[6] != None):
-		role = discord.Object(data[6])
-		await client.add_roles(member, role)
+		role = discord.Object(int(data[6]))
+		await member.add_roles(role)
 
 # member leave
 @client.event
 async def on_member_remove(member):
-	data = await load_server(member.server, conn, cur)
+	data = await load_server(member.guild, conn, cur)
 	if (data[4] != None and data[5] != None):
-		channel = discord.Object(data[4])
+		channel = client.get_channel(int(data[4]))
 		data[5] = data[5].replace('!user.mention!', member.mention)
 		data[5] = data[5].replace('!user.name!', member.name)
-		await client.send_message(channel, data[5])
+		await channel.send(data[5])
 	
 # song of the day updater
 async def sotd():
@@ -184,16 +183,9 @@ async def on_ready():
 	print(client.user.name)
 	print(client.user.id)
 	print('------')
-	await client.change_presence(game=discord.Game(type=0, name=prefix+'help | Nyanpasuuu~'), status=None, afk=False)
-	log_channel = discord.Object('314283195866677251')
-	await client.send_message(log_channel, 'Booted successfully!')
-
-# logging
-logger = logging.getLogger('discord')
-logger.setLevel(logging.DEBUG)
-handler = logging.FileHandler(filename='logs.txt', encoding='utf-8', mode='w')
-handler.setFormatter(logging.Formatter('%(asctime)s:%(levelname)s:%(name)s: %(message)s'))
-logger.addHandler(handler)
+	await client.change_presence(activity = discord.Game(type = 0, name = prefix + 'help | Nyanpasuuu~'), status = None, afk = False)
+	log_channel = client.get_channel(314283195866677251)
+	await log_channel.send('Booted successfully!')
 
 # run
 random.seed(time.time())
