@@ -7,14 +7,14 @@ import json
 async def get_image(client, channel, type, head, text):
 	req = urllib.request.Request(
 		'https://rra.ram.moe/i/r?type=' + type, 
-		data=None, 
-		headers={'User-Agent': 'Renge/1.0'}
+		data = None, 
+		headers = {'token'}
 	)
 	with urllib.request.urlopen(req) as url:
 		data = json.loads(url.read().decode())
-		embed = discord.Embed(title=head, description = text, type='rich')
-		embed.set_image(url='https://rra.ram.moe' + data['path'])
-		await client.send_message(channel, content=None, embed=embed)
+		embed = discord.Embed(title = head, description = text, type = 'rich')
+		embed.set_image(url = 'https://rra.ram.moe' + data['path'])
+		await channel.send(content = None, embed = embed)
 		
 # list users
 async def list_mentions(users):
@@ -47,7 +47,7 @@ async def cmds_action(message, umsg, client):
 				list = await list_mentions(message.mentions)
 				await get_image(client, channel, 'pat', 'Pat', '**' + member.display_name + '**' + ' is patting ' + list)
 		else:
-			await client.send_message(channel, 'You need to mention someone to pat!')
+			await channel.send('You need to mention someone to pat!')
 	
 	# hug
 	if (args[0].lower() == 'hug'):
@@ -58,7 +58,7 @@ async def cmds_action(message, umsg, client):
 				list = await list_mentions(message.mentions)
 				await get_image(client, channel, 'hug', 'Hug', '**' + member.display_name + '**' + ' is hugging ' + list)
 		else:
-			await client.send_message(channel, 'You need to mention someone to hug!')
+			await channel.send('You need to mention someone to hug!')
 	
 	# pout
 	if (args[0].lower() == 'pout'):
@@ -80,7 +80,7 @@ async def cmds_action(message, umsg, client):
 				list = await list_mentions(message.mentions)
 				await get_image(client, channel, 'slap', 'Slap', '**' + member.display_name + '**' + ' is slapping ' + list)
 		else:
-			await client.send_message(channel, 'You need to mention someone to slap!')
+			await channel.send('You need to mention someone to slap!')
 	
 	# stare
 	if (args[0].lower() == 'stare'):
@@ -91,7 +91,7 @@ async def cmds_action(message, umsg, client):
 				list = await list_mentions(message.mentions)
 				await get_image(client, channel, 'stare', 'Stare', '**' + member.display_name + '**' + ' is staring at ' + list)
 		else:
-			await client.send_message(channel, 'You need to mention someone to stare at!')
+			await channel.send('You need to mention someone to stare at!')
 	
 	# nom
 	if (args[0].lower() == 'nom'):
@@ -106,12 +106,12 @@ async def cmds_action(message, umsg, client):
 	
 	# shrug
 	if (args[0].lower() == 'shrug'):
-		embed = discord.Embed(title='Shrug', type='rich')
-		embed.set_image(url='http://i.imgur.com/dka933e.gif')
-		await client.send_message(channel, content=None, embed=embed)
+		embed = discord.Embed(title = 'Shrug', type = 'rich')
+		embed.set_image(url = 'http://i.imgur.com/dka933e.gif')
+		await channel.send(content = None, embed = embed)
 	
 	# sugoi
 	if (args[0].lower() == 'sugoi'):
-		embed = discord.Embed(title='SUGOI!', type='rich')
-		embed.set_image(url='http://i.imgur.com/ELdj5Nn.gif')
-		await client.send_message(channel, content=None, embed=embed)
+		embed = discord.Embed(title = 'SUGOI!', type = 'rich')
+		embed.set_image(url = 'http://i.imgur.com/ELdj5Nn.gif')
+		await channel.send(content = None, embed = embed)
