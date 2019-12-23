@@ -168,7 +168,7 @@ async def sotd():
 	global sotd_t1
 	global sotd_t2
 	await client.wait_until_ready()
-	while not client.is_closed:
+	while not client.is_closed():
 		await asyncio.sleep(60)
 		sotd_t1 = sotd_t2
 		sotd_t2 = datetime.datetime.now().day
